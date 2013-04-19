@@ -1,4 +1,4 @@
-Dutch Nao Team -- source code
+Dutch Nao Team
 ==============================
 Based on the source code of team Humboldt.
 
