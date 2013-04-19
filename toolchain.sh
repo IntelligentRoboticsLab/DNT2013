@@ -2,5 +2,7 @@ wget http://www2.informatik.hu-berlin.de/~naoth/ressources/toolchains/NaoTHToolC
 cd NaoTH2011-light
 tar -xvf ../NaoTHToolChain_Ubuntu64.tar.xz
 rm ../NaoTHToolChain_Ubuntu64.tar.xz
-cd NaoTHToolChain_Ubuntu64
+cd NaoTHToolChain_Ubuntu64/toolchain_native/extern
+mkdir lib
+cd ../../
 sh setup.sh

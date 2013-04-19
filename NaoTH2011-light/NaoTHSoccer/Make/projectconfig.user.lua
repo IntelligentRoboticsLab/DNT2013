@@ -24,7 +24,7 @@ EXTERN_PATH_NAO = nil
 
 -- naoqi toolchain needed to compile the NaoSMAL
 -- default: os.getenv("AL_DIR")
-AL_DIR = nil
+AL_DIR = "../../naoqi-sdk-1.14.1-linux32"
 
 -- example: add additional dirs for both platforms
 --if PLATFORM == "Nao" then
