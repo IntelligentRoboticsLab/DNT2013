@@ -84,6 +84,7 @@ public class NaoScp extends NaoScpMainFrame
 
     initComponents();
 
+    wlanBtnGroup.add(radioWPA2);
     wlanBtnGroup.add(radioWPA);
     wlanBtnGroup.add(radioWEP);
 
@@ -756,6 +757,7 @@ public class NaoScp extends NaoScpMainFrame
     netmaskFieldWLAN.setEnabled(enable);
     broadcastFieldWLAN.setEnabled(enable);
 
+    radioWPA2.setEnabled(enable);
     radioWPA.setEnabled(enable);
     radioWEP.setEnabled(enable);
     wlanSSID.setEnabled(enable);
@@ -1041,13 +1043,21 @@ public class NaoScp extends NaoScpMainFrame
         }
       }
       br.close();
+      if(fileContent.contains("WPA2"))
+      {
+        radioWPA2.setSelected(true);
+        radioWPA.setSelected(false);
+        radioWEP.setSelected(false);
+      }
       if(fileContent.contains("WPA-PSK"))
       {
+        radioWPA2.setSelected(false);
         radioWPA.setSelected(true);
         radioWEP.setSelected(false);
       }
       else
       {
+        radioWPA2.setSelected(false);
         radioWPA.setSelected(false);
         radioWEP.setSelected(true);
       }
@@ -1062,7 +1072,11 @@ public class NaoScp extends NaoScpMainFrame
     try
     {
       String wpaConfigFileName = cfg.localSetupScriptPath() + "/wpa_supplicant.wpa";
-      if(radioWEP.isSelected())
+      if(radioWPA2.isSelected())
+      {
+        wpaConfigFileName = cfg.localSetupScriptPath() + "/wpa_supplicant.wpa2";
+      }
+      else if(radioWEP.isSelected())
       {
         wpaConfigFileName = cfg.localSetupScriptPath() + "/wpa_supplicant.wep";
       }
@@ -2168,6 +2182,7 @@ public class NaoScp extends NaoScpMainFrame
     subnetFieldWLAN = new javax.swing.JTextField();
     netmaskFieldWLAN = new javax.swing.JTextField();
     broadcastFieldWLAN = new javax.swing.JTextField();
+    radioWPA2 = new javax.swing.JRadioButton();
     radioWPA = new javax.swing.JRadioButton();
     radioWEP = new javax.swing.JRadioButton();
     jLabel5 = new javax.swing.JLabel();
@@ -2769,7 +2784,10 @@ public class NaoScp extends NaoScpMainFrame
 
     radioWPA.setBackground(new java.awt.Color(204, 204, 255));
     radioWPA.setSelected(true);
-    radioWPA.setText("WPA PSK");
+    radioWPA.setText("WPA");
+
+    radioWPA2.setBackground(new java.awt.Color(204, 204, 255));
+    radioWPA2.setText("WPA2");
 
     radioWEP.setBackground(new java.awt.Color(204, 204, 255));
     radioWEP.setText("WEP");
@@ -2835,7 +2853,7 @@ public class NaoScp extends NaoScpMainFrame
                       .add(broadcastFieldWLAN, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
                       .add(subnetFieldWLAN, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
                       .add(netmaskFieldWLAN, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-                      .add(radioWPA, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 100, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))))))
+                      /*.add(radioWPA, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 100, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)*/))))))
           .add(jSettingsPanel1Layout.createSequentialGroup()
             .addContainerGap()
             .add(jSettingsPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -2847,7 +2865,9 @@ public class NaoScp extends NaoScpMainFrame
                     .add(wlanSSID, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                     .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                     .add(radioWEP)
-                    .add(168, 168, 168))))
+                    .add(radioWPA)
+                    .add(radioWPA2)
+                    .add(10, 10, 10))))
               .add(jLabel5)
               .add(jLabel9))))
         .add(13, 13, 13))
@@ -2889,7 +2909,8 @@ public class NaoScp extends NaoScpMainFrame
           .add(jLabel5)
           .add(wlanSSID, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
           .add(radioWEP)
-          .add(radioWPA))
+          .add(radioWPA)
+          .add(radioWPA2))
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(jSettingsPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
           .add(jLabel9)
@@ -3483,6 +3504,7 @@ public class NaoScp extends NaoScpMainFrame
   private javax.swing.JProgressBar progressBar;
   private javax.swing.JRadioButton radioWEP;
   private javax.swing.JRadioButton radioWPA;
+  private javax.swing.JRadioButton radioWPA2;
   private javax.swing.JPasswordField sshPassword;
   private javax.swing.JPasswordField sshRootPassword;
   private javax.swing.JTextField sshRootUser;

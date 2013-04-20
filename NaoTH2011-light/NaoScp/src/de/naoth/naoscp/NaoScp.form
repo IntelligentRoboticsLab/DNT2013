@@ -712,6 +712,8 @@
                                                           <Component id="subnetFieldWLAN" pref="139" max="32767" attributes="1"/>
                                                           <Component id="netmaskFieldWLAN" alignment="0" pref="139" max="32767" attributes="1"/>
                                                           <Component id="radioWPA" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
+                                                          <EmptySpace min="-2" pref="168" max="-2" attributes="0"/>
+                                                          <Component id="radioWPA2" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
                                                       </Group>
                                                   </Group>
                                               </Group>
@@ -788,6 +790,7 @@
                                   <Component id="wlanSSID" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="radioWEP" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="radioWPA" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="radioWPA2" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -902,7 +905,16 @@
                           <Color blue="ff" green="cc" red="cc" type="rgb"/>
                         </Property>
                         <Property name="selected" type="boolean" value="true"/>
-                        <Property name="text" type="java.lang.String" value="WPA PSK"/>
+                        <Property name="text" type="java.lang.String" value="WPA"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JRadioButton" name="radioWPA2">
+                      <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="ff" green="cc" red="cc" type="rgb"/>
+                        </Property>
+                        <Property name="selected" type="boolean" value="true"/>
+                        <Property name="text" type="java.lang.String" value="WPA2"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JRadioButton" name="radioWEP">

@@ -1,0 +1,11 @@
+
+network={
+	ssid="WLAN_SSID"
+	scan_ssid=1
+	proto=WPA2
+	key_mgmt=WPA-PSK
+	psk="WLAN_KEY"
+	pairwise=CCMP TKIP
+	group=CCMP TKIP WEP104 WEP40
+} 
+
