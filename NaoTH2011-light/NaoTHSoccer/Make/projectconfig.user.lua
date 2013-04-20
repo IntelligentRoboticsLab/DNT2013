@@ -10,7 +10,7 @@ FRAMEWORK_PATH = nil
 EXTERN_PATH_NATIVE = nil
 -- webots instalation if available
 -- default: os.getenv("WEBOTS_HOME")
-WEBOTS_HOME = nil
+WEBOTS_HOME = "../../webots"
 
 -- path to the Nao crosscompiler and libs
 -- default: os.getenv("NAO_CTC")
