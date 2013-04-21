@@ -43,6 +43,9 @@
 #include "Representations/Perception/CameraMatrix.h"
 #include "Representations/Modeling/ColorClassificationModel.h"
 
+// Under Construction
+#include "ObjectDetectors/LineDetectorDNT.h"
+
 
 #include <sstream>
 
@@ -82,6 +85,7 @@ private:
   
   ModuleCreator<LineDetector>* theLineDetector;
   ModuleCreator<GoalDetector>* theGoalDetector;
+  ModuleCreator<LineDetectorDNT>* theLineDetectorDNT;
 
   const ColorClassificationModel& getColorTable64() const
   {

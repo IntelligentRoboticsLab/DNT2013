@@ -46,39 +46,39 @@
 #include "Modules/Perception/VirtualVisionProcessor/VirtualVisionProcessor.h"
 #include "Modules/Perception/PerceptProjector/PerceptProjector.h"
 #include "Modules/Perception/PerceptionsVisualization/PerceptionsVisualization.h"
-#include "Modules/Perception/OpenCV/FieldSideDetector.h"
-#include "Modules/Perception/OpenCV/OpenCVDebug.h"
+//#include "Modules/Perception/OpenCV/FieldSideDetector.h"
+//#include "Modules/Perception/OpenCV/OpenCVDebug.h"
 #include "Modules/Perception/ArtificialHorizonCalculator/ArtificialHorizonCalculator.h"
 
 // Modeling
-#include "Modules/Modeling/BodyStateProvider/BodyStateProvider.h"
-#include "Modules/Modeling/BallLocator/ParticleFilterBallLocator/ParticleFilterBallLocator.h"
-#include "Modules/Modeling/BallLocator/KalmanFilterBallLocator/KalmanFilterBallLocator.h"
-#include "Modules/Modeling/BallLocator/TeamBallLocator/TeamBallLocator.h"
-#include "Modules/Modeling/GoalLocator/ActiveGoalLocator/ActiveGoalLocator.h"
-#include "Modules/Modeling/GoalLocator/WholeGoalLocator/WholeGoalLocator.h"
-#include "Modules/Modeling/GoalLocator/DummyActiveGoalLocator/DummyActiveGoalLocator.h"
-#include "Modules/Modeling/SelfLocator/GPS_SelfLocator/GPS_SelfLocator.h"
-#include "Modules/Modeling/SelfLocator/OdometrySelfLocator/OdometrySelfLocator.h"
-#include "Modules/Modeling/ObstacleLocator/UltraSoundObstacleLocator.h"
-#include "Modules/Modeling/ObstacleLocator/VisualObstacleLocator.h"
-#include "Modules/Modeling/SelfLocator/MonteCarloSelfLocator/MonteCarloSelfLocator.h"
-#include "Modules/Modeling/FieldCompass/FieldCompass.h"
-#include "Modules/Modeling/SoccerStrategyProvider/SoccerStrategyProvider.h"
-#include "Modules/Modeling/PlayersLocator/PlayersLocator.h"
-#include "Modules/Modeling/PotentialFieldProvider/PotentialFieldProvider.h"
-#include "Modules/Modeling/AttentionAnalyzer/AttentionAnalyzer.h"
-#include "Modules/Modeling/PathPlanner/PathPlanner.h"
-#include "Modules/Modeling/CollisionDetector/CollisionDetector.h"
+//#include "Modules/Modeling/BodyStateProvider/BodyStateProvider.h"
+//#include "Modules/Modeling/BallLocator/ParticleFilterBallLocator/ParticleFilterBallLocator.h"
+//#include "Modules/Modeling/BallLocator/KalmanFilterBallLocator/KalmanFilterBallLocator.h"
+//#include "Modules/Modeling/BallLocator/TeamBallLocator/TeamBallLocator.h"
+//#include "Modules/Modeling/GoalLocator/ActiveGoalLocator/ActiveGoalLocator.h"
+//#include "Modules/Modeling/GoalLocator/WholeGoalLocator/WholeGoalLocator.h"
+//#include "Modules/Modeling/GoalLocator/DummyActiveGoalLocator/DummyActiveGoalLocator.h"
+//#include "Modules/Modeling/SelfLocator/GPS_SelfLocator/GPS_SelfLocator.h"
+//#include "Modules/Modeling/SelfLocator/OdometrySelfLocator/OdometrySelfLocator.h"
+//#include "Modules/Modeling/ObstacleLocator/UltraSoundObstacleLocator.h"
+//#include "Modules/Modeling/ObstacleLocator/VisualObstacleLocator.h"
+//#include "Modules/Modeling/SelfLocator/MonteCarloSelfLocator/MonteCarloSelfLocator.h"
+//#include "Modules/Modeling/FieldCompass/FieldCompass.h"
+//#include "Modules/Modeling/SoccerStrategyProvider/SoccerStrategyProvider.h"
+//#include "Modules/Modeling/PlayersLocator/PlayersLocator.h"
+//#include "Modules/Modeling/PotentialFieldProvider/PotentialFieldProvider.h"
+//#include "Modules/Modeling/AttentionAnalyzer/AttentionAnalyzer.h"
+//#include "Modules/Modeling/PathPlanner/PathPlanner.h"
+//#include "Modules/Modeling/CollisionDetector/CollisionDetector.h"
 
 // Behavior
-#include "Modules/BehaviorControl/SensorBehaviorControl/SensorBehaviorControl.h"
-#include "Modules/BehaviorControl/SimpleMotionBehaviorControl/SimpleMotionBehaviorControl.h"
-#include "Modules/BehaviorControl/XABSLBehaviorControl/XABSLBehaviorControl.h"
-#include "Modules/BehaviorControl/CalibrationBehaviorControl/CalibrationBehaviorControl.h"
+//#include "Modules/BehaviorControl/SensorBehaviorControl/SensorBehaviorControl.h"
+//#include "Modules/BehaviorControl/SimpleMotionBehaviorControl/SimpleMotionBehaviorControl.h"
+//#include "Modules/BehaviorControl/XABSLBehaviorControl/XABSLBehaviorControl.h"
+//#include "Modules/BehaviorControl/CalibrationBehaviorControl/CalibrationBehaviorControl.h"
 
 // Experiment
-#include "Modules/Experiment/Evolution/Evolution.h"
+//#include "Modules/Experiment/Evolution/Evolution.h"
 //#include "Modules/Experiment/VisualAttention/SaliencyMap/SaliencyMapProvider.h"
 
 // tools
@@ -138,44 +138,44 @@ void Cognition::init(naoth::ProcessInterface& platformInterface, const naoth::Pl
   REGISTER_MODULE(GridProvider);
   REGISTER_MODULE(ImageProcessor);
   REGISTER_MODULE(VirtualVisionProcessor);
-  REGISTER_MODULE(FieldSideDetector);
-  REGISTER_MODULE(OpenCVDebug);
+//  REGISTER_MODULE(FieldSideDetector);
+//  REGISTER_MODULE(OpenCVDebug);
 
-  // scene analysers 
+  // scene analysers
   // (analyze the visual information seen in the image)
-  REGISTER_MODULE(WholeGoalLocator);
+//  REGISTER_MODULE(WholeGoalLocator);
   REGISTER_MODULE(PerceptProjector);
   REGISTER_MODULE(PerceptionsVisualization);
 
 
   // modeling
-  REGISTER_MODULE(BodyStateProvider);
-  REGISTER_MODULE(ParticleFilterBallLocator);
-  REGISTER_MODULE(KalmanFilterBallLocator);
-  REGISTER_MODULE(ActiveGoalLocator);
-  REGISTER_MODULE(GPS_SelfLocator);
-  REGISTER_MODULE(OdometrySelfLocator);
-  REGISTER_MODULE(UltraSoundObstacleLocator);
-  REGISTER_MODULE(VisualObstacleLocator);
-  REGISTER_MODULE(MonteCarloSelfLocator);
-  REGISTER_MODULE(DummyActiveGoalLocator); // has to be after MonteCarloSelfLocator
-  REGISTER_MODULE(FieldCompass);
-  REGISTER_MODULE(TeamBallLocator);
-  REGISTER_MODULE(PlayersLocator);
-  REGISTER_MODULE(PotentialFieldProvider);
-  REGISTER_MODULE(AttentionAnalyzer);
-  REGISTER_MODULE(SoccerStrategyProvider);
-  REGISTER_MODULE(PathPlanner);
-  REGISTER_MODULE(CollisionDetector)
+//  REGISTER_MODULE(BodyStateProvider);
+//  REGISTER_MODULE(ParticleFilterBallLocator);
+//  REGISTER_MODULE(KalmanFilterBallLocator);
+//  REGISTER_MODULE(ActiveGoalLocator);
+//  REGISTER_MODULE(GPS_SelfLocator);
+//  REGISTER_MODULE(OdometrySelfLocator);
+//  REGISTER_MODULE(UltraSoundObstacleLocator);
+//  REGISTER_MODULE(VisualObstacleLocator);
+//  REGISTER_MODULE(MonteCarloSelfLocator);
+//  REGISTER_MODULE(DummyActiveGoalLocator); // has to be after MonteCarloSelfLocator
+//  REGISTER_MODULE(FieldCompass);
+//  REGISTER_MODULE(TeamBallLocator);
+//  REGISTER_MODULE(PlayersLocator);
+//  REGISTER_MODULE(PotentialFieldProvider);
+//  REGISTER_MODULE(AttentionAnalyzer);
+//  REGISTER_MODULE(SoccerStrategyProvider);
+//  REGISTER_MODULE(PathPlanner);
+//  REGISTER_MODULE(CollisionDetector)
 
   // behavior
-  REGISTER_MODULE(SensorBehaviorControl);
-  REGISTER_MODULE(SimpleMotionBehaviorControl);
-  REGISTER_MODULE(CalibrationBehaviorControl);
-  REGISTER_MODULE(XABSLBehaviorControl);
+//  REGISTER_MODULE(SensorBehaviorControl);
+//  REGISTER_MODULE(SimpleMotionBehaviorControl);
+//  REGISTER_MODULE(CalibrationBehaviorControl);
+//  REGISTER_MODULE(XABSLBehaviorControl);
 
   // experiment
-  REGISTER_MODULE(Evolution);
+//  REGISTER_MODULE(Evolution);
   //REGISTER_MODULE(SaliencyMapProvider);
 
   // infrastructure
