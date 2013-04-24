@@ -60,6 +60,15 @@ public:
 private:
   vector<LinePercept::LineSegmentImage> lineSegments;
 
+  void scanLinesHorizontal(vector<Vector2d>& linePoints);
+
+  void scanLinesVertical(vector<Vector2d>& linePoints);
+
+  const ColorClassificationModel& getColorTable64() const
+  {
+    return getColorClassificationModel();
+  }
+
 };//end class LineDetectorDNT
 
 #endif // __LineDetectorDNT_H_
