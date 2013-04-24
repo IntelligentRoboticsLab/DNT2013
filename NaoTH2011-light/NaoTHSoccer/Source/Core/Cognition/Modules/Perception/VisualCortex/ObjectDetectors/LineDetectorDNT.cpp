@@ -14,11 +14,11 @@ void LineDetectorDNT::execute()
     vector<Vector2d> scanPoints;
 
     scanLinesHorizontal(scanPoints);
-    scanLinesVertical(scanPoints);
+//    scanLinesVertical(scanPoints);
 
     DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:dntlines",
     for(int i = 0; i < (int) scanPoints.size(); i ++){
-        CIRCLE_PX(ColorClasses::orange, (int) scanPoints[i].x, (int) scanPoints[i].y, (int) 2);
+        CIRCLE_PX(ColorClasses::orange, (int) scanPoints[i].x -2 , (int) scanPoints[i].y -2, (int) 2);
     }
     );
 
@@ -27,8 +27,8 @@ void LineDetectorDNT::execute()
 
 void LineDetectorDNT::scanLinesHorizontal(vector<Vector2d> &linePoints)
 {
-    const int scanResolution = 7,
-            scanStep = 1;
+    const int scanResolution = 15,
+            scanStep = 2;
     Pixel pixel;
     ColorClasses::Color thisPixelColor;
 
@@ -47,13 +47,21 @@ void LineDetectorDNT::scanLinesHorizontal(vector<Vector2d> &linePoints)
                 break;
             case 1:
                 if(thisPixelColor == ColorClasses::white)
+                {
                     step = 2;
+                }
+                else if(thisPixelColor == ColorClasses::none)
+                {
+                }
+                else
+                {
+                    step = 0;
+                }
                 break;
             case 2:
             {
                 double whiteRatio = 0.00;
-                int numOfPixels = -1;
-                int numOfWhite = 0;
+                int numOfPixels = -1, numOfWhite = 0;
                 do{
                     pixel = getImage().get(j++,i);
                     thisPixelColor = getColorTable64().getColorClass(pixel);
@@ -62,13 +70,16 @@ void LineDetectorDNT::scanLinesHorizontal(vector<Vector2d> &linePoints)
                     numOfPixels ++;
                 }
                 while(thisPixelColor != ColorClasses::green && j < (int) getImage().width());
-
-                whiteRatio = (double) numOfWhite / (double) numOfPixels;
-                if(whiteRatio > 0.70)
+                if(j < (int) getImage().width())
                 {
-                    linePoints.push_back(Vector2d(j - floor((numOfPixels)/2), i));
+                    whiteRatio = (double) numOfWhite / (double) numOfPixels;
+                    if(whiteRatio > 0.50)
+                    {
+                        if(getFieldPercept().getLargestValidPoly(getArtificialHorizon()).isInside(Vector2d(j - ceil((numOfPixels)/2), i)))
+                            linePoints.push_back(Vector2d(j - ceil((numOfPixels)/2), i));
+                    }
+                    step = 1;
                 }
-                step = 1;
                 break;
             }
             default:
@@ -80,8 +91,8 @@ void LineDetectorDNT::scanLinesHorizontal(vector<Vector2d> &linePoints)
 
 void LineDetectorDNT::scanLinesVertical(vector<Vector2d> &linePoints)
 {
-    const int scanResolution = 7,
-            scanStep = 1;
+    const int scanResolution = 15,
+            scanStep = 2;
     Pixel pixel;
     ColorClasses::Color thisPixelColor;
 
@@ -100,13 +111,21 @@ void LineDetectorDNT::scanLinesVertical(vector<Vector2d> &linePoints)
                 break;
             case 1:
                 if(thisPixelColor == ColorClasses::white)
+                {
                     step = 2;
+                }
+                else if(thisPixelColor == ColorClasses::none)
+                {
+                }
+                else
+                {
+                    step = 0;
+                }
                 break;
             case 2:
             {
                 double whiteRatio = 0.00;
-                int numOfPixels = -1;
-                int numOfWhite = 0;
+                int numOfPixels = -1, numOfWhite = 0;
                 do{
                     pixel = getImage().get(i,j++);
                     thisPixelColor = getColorTable64().getColorClass(pixel);
@@ -115,13 +134,16 @@ void LineDetectorDNT::scanLinesVertical(vector<Vector2d> &linePoints)
                     numOfPixels ++;
                 }
                 while(thisPixelColor != ColorClasses::green && j < (int) getImage().height());
-
-                whiteRatio = (double) numOfWhite / (double) numOfPixels;
-                if(whiteRatio > 0.70)
+                if(j < (int) getImage().height())
                 {
-                    linePoints.push_back(Vector2d(i,j - floor((numOfPixels)/2)));
+                    whiteRatio = (double) numOfWhite / (double) numOfPixels;
+                    if(whiteRatio > 0.50)
+                    {
+                        if(getFieldPercept().getLargestValidPoly(getArtificialHorizon()).isInside(Vector2d(i,j - floor((numOfPixels)/2))))
+                            linePoints.push_back(Vector2d(i,j - floor((numOfPixels)/2)));
+                    }
+                    step = 1;
                 }
-                step = 1;
                 break;
             }
             default:
