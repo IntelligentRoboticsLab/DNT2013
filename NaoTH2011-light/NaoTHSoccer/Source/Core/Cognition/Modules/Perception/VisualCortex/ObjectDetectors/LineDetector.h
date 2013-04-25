@@ -43,7 +43,6 @@
 
 BEGIN_DECLARE_MODULE(LineDetector)
   REQUIRE(Image)
-//  REQUIRE(ColorTable64)
   REQUIRE(ColorClassificationModel)
   REQUIRE(CurrentCameraSettings)
   REQUIRE(CameraMatrix)
