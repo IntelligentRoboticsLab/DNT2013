@@ -2,5 +2,5 @@
 
 LineScanner::LineScanner()
 {
-    std::cout<< "" << endl;
+
 }

@@ -70,7 +70,7 @@ private:
   // distance and coordinate.
   struct candidate_point
   {
-      Point pnt;
+      Vector2<int> pnt;
       double distance;
   };
 
@@ -80,9 +80,9 @@ private:
 
   void scanLinesVertical(vector< Vector2<int> >& linePoints, int scanResolution, int scanStep, double qualRatio);
 
-  void find_candidate_points(vector< Vector2<int> > points, Vector2<int> start, Vector2<int> previous, vector< Vector2<int> > line, vector<candidate_point> &candidates);
+//  void find_candidate_points(vector< Vector2<int> > points, Vector2<int> start, Vector2<int> previous, vector< Vector2<int> > line, vector<candidate_point> &candidates);
 
-  void line_extraction(vector< Vector2<int> > points, vector<Vector4d> &produced_lines);
+//  void line_extraction(vector< Vector2<int> > points, vector<Vector4d> &produced_lines);
 
   const ColorClassificationModel& getColorTable64() const
   {
