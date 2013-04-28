@@ -1,9 +1,17 @@
+/**
+* @file LineDetectorDNT.h
+*
+* @author <a href="mailto:giorgosmethe@gmail.com">Georgios Methenitis</a>
+* Definition of class LineDetectorDNT
+*/
+
 #ifndef _LineDetectorDNT_H_
 #define _LineDetectorDNT_H_
 
 #include <ModuleFramework/Module.h>
 
 #include <vector>
+#include "Tools/Debug/Stopwatch.h"
 
 #include "Tools/Math/Line.h"
 #include "Tools/ColorClasses.h"
@@ -58,11 +66,23 @@ public:
   void execute();
 
 private:
+  // item candidate_point represents points to be connected with the producing line,
+  // distance and coordinate.
+  struct candidate_point
+  {
+      Point pnt;
+      double distance;
+  };
+
   vector<LinePercept::LineSegmentImage> lineSegments;
 
-  void scanLinesHorizontal(vector<Vector2d>& linePoints);
+  void scanLinesHorizontal(vector< Vector2<int> >& linePoints, int scanResolution, int scanStep, double qualRatio);
 
-  void scanLinesVertical(vector<Vector2d>& linePoints);
+  void scanLinesVertical(vector< Vector2<int> >& linePoints, int scanResolution, int scanStep, double qualRatio);
+
+  void find_candidate_points(vector< Vector2<int> > points, Vector2<int> start, Vector2<int> previous, vector< Vector2<int> > line, vector<candidate_point> &candidates);
+
+  void line_extraction(vector< Vector2<int> > points, vector<Vector4d> &produced_lines);
 
   const ColorClassificationModel& getColorTable64() const
   {
