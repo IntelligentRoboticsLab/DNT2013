@@ -1049,7 +1049,7 @@ public class NaoScp extends NaoScpMainFrame
         radioWPA.setSelected(false);
         radioWEP.setSelected(false);
       }
-      if(fileContent.contains("WPA-PSK"))
+      else if(fileContent.contains("WPA-PSK"))
       {
         radioWPA2.setSelected(false);
         radioWPA.setSelected(true);
