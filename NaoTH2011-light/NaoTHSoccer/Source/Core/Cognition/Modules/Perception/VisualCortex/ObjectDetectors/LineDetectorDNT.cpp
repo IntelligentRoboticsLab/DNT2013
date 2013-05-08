@@ -136,6 +136,11 @@ void LineDetectorDNT::scanLinesVertical(vector< Vector2<int> > &linePoints, int 
     }
 }
 
+void LineDetectorDNT::line_extraction(vector< Vector2<int> > linePoints, vector<cv::Vec4i> &lines)
+{
+    linePoints.clear();
+}
+
 //void LineDetectorDNT::find_candidate_points(vector< Vector2<int> > points, Vector2<int> start, Vector2<int> previous, vector< Vector2<int> > line, vector<candidate_point> &candidates)
 //{
 //    for(int i=0; i < points.size(); i++)
