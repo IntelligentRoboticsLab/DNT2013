@@ -72,19 +72,25 @@ private:
   // distance and coordinate.
   struct scan_point
   {
+      int id;
       Vector2<int> position;
+      Vector2<int> position_start;
+      Vector2<int> position_end;
       double weight;
       int thickness;
+      double distance;
       bool valid;
   };
 
   vector<LinePercept::LineSegmentImage> lineSegments;
 
-  void scanLinesHorizontal(vector< Vector2<int> >& linePoints, int scanResolution, int scanStep, double qualRatio);
+  void scanLinesHorizontal(vector< scan_point >& linePoints, int scanResolution, int scanStep, double qualRatio, int &point_id);
 
-  void scanLinesVertical(vector< Vector2<int> >& linePoints, int scanResolution, int scanStep, double qualRatio);
+  void scanLinesVertical(vector< scan_point >& linePoints, int scanResolution, int scanStep, double qualRatio, int& point_id);
 
-  void line_extraction(vector< Vector2<int> > points, vector<cv::Vec4i> &lines);
+  void candidate_points(vector< scan_point > scan_points, scan_point start, scan_point previous, vector< scan_point > lineTemp, vector<scan_point> &candidates);
+
+  void line_extraction(vector< scan_point > scan_points, vector<cv::Vec4i> &lines);
 
   const ColorClassificationModel& getColorTable64() const
   {
