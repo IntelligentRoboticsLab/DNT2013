@@ -70,10 +70,12 @@ public:
 private:
   // item candidate_point represents points to be connected with the producing line,
   // distance and coordinate.
-  struct candidate_point
+  struct scan_point
   {
-      Vector2<int> pnt;
-      double distance;
+      Vector2<int> position;
+      double weight;
+      int thickness;
+      bool valid;
   };
 
   vector<LinePercept::LineSegmentImage> lineSegments;
