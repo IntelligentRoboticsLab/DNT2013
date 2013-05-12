@@ -92,6 +92,14 @@ private:
 
   void line_extraction(vector< scan_point > scan_points, vector<cv::Vec4i> &lines);
 
+  void best_candidate(vector<scan_point> candidates, vector<scan_point> line,  scan_point start, scan_point previous, scan_point &best, double &min_error);
+
+  void compute_white_ratio(scan_point point1, scan_point point2, double &ratio);
+
+  void line_error(vector<scan_point> line, scan_point start, scan_point best_candidate, double &error);
+
+  void delete_point(scan_point element, vector<scan_point> &points);
+
   const ColorClassificationModel& getColorTable64() const
   {
     return getColorClassificationModel();
