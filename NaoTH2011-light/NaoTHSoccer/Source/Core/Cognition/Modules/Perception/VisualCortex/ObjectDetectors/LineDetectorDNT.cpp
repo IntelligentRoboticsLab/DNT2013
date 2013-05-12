@@ -4,6 +4,8 @@
 LineDetectorDNT::LineDetectorDNT()
 {
     DEBUG_REQUEST_REGISTER("ImageProcessor:LineDetectorDNT:scan_points", "mark the points scanned as line candidates on the image", false);
+    DEBUG_REQUEST_REGISTER("ImageProcessor:LineDetectorDNT:extracted_lines", "mark the extracted lines on the image", false);
+    DEBUG_REQUEST_REGISTER("ImageProcessor:LineDetectorDNT:poutsa", "mark the extracted lines on the image", false);
 }
 
 void LineDetectorDNT::execute()
@@ -14,21 +16,47 @@ void LineDetectorDNT::execute()
     GT_TRACE("executing LineDetectorDNT~Scanner");
     STOPWATCH_START("LineDetectorDNT~Scanner");
     scanLinesHorizontal(scanPoints, 15, 2, 0.60, point_id);
-    scanLinesVertical(scanPoints, 15, 2, 0.60, point_id);
+    //scanLinesVertical(scanPoints, 15, 2, 0.60, point_id);
     STOPWATCH_STOP("LineDetectorDNT~Scanner");
 
     DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_points",
                   for(int i = 0; i < (int) scanPoints.size(); i ++){
-        CIRCLE_PX(ColorClasses::yellow, (int) scanPoints[i].position.x , (int) scanPoints[i].position.y, (int) 1);
-        LINE_PX(ColorClasses::red, (int) scanPoints[i].position_start.x, (int) scanPoints[i].position_start.y, (int) scanPoints[i].position_end.x, (int) scanPoints[i].position_end.y);
+        CIRCLE_PX(ColorClasses::blue, (int) scanPoints[i].position.x , (int) scanPoints[i].position.y, (int) 1);
+        LINE_PX(ColorClasses::green, (int) scanPoints[i].position_start.x, (int) scanPoints[i].position_start.y, (int) scanPoints[i].position_end.x, (int) scanPoints[i].position_end.y);
     }
     );
 
-    vector<cv::Vec4i> lines;
+
+    vector< vector< scan_point > > extracted_lines;
     GT_TRACE("executing LineDetectorDNT~Extraction");
     STOPWATCH_START("LineDetectorDNT~Extraction");
-    line_extraction(scanPoints, lines);
+    line_extraction(scanPoints, extracted_lines);
     STOPWATCH_STOP("LineDetectorDNT~Extraction");
+
+    DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:extracted_lines",
+                  for (unsigned int i = 0; i < extracted_lines.size(); ++i) {
+        LINE_PX(ColorClasses::red, (int) extracted_lines[i][0].position.x, (int) extracted_lines[i][0].position.y,
+                (int) extracted_lines[i][extracted_lines[i].size()-1].position.x, (int) extracted_lines[i][extracted_lines[i].size()-1].position.y);
+    });
+
+
+    DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:poutsa",
+                  FieldPercept::FieldPoly fieldPoly;
+            fieldPoly = getFieldPercept().getPoly();
+    for(int i = 0; i < (int) getImage().width(); i += 20)
+    {
+        Math::LineSegment al = Math::LineSegment(Vector2<int>(0,i), Vector2<int>(getImage().height(),i));
+        for(int var = 2; var < fieldPoly.length-1; var++)
+        {
+            Math::LineSegment temp = Math::LineSegment(fieldPoly[var-1], fieldPoly[var]);
+            if(al.intersect(temp)){
+                double a = al.intersection(temp);
+                Vector2<double> aa = al.point(a);
+                CIRCLE_PX(ColorClasses::green, (int) aa.x , (int) aa.y, (int) 1);
+            }
+        }
+    }
+    );
 
 
 
@@ -55,44 +83,41 @@ void LineDetectorDNT::scanLinesHorizontal(vector< scan_point >& linePoints, int 
             case 1:
                 if(thisPixelColor == ColorClasses::white || thisPixelColor == ColorClasses::none)
                 {
-                    step = 2;
-                }
-                break;
-            case 2:
-            {
-                double whiteRatio = 0.00;
-                int numOfPixels = -1, numOfWhite = 0;
-                do{
-                    pixel = getImage().get(j++,i);
-                    thisPixelColor = getColorTable64().getColorClass(pixel);
+                    double whiteRatio = 0.00;
+                    int numOfPixels = 1, numOfWhite = 0;
                     if(thisPixelColor == ColorClasses::white)
-                        numOfWhite ++;
-                    numOfPixels ++;
-                }
-                while(thisPixelColor != ColorClasses::green && j < (int) getImage().width());
-                if(j < (int) getImage().width())
-                {
-                    whiteRatio = (double) numOfWhite / (double) numOfPixels;
-                    if(whiteRatio > qualRatio)
-                    {
-                        if(getFieldPercept().getLargestValidPoly(getArtificialHorizon()).isInside(Vector2d(j - ceil((numOfPixels)/2), i)))
-                        {
-                            scan_point temp;
-                            temp.id = point_id++;
-                            temp.position = Vector2<int>(j - ceil((numOfPixels)/2), i);
-                            temp.position_start = Vector2<int>(j - numOfPixels, i);
-                            temp.position_end = Vector2<int>(j, i);
-                            temp.weight = whiteRatio;
-                            temp.thickness = numOfPixels;
-                            temp.distance = 0.0f;
-                            temp.valid = true;
-                            linePoints.push_back(temp);
-                        }
+                        numOfWhite++;
+                    do{
+                        pixel = getImage().get(j++,i);
+                        thisPixelColor = getColorTable64().getColorClass(pixel);
+                        if(thisPixelColor == ColorClasses::white)
+                            numOfWhite ++;
+                        numOfPixels ++;
                     }
-                    step = 1;
+                    while(thisPixelColor != ColorClasses::green && j < (int) getImage().width());
+                    if(j < (int) getImage().width())
+                    {
+                        whiteRatio = (double) numOfWhite / (double) numOfPixels;
+                        if(whiteRatio > qualRatio)
+                        {
+                            if(getFieldPercept().getLargestValidPoly(getArtificialHorizon()).isInside(Vector2d(j - ceil((numOfPixels)/2), i)))
+                            {
+                                scan_point temp;
+                                temp.id = point_id++;
+                                temp.position = Vector2<int>(j - 1 - floor((numOfPixels)/2), i);
+                                temp.position_start = Vector2<int>(j - 1 - numOfPixels, i);
+                                temp.position_end = Vector2<int>(j - 1, i);
+                                temp.weight = whiteRatio;
+                                temp.thickness = numOfPixels;
+                                temp.distance = 0.0f;
+                                temp.valid = true;
+                                linePoints.push_back(temp);
+                            }
+                        }
+                        step = 0;
+                    }
                 }
                 break;
-            }
             default:
                 break;
             }
@@ -172,7 +197,7 @@ void LineDetectorDNT::candidate_points(vector< scan_point > scan_points, scan_po
     {
         if (scan_points[var].id != previous.id)
         {
-            double temp_sim_value = previous.position.dis(scan_points[var].position);
+            double temp_sim_value = previous.position.dis(scan_points[var].position) + abs(previous.thickness - scan_points[var].thickness);
             if(lineTemp.size() >= 3)
             {
                 Math::LineSegment temp_line = Math::LineSegment(start.position, previous.position);
@@ -251,7 +276,8 @@ void LineDetectorDNT::compute_white_ratio(scan_point point1, scan_point point2, 
         }
         else if(thisPixelColor == ColorClasses::green)
         {
-            white_counter --;
+            ratio = 0.00;
+            return;
         }
         if (x0 == x1 && y0 == y1)
         {
@@ -321,9 +347,13 @@ void LineDetectorDNT::delete_point(scan_point element, vector<scan_point> &point
     return;
 }
 
-void LineDetectorDNT::line_extraction(vector< scan_point > scan_points, vector<cv::Vec4i> &lines)
+void LineDetectorDNT::store_line(vector< vector<scan_point> > &lines, vector<scan_point> line)
 {
-    vector< vector< scan_point > > extracted_lines;
+    return;
+}
+
+void LineDetectorDNT::line_extraction(vector< scan_point > scan_points, vector< vector< scan_point > > &extracted_lines)
+{
     while(scan_points.size() != 0)
     {
         bool end = false;
@@ -350,8 +380,9 @@ void LineDetectorDNT::line_extraction(vector< scan_point > scan_points, vector<c
                 {
                     double sum_error;
                     line_error(lineTemp, start, best, sum_error);
-                    if(sum_error < 5)
+                    if(sum_error < 10)
                     {
+                        lineTemp.push_back(best);
                         previous = best;
                     }
                     else
@@ -376,88 +407,7 @@ void LineDetectorDNT::line_extraction(vector< scan_point > scan_points, vector<c
             delete_point(previous, scan_points);
         }
         while(!end);
+        extracted_lines.push_back(lineTemp);
+        lineTemp.clear();
     }
 }
-
-//void LineDetectorDNT::line_extraction(vector< Vector2<int> > points, vector<Vector4d> &produced_lines)
-//{
-//    vector< vector<Point> > lines;
-//    while(points.size() != 0)
-//    {
-//        bool end = false;
-//        vector< Vector2<int> > line;
-//        Vector2<int> start = points[0];
-//        Vector2<int> previous = points[0];
-//        do
-//        {
-//            line.push_back(previous);
-//            vector<candidate_point> candidates;
-//            find_candidate_points(points, start,  previous, line, candidates);
-//            // find best candidate to connect
-//            Point best_candidate;
-//            double error;
-//            find_best_candidate(image, candidates, line, start, previous, best_candidate, error);
-//            candidates.clear();
-//            if(error > 3)
-//            {
-//                end = true;
-//            }
-//            else
-//            {
-//                if(line.size() >= 4)
-//                {
-//                    double sum_error;
-//                    line_error(line, start, best_candidate, sum_error);
-//                    if(sum_error < 5)
-//                    {
-//                        previous = best_candidate;
-//                    }
-//                    else
-//                    {
-//                        if(line.size() <= 4 && line.size() != 0)
-//                        {
-//                            for(int i=0; i<line.size(); i++)
-//                            {
-//                                points.push_back(line[i]);
-//                            }
-//                            line.clear();
-//                        }
-//                        end = true;
-//                    }
-//                }
-//                else
-//                {
-//                    line.push_back(best_candidate);
-//                    previous = best_candidate;
-//                }
-//            }
-//            delete_point(previous, points);
-//        }
-//        while(!end);
-//        store_line(image, lines, line);
-//        line.clear();
-//    }
-//    //lines construction and export...
-//    for(int i = 0; i < lines.size(); i++)
-//    {
-//        Point point1,point2;
-//        double max_distance = 0;
-//        for(int j1 = 0; j1 < lines[i].size(); j1++)
-//        {
-//            for(int j2 = 0; j2 < lines[i].size(); j2++)
-//            {
-//                if(j1 != j2)
-//                {
-//                    double temp = points_distance(lines[i][j1], lines[i][j2]);
-//                    if(temp > max_distance)
-//                    {
-//                        point1 = lines[i][j1];
-//                        point2 = lines[i][j2];
-//                        max_distance = temp;
-//                    }
-//                }
-//            }
-//        }
-//        produced_lines.push_back(Vec4i(point1.x, point1.y, point2.x, point2.y));
-//    }
-//}

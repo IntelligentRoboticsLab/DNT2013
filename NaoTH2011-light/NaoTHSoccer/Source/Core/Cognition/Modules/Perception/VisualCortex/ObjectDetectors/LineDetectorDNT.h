@@ -90,7 +90,7 @@ private:
 
   void candidate_points(vector< scan_point > scan_points, scan_point start, scan_point previous, vector< scan_point > lineTemp, vector<scan_point> &candidates);
 
-  void line_extraction(vector< scan_point > scan_points, vector<cv::Vec4i> &lines);
+  void line_extraction(vector< scan_point > scan_points, vector<vector<scan_point> > &extracted_lines);
 
   void best_candidate(vector<scan_point> candidates, vector<scan_point> line,  scan_point start, scan_point previous, scan_point &best, double &min_error);
 
@@ -99,6 +99,8 @@ private:
   void line_error(vector<scan_point> line, scan_point start, scan_point best_candidate, double &error);
 
   void delete_point(scan_point element, vector<scan_point> &points);
+
+  void store_line(vector< vector<scan_point> > &lines, vector<scan_point> line);
 
   const ColorClassificationModel& getColorTable64() const
   {
