@@ -60,7 +60,7 @@ BEGIN_DECLARE_MODULE(ImageProcessor)
 
   PROVIDE(BallPercept)
   PROVIDE(PlayersPercept)
-  PROVIDE(LinePercept)
+//  PROVIDE(LinePercept)
   PROVIDE(GoalPercept)
   PROVIDE(ScanLineEdgelPercept)
 END_DECLARE_MODULE(ImageProcessor)
@@ -83,7 +83,7 @@ private:
   ModuleCreator<BallDetector>* theBallDetector;
   ModuleCreator<RobotDetector>* theRobotDetector;
   
-  ModuleCreator<LineDetector>* theLineDetector;
+//  ModuleCreator<LineDetector>* theLineDetector;
   ModuleCreator<GoalDetector>* theGoalDetector;
   ModuleCreator<LineDetectorDNT>* theLineDetectorDNT;
 

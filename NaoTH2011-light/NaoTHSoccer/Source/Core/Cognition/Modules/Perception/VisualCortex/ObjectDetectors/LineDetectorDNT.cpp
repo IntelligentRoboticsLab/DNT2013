@@ -5,18 +5,24 @@ LineDetectorDNT::LineDetectorDNT()
 {
     DEBUG_REQUEST_REGISTER("ImageProcessor:LineDetectorDNT:scan_points", "mark the points scanned as line candidates on the image", false);
     DEBUG_REQUEST_REGISTER("ImageProcessor:LineDetectorDNT:extracted_lines", "mark the extracted lines on the image", false);
-    DEBUG_REQUEST_REGISTER("ImageProcessor:LineDetectorDNT:poutsa", "mark the extracted lines on the image", false);
+    DEBUG_REQUEST_REGISTER("ImageProcessor:LineDetectorDNT:scan_area", "mark the area scanned", false);
 }
 
 void LineDetectorDNT::execute()
 {
     lineSegments.clear();
     vector< scan_point > scanPoints;
+    FieldPercept::FieldPoly fieldPoly;
+    fieldPoly = getFieldPercept().getPoly();
+    int scanResolution = 20;
+    if(fieldPoly.getArea() > 484591.0)
+        scanResolution += 5;
+
     int point_id = -1;
     GT_TRACE("executing LineDetectorDNT~Scanner");
     STOPWATCH_START("LineDetectorDNT~Scanner");
-    scanLinesHorizontal(scanPoints, 15, 2, 0.60, point_id);
-    //scanLinesVertical(scanPoints, 15, 2, 0.60, point_id);
+    scanLinesHorizontal(fieldPoly, scanPoints, scanResolution, 2, 0.60, point_id);
+    scanLinesVertical(fieldPoly, scanPoints, scanResolution, 2, 0.60, point_id);
     STOPWATCH_STOP("LineDetectorDNT~Scanner");
 
     DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_points",
@@ -39,153 +45,179 @@ void LineDetectorDNT::execute()
                 (int) extracted_lines[i][extracted_lines[i].size()-1].position.x, (int) extracted_lines[i][extracted_lines[i].size()-1].position.y);
     });
 
-
-    DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:poutsa",
-                  FieldPercept::FieldPoly fieldPoly;
-            fieldPoly = getFieldPercept().getPoly();
-    for(int i = 0; i < (int) getImage().width(); i += 20)
-    {
-        Math::LineSegment al = Math::LineSegment(Vector2<int>(0,i), Vector2<int>(getImage().height(),i));
-        for(int var = 2; var < fieldPoly.length-1; var++)
-        {
-            Math::LineSegment temp = Math::LineSegment(fieldPoly[var-1], fieldPoly[var]);
-            if(al.intersect(temp)){
-                double a = al.intersection(temp);
-                Vector2<double> aa = al.point(a);
-                CIRCLE_PX(ColorClasses::green, (int) aa.x , (int) aa.y, (int) 1);
-            }
-        }
-    }
-    );
-
-
-
 }//end execute
 
-void LineDetectorDNT::scanLinesHorizontal(vector< scan_point >& linePoints, int scanResolution, int scanStep, double qualRatio, int& point_id)
+void LineDetectorDNT::scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int scanStep, double qualRatio, int& point_id)
 {
     Pixel pixel;
     ColorClasses::Color thisPixelColor;
-
     for(int i = 0; i < (int) getImage().height(); i += scanResolution)
     {
-        int step = 0;
-        for(int j = 0; j < (int) getImage().width(); j += scanStep)
+        vector< Vector2<double> > intersection_points;
+        Math::LineSegment al = Math::LineSegment(Vector2<int>(0,i), Vector2<int>(getImage().width(), i));
+        for(int var = 1; var < fieldPoly.length; var++)
         {
-            pixel = getImage().get(j,i);
-            thisPixelColor = getColorTable64().getColorClass(pixel);
-            switch (step)
+            Math::LineSegment temp = Math::LineSegment(fieldPoly[var-1], fieldPoly[var]);
+            if(temp.intersect(al))
             {
-            case 0:
-                if(thisPixelColor == ColorClasses::green)
-                    step = 1;
-                break;
-            case 1:
-                if(thisPixelColor == ColorClasses::white || thisPixelColor == ColorClasses::none)
+                double a = temp.intersection(al);
+                intersection_points.push_back(temp.point(a));
+            }
+            if(intersection_points.size() >= 2)
+            {
+                for(unsigned int var2 = 1; var2 < intersection_points.size(); var2++)
                 {
-                    double whiteRatio = 0.00;
-                    int numOfPixels = 1, numOfWhite = 0;
-                    if(thisPixelColor == ColorClasses::white)
-                        numOfWhite++;
-                    do{
-                        pixel = getImage().get(j++,i);
-                        thisPixelColor = getColorTable64().getColorClass(pixel);
-                        if(thisPixelColor == ColorClasses::white)
-                            numOfWhite ++;
-                        numOfPixels ++;
-                    }
-                    while(thisPixelColor != ColorClasses::green && j < (int) getImage().width());
-                    if(j < (int) getImage().width())
+                    if(fieldPoly.isInside(Vector2<int>(floor((intersection_points[var2-1].x + intersection_points[var2].x) / 2),
+                                                       floor((intersection_points[var2-1].y + intersection_points[var2].y) / 2))))
                     {
-                        whiteRatio = (double) numOfWhite / (double) numOfPixels;
-                        if(whiteRatio > qualRatio)
+                        DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_area",
+                                      LINE_PX(ColorClasses::red, (int) intersection_points[var2-1].x, (int) i, (int) intersection_points[var2].x, (int) i);
+                        );
+                        int start = floor(min(intersection_points[var2-1].x, intersection_points[var2].x));
+                        int stop = floor(max(intersection_points[var2-1].x, intersection_points[var2].x));
+                        int step = 0;
+                        for(int j = start; j < stop; j += scanStep)
                         {
-                            if(getFieldPercept().getLargestValidPoly(getArtificialHorizon()).isInside(Vector2d(j - ceil((numOfPixels)/2), i)))
+                            pixel = getImage().get(j,i);
+                            thisPixelColor = getColorTable64().getColorClass(pixel);
+                            switch (step)
                             {
-                                scan_point temp;
-                                temp.id = point_id++;
-                                temp.position = Vector2<int>(j - 1 - floor((numOfPixels)/2), i);
-                                temp.position_start = Vector2<int>(j - 1 - numOfPixels, i);
-                                temp.position_end = Vector2<int>(j - 1, i);
-                                temp.weight = whiteRatio;
-                                temp.thickness = numOfPixels;
-                                temp.distance = 0.0f;
-                                temp.valid = true;
-                                linePoints.push_back(temp);
+                            case 0:
+                                if(thisPixelColor == ColorClasses::green)
+                                    step = 1;
+                                break;
+                            case 1:
+                                if(thisPixelColor == ColorClasses::white || thisPixelColor == ColorClasses::none)
+                                {
+                                    double whiteRatio = 0.00;
+                                    int numOfPixels = 1, numOfWhite = 0;
+                                    if(thisPixelColor == ColorClasses::white)
+                                        numOfWhite++;
+                                    do{
+                                        pixel = getImage().get(j++,i);
+                                        thisPixelColor = getColorTable64().getColorClass(pixel);
+                                        if(thisPixelColor == ColorClasses::white)
+                                            numOfWhite ++;
+                                        numOfPixels ++;
+                                    }
+                                    while(thisPixelColor != ColorClasses::green && j < stop);
+                                    if(j < stop)
+                                    {
+                                        whiteRatio = (double) numOfWhite / (double) numOfPixels;
+                                        if(whiteRatio > qualRatio)
+                                        {
+                                            if(getFieldPercept().getLargestValidPoly(getArtificialHorizon()).isInside(Vector2d(j - ceil((numOfPixels)/2), i)))
+                                            {
+                                                scan_point temp;
+                                                temp.id = point_id++;
+                                                temp.position = Vector2<int>(j - 1 - floor((numOfPixels)/2), i);
+                                                temp.position_start = Vector2<int>(j - 1 - numOfPixels, i);
+                                                temp.position_end = Vector2<int>(j - 1, i);
+                                                temp.weight = whiteRatio;
+                                                temp.thickness = numOfPixels;
+                                                temp.distance = 0.0f;
+                                                temp.valid = true;
+                                                linePoints.push_back(temp);
+                                            }
+                                        }
+                                        step = 0;
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
                             }
                         }
-                        step = 0;
                     }
                 }
-                break;
-            default:
-                break;
             }
         }
     }
 }
 
-void LineDetectorDNT::scanLinesVertical(vector< scan_point > &linePoints, int scanResolution, int scanStep, double qualRatio, int& point_id)
+void LineDetectorDNT::scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vector< scan_point > &linePoints, int scanResolution, int scanStep, double qualRatio, int& point_id)
 {
     Pixel pixel;
     ColorClasses::Color thisPixelColor;
-
     for(int i = 0; i < (int) getImage().width(); i += scanResolution)
     {
-        int step = 0;
-        for(int j = 0; j < (int) getImage().height(); j += scanStep)
+        vector< Vector2<double> > intersection_points;
+        Math::LineSegment al = Math::LineSegment(Vector2<int>(i,0), Vector2<int>(i,getImage().height()));
+        for(int var = 1; var < fieldPoly.length; var++)
         {
-            pixel = getImage().get(i,j);
-            thisPixelColor = getColorTable64().getColorClass(pixel);
-            switch (step)
+            Math::LineSegment temp = Math::LineSegment(fieldPoly[var-1], fieldPoly[var]);
+            if(temp.intersect(al))
             {
-            case 0:
-                if(thisPixelColor == ColorClasses::green)
-                    step = 1;
-                break;
-            case 1:
-                if(thisPixelColor == ColorClasses::white || thisPixelColor == ColorClasses::none)
-                {
-                    step = 2;
-                }
-                break;
-            case 2:
+                double a = temp.intersection(al);
+                intersection_points.push_back(temp.point(a));
+            }
+            if(intersection_points.size() >= 2)
             {
-                double whiteRatio = 0.00;
-                int numOfPixels = -1, numOfWhite = 0;
-                do{
-                    pixel = getImage().get(i,j++);
-                    thisPixelColor = getColorTable64().getColorClass(pixel);
-                    if(thisPixelColor == ColorClasses::white)
-                        numOfWhite ++;
-                    numOfPixels ++;
-                }
-                while(thisPixelColor != ColorClasses::green && j < (int) getImage().height());
-                if(j < (int) getImage().height())
+                for(unsigned int var2 = 1; var2 < intersection_points.size(); var2++)
                 {
-                    whiteRatio = (double) numOfWhite / (double) numOfPixels;
-                    if(whiteRatio > qualRatio)
+                    if(fieldPoly.isInside(Vector2<int>(floor((intersection_points[var2-1].x + intersection_points[var2].x) / 2),
+                                                       floor((intersection_points[var2-1].y + intersection_points[var2].y) / 2))))
                     {
-                        if(getFieldPercept().getLargestValidPoly(getArtificialHorizon()).isInside(Vector2d(i,j - floor((numOfPixels)/2))))
+                        DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_area",
+                                      LINE_PX(ColorClasses::red, (int) i, (int) intersection_points[var2-1].y, (int) i, (int) intersection_points[var2].y);
+                        );
+                        int start = floor(min(intersection_points[var2-1].y, intersection_points[var2].y));
+                        int stop = floor(max(intersection_points[var2-1].y, intersection_points[var2].y));
+                        int step = 0;
+                        for(int j = start; j < stop; j += scanStep)
                         {
-                            scan_point temp;
-                            temp.id = point_id++;
-                            temp.position = Vector2<int>(i, j - floor((numOfPixels)/2));
-                            temp.position_start = Vector2<int>(i, j - numOfPixels);
-                            temp.position_end = Vector2<int>(i, j);
-                            temp.weight = whiteRatio;
-                            temp.thickness = numOfPixels;
-                            temp.distance = 0.0f;
-                            temp.valid = true;
-                            linePoints.push_back(temp);
+                            pixel = getImage().get(i,j);
+                            thisPixelColor = getColorTable64().getColorClass(pixel);
+                            switch (step)
+                            {
+                            case 0:
+                                if(thisPixelColor == ColorClasses::green)
+                                    step = 1;
+                                break;
+                            case 1:
+                                if(thisPixelColor == ColorClasses::white || thisPixelColor == ColorClasses::none)
+                                {
+                                    double whiteRatio = 0.00;
+                                    int numOfPixels = 1, numOfWhite = 0;
+                                    if(thisPixelColor == ColorClasses::white)
+                                        numOfWhite++;
+                                    do{
+                                        pixel = getImage().get(i,j++);
+                                        thisPixelColor = getColorTable64().getColorClass(pixel);
+                                        if(thisPixelColor == ColorClasses::white)
+                                            numOfWhite ++;
+                                        numOfPixels ++;
+                                    }
+                                    while(thisPixelColor != ColorClasses::green && j < stop);
+                                    if(j < stop)
+                                    {
+                                        whiteRatio = (double) numOfWhite / (double) numOfPixels;
+                                        if(whiteRatio > qualRatio)
+                                        {
+                                            if(getFieldPercept().getLargestValidPoly(getArtificialHorizon()).isInside(Vector2d(i,j - floor((numOfPixels)/2))))
+                                            {
+                                                scan_point temp;
+                                                temp.id = point_id++;
+                                                temp.position = Vector2<int>(i, j - 1 - floor((numOfPixels)/2));
+                                                temp.position_start = Vector2<int>(i, j - 1 - numOfPixels);
+                                                temp.position_end = Vector2<int>(i, j - 1);
+                                                temp.weight = whiteRatio;
+                                                temp.thickness = numOfPixels;
+                                                temp.distance = 0.0f;
+                                                temp.valid = true;
+                                                linePoints.push_back(temp);
+                                            }
+                                        }
+                                        step = 1;
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
+                            }
                         }
                     }
-                    step = 1;
                 }
-                break;
-            }
-            default:
-                break;
             }
         }
     }
