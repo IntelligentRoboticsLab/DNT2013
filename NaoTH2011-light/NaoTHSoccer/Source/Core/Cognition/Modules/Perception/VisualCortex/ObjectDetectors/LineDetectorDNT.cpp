@@ -10,15 +10,16 @@ LineDetectorDNT::LineDetectorDNT()
 
 void LineDetectorDNT::execute()
 {
+    int point_id = -1;
+    int scanResolution;
     lineSegments.clear();
     vector< scan_point > scanPoints;
     FieldPercept::FieldPoly fieldPoly;
-    fieldPoly = getFieldPercept().getPoly();
-    int scanResolution = 20;
-    if(fieldPoly.getArea() > 484591.0)
-        scanResolution += 5;
+    vector< vector< scan_point > > extracted_lines;
 
-    int point_id = -1;
+    fieldPoly = getFieldPercept().getPoly();
+    determineScanResolution(fieldPoly, scanResolution);
+
     GT_TRACE("executing LineDetectorDNT~Scanner");
     STOPWATCH_START("LineDetectorDNT~Scanner");
     scanLinesHorizontal(fieldPoly, scanPoints, scanResolution, 2, 0.60, point_id);
@@ -32,8 +33,6 @@ void LineDetectorDNT::execute()
     }
     );
 
-
-    vector< vector< scan_point > > extracted_lines;
     GT_TRACE("executing LineDetectorDNT~Extraction");
     STOPWATCH_START("LineDetectorDNT~Extraction");
     line_extraction(scanPoints, extracted_lines);
@@ -46,6 +45,18 @@ void LineDetectorDNT::execute()
     });
 
 }//end execute
+
+void LineDetectorDNT::determineScanResolution(FieldPercept::FieldPoly fieldPoly, int &scanResolution)
+{
+    double  area = fieldPoly.getArea(),
+            maxArea = 89600.0,
+            ratio = 1.0 - min(1.0, area / maxArea);
+
+    int     maxRes = 25,
+            minRes = 8;
+
+    scanResolution = maxRes - floor((maxRes - minRes) * ratio);
+}
 
 void LineDetectorDNT::scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int scanStep, double qualRatio, int& point_id)
 {

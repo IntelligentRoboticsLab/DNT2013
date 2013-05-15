@@ -84,6 +84,8 @@ private:
 
   vector<LinePercept::LineSegmentImage> lineSegments;
 
+  void determineScanResolution(FieldPercept::FieldPoly fieldPoly, int &scanResolution);
+
   void scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int scanStep, double qualRatio, int &point_id);
 
   void scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int scanStep, double qualRatio, int& point_id);
