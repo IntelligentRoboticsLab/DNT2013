@@ -3,7 +3,7 @@ Dutch Nao Team
 Based on the source code of team Humboldt.
 
 
-1. Some things before be ready to compile
+1. Some things before compile
 ==========================================
 
 * toolchain.sh once you clone the repository, you have to run the toolchain script.
