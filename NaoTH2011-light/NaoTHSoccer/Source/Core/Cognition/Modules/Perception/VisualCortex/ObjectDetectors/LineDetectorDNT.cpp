@@ -110,7 +110,7 @@ void LineDetectorDNT::scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vec
                                     if(j < stop)
                                     {
                                         whiteRatio = (double) numOfWhite / (double) numOfPixels;
-                                        if(whiteRatio > QUAL_WHITE_RATIO && numOfPixels <= MAX_POSSIBLE_LINE_THICKNESS)
+                                        if(whiteRatio > QUAL_WHITE_RATIO && numOfPixels <= MAX_LINE_THICKNESS)
                                         {
                                             scan_point temp;
                                             temp.id = point_id++;
@@ -195,7 +195,7 @@ void LineDetectorDNT::scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vecto
                                     if(j < stop)
                                     {
                                         whiteRatio = (double) numOfWhite / (double) numOfPixels;
-                                        if(whiteRatio > QUAL_WHITE_RATIO && numOfPixels <= MAX_POSSIBLE_LINE_THICKNESS)
+                                        if(whiteRatio > QUAL_WHITE_RATIO && numOfPixels <= MAX_LINE_THICKNESS)
                                         {
                                             scan_point temp;
                                             temp.id = point_id++;
@@ -235,7 +235,7 @@ void LineDetectorDNT::candidate_points(vector< scan_point > scan_points, scan_po
                 Math::LineSegment temp_line = Math::LineSegment(start.position, previous.position);
                 temp_sim_value = temp_sim_value * 0.05 + temp_line.minDistance(scan_points[var].position);
             }
-            if(candidates.size() >= 5)
+            if(candidates.size() >= 3)
             {
                 // bubblesort
                 for(unsigned int j=0; j < candidates.size(); j++)
@@ -335,7 +335,6 @@ void LineDetectorDNT::best_candidate(vector<scan_point> candidates, vector<scan_
 {
     min_error = DBL_MAX;
     double white;
-    double distance;
     double temp_error;
     scan_point temp;
 
@@ -343,9 +342,8 @@ void LineDetectorDNT::best_candidate(vector<scan_point> candidates, vector<scan_
     {
         temp = candidates[i];
         temp_error = 0;
-        distance = previous.position.dis(temp.position);
         compute_white_ratio(previous, temp, white);
-        temp_error = (1.01 - white) * distance;
+        temp_error = 1.00 - white;
         if(temp_error < min_error)
         {
             best = temp;
@@ -402,7 +400,7 @@ void LineDetectorDNT::line_extraction(vector< scan_point > scan_points, vector< 
             double error;
             best_candidate(candidates, lineTemp, start, previous, best, error);
             candidates.clear();
-            if(error > 3.00)
+            if(error > CONN_WHITE_RATIO)
             {
                 end = true;
             }

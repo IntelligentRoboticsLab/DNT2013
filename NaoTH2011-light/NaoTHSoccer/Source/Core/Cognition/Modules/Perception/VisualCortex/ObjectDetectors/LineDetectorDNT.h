@@ -82,6 +82,13 @@ private:
       bool valid;
   };
 
+  struct line_candidate
+  {
+      vector< scan_point > scan_points;
+      scan_point* start;
+      scan_point* end;
+  };
+
   vector<LinePercept::LineSegmentImage> lineSegments;
 
   void determineScanResolution(FieldPercept::FieldPoly fieldPoly, int &scanResolution);
