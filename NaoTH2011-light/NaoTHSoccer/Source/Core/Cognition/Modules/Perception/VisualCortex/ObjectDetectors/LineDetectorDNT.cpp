@@ -6,6 +6,7 @@ LineDetectorDNT::LineDetectorDNT()
     DEBUG_REQUEST_REGISTER("ImageProcessor:LineDetectorDNT:scan_points", "mark the points scanned as line candidates on the image", false);
     DEBUG_REQUEST_REGISTER("ImageProcessor:LineDetectorDNT:extracted_lines", "mark the extracted lines on the image", false);
     DEBUG_REQUEST_REGISTER("ImageProcessor:LineDetectorDNT:scan_area", "mark the area scanned", false);
+    DEBUG_REQUEST_REGISTER("ImageProcessor:LineDetectorDNT:clustered lines", "mark the clustered lines", false);
 }
 
 void LineDetectorDNT::execute()
@@ -22,8 +23,8 @@ void LineDetectorDNT::execute()
 
     GT_TRACE("executing LineDetectorDNT~Scanner");
     STOPWATCH_START("LineDetectorDNT~Scanner");
-    scanLinesHorizontal(fieldPoly, scanPoints, scanResolution, 2, 0.60, point_id);
-    scanLinesVertical(fieldPoly, scanPoints, scanResolution, 2, 0.60, point_id);
+    scanLinesHorizontal(fieldPoly, scanPoints, scanResolution, point_id);
+    scanLinesVertical(fieldPoly, scanPoints, scanResolution, point_id);
     STOPWATCH_STOP("LineDetectorDNT~Scanner");
 
     DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_points",
@@ -48,17 +49,11 @@ void LineDetectorDNT::execute()
 
 void LineDetectorDNT::determineScanResolution(FieldPercept::FieldPoly fieldPoly, int &scanResolution)
 {
-    double  area = fieldPoly.getArea(),
-            maxArea = 89600.0,
-            ratio = 1.0 - min(1.0, area / maxArea);
-
-    int     maxRes = 25,
-            minRes = 8;
-
-    scanResolution = maxRes - floor((maxRes - minRes) * ratio);
+    double  ratio = 1.0 - min(1.0, fieldPoly.getArea() / MAX_AREA);
+    scanResolution = MAX_SCAN_RESOLUTION - floor((MAX_SCAN_RESOLUTION - MIN_SCAN_RESOLUTION) * ratio);
 }
 
-void LineDetectorDNT::scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int scanStep, double qualRatio, int& point_id)
+void LineDetectorDNT::scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int& point_id)
 {
     Pixel pixel;
     ColorClasses::Color thisPixelColor;
@@ -82,12 +77,12 @@ void LineDetectorDNT::scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vec
                                                        floor((intersection_points[var2-1].y + intersection_points[var2].y) / 2))))
                     {
                         DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_area",
-                                      LINE_PX(ColorClasses::red, (int) intersection_points[var2-1].x, (int) i, (int) intersection_points[var2].x, (int) i);
+                                      LINE_PX(ColorClasses::gray, (int) intersection_points[var2-1].x, (int) i, (int) intersection_points[var2].x, (int) i);
                         );
                         int start = floor(min(intersection_points[var2-1].x, intersection_points[var2].x));
                         int stop = floor(max(intersection_points[var2-1].x, intersection_points[var2].x));
                         int step = 0;
-                        for(int j = start; j < stop; j += scanStep)
+                        for(int j = start; j < stop; j += SCAN_STEP)
                         {
                             pixel = getImage().get(j,i);
                             thisPixelColor = getColorTable64().getColorClass(pixel);
@@ -115,21 +110,18 @@ void LineDetectorDNT::scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vec
                                     if(j < stop)
                                     {
                                         whiteRatio = (double) numOfWhite / (double) numOfPixels;
-                                        if(whiteRatio > qualRatio)
+                                        if(whiteRatio > QUAL_WHITE_RATIO && numOfPixels <= MAX_POSSIBLE_LINE_THICKNESS)
                                         {
-                                            if(getFieldPercept().getLargestValidPoly(getArtificialHorizon()).isInside(Vector2d(j - ceil((numOfPixels)/2), i)))
-                                            {
-                                                scan_point temp;
-                                                temp.id = point_id++;
-                                                temp.position = Vector2<int>(j - 1 - floor((numOfPixels)/2), i);
-                                                temp.position_start = Vector2<int>(j - 1 - numOfPixels, i);
-                                                temp.position_end = Vector2<int>(j - 1, i);
-                                                temp.weight = whiteRatio;
-                                                temp.thickness = numOfPixels;
-                                                temp.distance = 0.0f;
-                                                temp.valid = true;
-                                                linePoints.push_back(temp);
-                                            }
+                                            scan_point temp;
+                                            temp.id = point_id++;
+                                            temp.position = Vector2<int>(j - 1 - floor((numOfPixels)/2), i);
+                                            temp.position_start = Vector2<int>(j - 1 - numOfPixels, i);
+                                            temp.position_end = Vector2<int>(j - 1, i);
+                                            temp.weight = whiteRatio;
+                                            temp.thickness = numOfPixels;
+                                            temp.distance = 0.0f;
+                                            temp.valid = true;
+                                            linePoints.push_back(temp);
                                         }
                                         step = 0;
                                     }
@@ -144,9 +136,9 @@ void LineDetectorDNT::scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vec
             }
         }
     }
-}
+} // end scanLinesHorizontal
 
-void LineDetectorDNT::scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vector< scan_point > &linePoints, int scanResolution, int scanStep, double qualRatio, int& point_id)
+void LineDetectorDNT::scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vector< scan_point > &linePoints, int scanResolution, int& point_id)
 {
     Pixel pixel;
     ColorClasses::Color thisPixelColor;
@@ -170,12 +162,12 @@ void LineDetectorDNT::scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vecto
                                                        floor((intersection_points[var2-1].y + intersection_points[var2].y) / 2))))
                     {
                         DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_area",
-                                      LINE_PX(ColorClasses::red, (int) i, (int) intersection_points[var2-1].y, (int) i, (int) intersection_points[var2].y);
+                                      LINE_PX(ColorClasses::gray, (int) i, (int) intersection_points[var2-1].y, (int) i, (int) intersection_points[var2].y);
                         );
                         int start = floor(min(intersection_points[var2-1].y, intersection_points[var2].y));
                         int stop = floor(max(intersection_points[var2-1].y, intersection_points[var2].y));
                         int step = 0;
-                        for(int j = start; j < stop; j += scanStep)
+                        for(int j = start; j < stop; j += SCAN_STEP)
                         {
                             pixel = getImage().get(i,j);
                             thisPixelColor = getColorTable64().getColorClass(pixel);
@@ -203,21 +195,18 @@ void LineDetectorDNT::scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vecto
                                     if(j < stop)
                                     {
                                         whiteRatio = (double) numOfWhite / (double) numOfPixels;
-                                        if(whiteRatio > qualRatio)
+                                        if(whiteRatio > QUAL_WHITE_RATIO && numOfPixels <= MAX_POSSIBLE_LINE_THICKNESS)
                                         {
-                                            if(getFieldPercept().getLargestValidPoly(getArtificialHorizon()).isInside(Vector2d(i,j - floor((numOfPixels)/2))))
-                                            {
-                                                scan_point temp;
-                                                temp.id = point_id++;
-                                                temp.position = Vector2<int>(i, j - 1 - floor((numOfPixels)/2));
-                                                temp.position_start = Vector2<int>(i, j - 1 - numOfPixels);
-                                                temp.position_end = Vector2<int>(i, j - 1);
-                                                temp.weight = whiteRatio;
-                                                temp.thickness = numOfPixels;
-                                                temp.distance = 0.0f;
-                                                temp.valid = true;
-                                                linePoints.push_back(temp);
-                                            }
+                                            scan_point temp;
+                                            temp.id = point_id++;
+                                            temp.position = Vector2<int>(i, j - 1 - floor((numOfPixels)/2));
+                                            temp.position_start = Vector2<int>(i, j - 1 - numOfPixels);
+                                            temp.position_end = Vector2<int>(i, j - 1);
+                                            temp.weight = whiteRatio;
+                                            temp.thickness = numOfPixels;
+                                            temp.distance = 0.0f;
+                                            temp.valid = true;
+                                            linePoints.push_back(temp);
                                         }
                                         step = 1;
                                     }
@@ -232,7 +221,7 @@ void LineDetectorDNT::scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vecto
             }
         }
     }
-}
+} // end scanLinesVertical
 
 void LineDetectorDNT::candidate_points(vector< scan_point > scan_points, scan_point start, scan_point previous, vector< scan_point > lineTemp, vector<scan_point> &candidates)
 {

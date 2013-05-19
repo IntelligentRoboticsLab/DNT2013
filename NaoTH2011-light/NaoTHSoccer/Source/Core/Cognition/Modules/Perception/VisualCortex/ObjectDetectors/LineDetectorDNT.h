@@ -24,7 +24,7 @@
 
 #include "Tools/ImageProcessing/ImageDrawings.h"
 #include "Tools/ImageProcessing/BresenhamLineScan.h"
-#include "Tools/ImageProcessing/LineDetectorConstParameters.h"
+#include "Tools/ImageProcessing/LineDetectorDNTConstParameters.h"
 #include "Tools/ImageProcessing/ClusteredLine.h"
 #include "Tools/ImageProcessing/Edgel.h"
 #include "Tools/ImageProcessing/ColoredGrid.h"
@@ -86,9 +86,9 @@ private:
 
   void determineScanResolution(FieldPercept::FieldPoly fieldPoly, int &scanResolution);
 
-  void scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int scanStep, double qualRatio, int &point_id);
+  void scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int &point_id);
 
-  void scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int scanStep, double qualRatio, int& point_id);
+  void scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int& point_id);
 
   void candidate_points(vector< scan_point > scan_points, scan_point start, scan_point previous, vector< scan_point > lineTemp, vector<scan_point> &candidates);
 
