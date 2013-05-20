@@ -44,79 +44,95 @@
 #include "Representations/Modeling/ColorClassificationModel.h"
 
 BEGIN_DECLARE_MODULE(LineDetectorDNT)
-  REQUIRE(Image)
-  REQUIRE(ColorClassificationModel)
-  REQUIRE(CurrentCameraSettings)
-  REQUIRE(CameraMatrix)
-  REQUIRE(ArtificialHorizon)
-  REQUIRE(FieldPercept)
-  REQUIRE(ColoredGrid)
-  REQUIRE(FieldInfo)
-  REQUIRE(ScanLineEdgelPercept)
-  REQUIRE(FrameInfo)
-  REQUIRE(BodyContour)
+REQUIRE(Image)
+REQUIRE(ColorClassificationModel)
+REQUIRE(CurrentCameraSettings)
+REQUIRE(CameraMatrix)
+REQUIRE(ArtificialHorizon)
+REQUIRE(FieldPercept)
+REQUIRE(ColoredGrid)
+REQUIRE(FieldInfo)
+REQUIRE(ScanLineEdgelPercept)
+REQUIRE(FrameInfo)
+REQUIRE(BodyContour)
 
-  PROVIDE(LinePercept)
-  PROVIDE(ObjectPercept)
+PROVIDE(LinePercept)
+PROVIDE(ObjectPercept)
 END_DECLARE_MODULE(LineDetectorDNT)
 
 
 class LineDetectorDNT: private LineDetectorDNTBase
 {
-public:
-  LineDetectorDNT();
-  ~LineDetectorDNT(){};
+                                   public:
+                                   LineDetectorDNT();
+~LineDetectorDNT(){};
 
-  void execute();
+void execute();
 
 private:
-  // item candidate_point represents points to be connected with the producing line,
-  // distance and coordinate.
-  struct scan_point
-  {
-      int id;
-      Vector2<int> position;
-      Vector2<int> position_start;
-      Vector2<int> position_end;
-      double weight;
-      int thickness;
-      double distance;
-      bool valid;
-  };
+// item candidate_point represents points to be connected with the producing line,
+// distance and coordinate.
+struct scan_point
+{
+    int id;
+    Vector2<int> position;
+    Vector2<int> position_start;
+    Vector2<int> position_end;
+    double weight;
+    int thickness;
+    double distance;
+    bool valid;
+    unsigned int type;
+};
 
-  struct line_candidate
-  {
-      vector< scan_point > scan_points;
-      scan_point* start;
-      scan_point* end;
-  };
+struct point_candidate
+{
+    unsigned int pos;
+    double score;
+};
 
-  vector<LinePercept::LineSegmentImage> lineSegments;
+struct line_candidate
+{
+    vector< scan_point > scan_points;
+    scan_point start;
+    scan_point end;
+    double error;
+    double length;
+    bool hasEnd;
+};
 
-  void determineScanResolution(FieldPercept::FieldPoly fieldPoly, int &scanResolution);
+vector<LinePercept::LineSegmentImage> lineSegments;
 
-  void scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int &point_id);
+bool connect_single(vector< scan_point > &scan_points, line_candidate &line, vector< point_candidate > &candidates);
 
-  void scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int& point_id);
+bool connect_complex(vector< scan_point > &scan_points, line_candidate &line, vector< point_candidate > &candidates);
 
-//  void candidate_points(vector< scan_point > scan_points, scan_point start, scan_point previous, vector< scan_point > lineTemp, vector<scan_point> &candidates);
+double length(line_candidate line);
 
-//  void line_extraction(vector< scan_point > scan_points, vector<vector<scan_point> > &extracted_lines);
+double length_start(line_candidate line, Vector2<int> point);
 
-//  void best_candidate(vector<scan_point> candidates, vector<scan_point> line,  scan_point start, scan_point previous, scan_point &best, double &min_error);
+double length_end(line_candidate line, Vector2<int> point);
 
-//  void compute_white_ratio(scan_point point1, scan_point point2, double &ratio);
+void determineScanResolution(FieldPercept::FieldPoly fieldPoly, int &scanResolution);
 
-//  void line_error(vector<scan_point> line, scan_point start, scan_point best_candidate, double &error);
+void scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int &point_id);
 
-//  void delete_point(scan_point element, vector<scan_point> &points);
+void scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int& point_id);
 
-//  void store_line(vector< vector<scan_point> > &lines, vector<scan_point> line);
+void find_candidates(vector< scan_point > scan_points, line_candidate line, vector<point_candidate> &candidates);
 
-  const ColorClassificationModel& getColorTable64() const
-  {
+void line_extraction(vector< scan_point > scan_points, vector< Math::LineSegment > &extracted_lines);
+
+void white_ratio(Vector2<int> point1, Vector2<int> point2, double &ratio);
+
+void explore_candidates(vector< scan_point > &scan_points, line_candidate &line, vector<point_candidate> &candidates, bool &end_b);
+
+void line_error(line_candidate line, scan_point start, scan_point point, double &error);
+
+const ColorClassificationModel& getColorTable64() const
+{
     return getColorClassificationModel();
-  }
+}
 
 };//end class LineDetectorDNT
 
