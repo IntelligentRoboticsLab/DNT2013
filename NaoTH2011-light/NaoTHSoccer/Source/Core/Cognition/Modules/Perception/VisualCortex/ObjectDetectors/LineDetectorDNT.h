@@ -40,6 +40,7 @@
 #include "Representations/Perception/LinePercept.h"
 #include "Representations/Perception/ObjectPercept.h"
 #include "Representations/Perception/ScanLineEdgelPercept.h"
+#include "Representations/Perception/BodyContour.h"
 #include "Representations/Modeling/ColorClassificationModel.h"
 
 BEGIN_DECLARE_MODULE(LineDetectorDNT)
@@ -53,6 +54,7 @@ BEGIN_DECLARE_MODULE(LineDetectorDNT)
   REQUIRE(FieldInfo)
   REQUIRE(ScanLineEdgelPercept)
   REQUIRE(FrameInfo)
+  REQUIRE(BodyContour)
 
   PROVIDE(LinePercept)
   PROVIDE(ObjectPercept)
@@ -97,19 +99,19 @@ private:
 
   void scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vector< scan_point >& linePoints, int scanResolution, int& point_id);
 
-  void candidate_points(vector< scan_point > scan_points, scan_point start, scan_point previous, vector< scan_point > lineTemp, vector<scan_point> &candidates);
+//  void candidate_points(vector< scan_point > scan_points, scan_point start, scan_point previous, vector< scan_point > lineTemp, vector<scan_point> &candidates);
 
-  void line_extraction(vector< scan_point > scan_points, vector<vector<scan_point> > &extracted_lines);
+//  void line_extraction(vector< scan_point > scan_points, vector<vector<scan_point> > &extracted_lines);
 
-  void best_candidate(vector<scan_point> candidates, vector<scan_point> line,  scan_point start, scan_point previous, scan_point &best, double &min_error);
+//  void best_candidate(vector<scan_point> candidates, vector<scan_point> line,  scan_point start, scan_point previous, scan_point &best, double &min_error);
 
-  void compute_white_ratio(scan_point point1, scan_point point2, double &ratio);
+//  void compute_white_ratio(scan_point point1, scan_point point2, double &ratio);
 
-  void line_error(vector<scan_point> line, scan_point start, scan_point best_candidate, double &error);
+//  void line_error(vector<scan_point> line, scan_point start, scan_point best_candidate, double &error);
 
-  void delete_point(scan_point element, vector<scan_point> &points);
+//  void delete_point(scan_point element, vector<scan_point> &points);
 
-  void store_line(vector< vector<scan_point> > &lines, vector<scan_point> line);
+//  void store_line(vector< vector<scan_point> > &lines, vector<scan_point> line);
 
   const ColorClassificationModel& getColorTable64() const
   {
