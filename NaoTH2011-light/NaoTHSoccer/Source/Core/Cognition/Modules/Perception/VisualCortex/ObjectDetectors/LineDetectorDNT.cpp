@@ -30,7 +30,7 @@ void LineDetectorDNT::execute()
     DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_points",
                   for(int i = 0; i < (int) scanPoints.size(); i ++){
         CIRCLE_PX(ColorClasses::blue, (int) scanPoints[i].position.x , (int) scanPoints[i].position.y, (int) 1);
-        LINE_PX(ColorClasses::green, (int) scanPoints[i].position_start.x, (int) scanPoints[i].position_start.y, (int) scanPoints[i].position_end.x, (int) scanPoints[i].position_end.y);
+        LINE_PX(ColorClasses::green, (int) scanPoints[i].position_begin.x, (int) scanPoints[i].position_begin.y, (int) scanPoints[i].position_end.x, (int) scanPoints[i].position_end.y);
     }
     );
 
@@ -38,6 +38,17 @@ void LineDetectorDNT::execute()
     STOPWATCH_START("LineDetectorDNT~Extraction");
     line_extraction(scanPoints, extracted_lines);
     STOPWATCH_STOP("LineDetectorDNT~Extraction");
+
+
+    DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:extracted_lines",
+    for(unsigned int i = 0; i < extracted_lines.size(); i ++)
+    {
+        LINE_PX(ColorClasses::red, (int) extracted_lines[i].begin().x,
+                (int) extracted_lines[i].begin().y,
+                (int) extracted_lines[i].end().x,
+                (int) extracted_lines[i].end().y);
+    }
+    );
 
 }//end execute
 
@@ -81,7 +92,7 @@ void LineDetectorDNT::scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vec
                                 continue;
                             }
                             DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_area",
-                                          CIRCLE_PX(ColorClasses::gray, (int) j , (int) i, (int) 1);
+                                          POINT_PX(ColorClasses::gray, (int) j , (int) i);
                                     );
                             pixel = getImage().get(j,i);
                             thisPixelColor = getColorTable64().getColorClass(pixel);
@@ -100,6 +111,10 @@ void LineDetectorDNT::scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vec
                                         numOfWhite++;
                                     do{
                                         pixel = getImage().get(j++,i);
+                                        DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_area",
+                                                      POINT_PX(ColorClasses::gray, (int) j , (int) i);
+
+                                                );
                                         thisPixelColor = getColorTable64().getColorClass(pixel);
                                         if(thisPixelColor == ColorClasses::white)
                                             numOfWhite ++;
@@ -114,7 +129,7 @@ void LineDetectorDNT::scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vec
                                             scan_point temp;
                                             temp.id = point_id++;
                                             temp.position = Vector2<int>(j - 1 - floor((numOfPixels)/2), i);
-                                            temp.position_start = Vector2<int>(j - 1 - numOfPixels, i);
+                                            temp.position_begin = Vector2<int>(j - 1 - numOfPixels, i);
                                             temp.position_end = Vector2<int>(j - 1, i);
                                             temp.weight = whiteRatio;
                                             temp.thickness = numOfPixels;
@@ -172,7 +187,7 @@ void LineDetectorDNT::scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vecto
                                 continue;
                             }
                             DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_area",
-                                          CIRCLE_PX(ColorClasses::gray, (int) i , (int) j, (int) 1);
+                                          POINT_PX(ColorClasses::gray, (int) i , (int) j);
                                     );
                             pixel = getImage().get(i,j);
                             thisPixelColor = getColorTable64().getColorClass(pixel);
@@ -191,6 +206,8 @@ void LineDetectorDNT::scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vecto
                                         numOfWhite++;
                                     do{
                                         pixel = getImage().get(i,j++);
+                                        DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_area",
+                                                      POINT_PX(ColorClasses::gray, (int) i , (int) j););
                                         thisPixelColor = getColorTable64().getColorClass(pixel);
                                         if(thisPixelColor == ColorClasses::white)
                                             numOfWhite ++;
@@ -205,7 +222,7 @@ void LineDetectorDNT::scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vecto
                                             scan_point temp;
                                             temp.id = point_id++;
                                             temp.position = Vector2<int>(i, j - 1 - floor((numOfPixels)/2));
-                                            temp.position_start = Vector2<int>(i, j - 1 - numOfPixels);
+                                            temp.position_begin = Vector2<int>(i, j - 1 - numOfPixels);
                                             temp.position_end = Vector2<int>(i, j - 1);
                                             temp.weight = whiteRatio;
                                             temp.thickness = numOfPixels;
@@ -307,12 +324,12 @@ void LineDetectorDNT::line_error(line_candidate line, scan_point start, scan_poi
 
 double LineDetectorDNT::length(line_candidate line)
 {
-    return line.start.position.dis(line.end.position);
+    return line.begin.position.dis(line.end.position);
 }
 
 double LineDetectorDNT::length_start(line_candidate line, Vector2<int> point)
 {
-    return line.start.position.dis(point);
+    return line.begin.position.dis(point);
 }
 
 double LineDetectorDNT::length_end(line_candidate line, Vector2<int> point)
@@ -325,12 +342,12 @@ void LineDetectorDNT::find_candidates(vector< scan_point > scan_points, line_can
     for (unsigned int var = 0; var < scan_points.size(); var++)
     {
         point_candidate tmp;
-        double temp_sim_value = 0.5 * line.start.position.dis(scan_points[var].position) + abs(line.start.thickness - scan_points[var].thickness);
+        double temp_sim_value = 0.5 * line.begin.position.dis(scan_points[var].position) + abs(line.begin.thickness - scan_points[var].thickness);
         if(line.hasEnd)
         {
             if(length_start(line, scan_points[var].position) < length_end(line, scan_points[var].position))
             {
-                temp_sim_value = 0.5 * line.start.position.dis(scan_points[var].position) + abs(line.start.thickness - scan_points[var].thickness);
+                temp_sim_value = 0.5 * line.begin.position.dis(scan_points[var].position) + abs(line.begin.thickness - scan_points[var].thickness);
             }
             else
             {
@@ -384,7 +401,7 @@ bool LineDetectorDNT::connect_single(vector< scan_point > &scan_points, line_can
         scan_point point = scan_points[tmp.pos];
 
         //score
-        white_ratio(line.start.position, point.position, white);
+        white_ratio(line.begin.position, point.position, white);
         error = (1.01 - white) * tmp.score;
 
         //take the minimum
@@ -437,14 +454,14 @@ bool LineDetectorDNT::connect_complex(vector< scan_point > &scan_points, line_ca
         if(line_start_len > line_end_len)
         {
             start_tmp = true;
-            line_error(line, line.start, point, l_error);
+            line_error(line, line.begin, point, l_error);
             white_ratio(line.end.position, point.position, white);
             error += (1.5 - white) * l_error;
         }
         else
         {
             line_error(line, line.end, point, l_error);
-            white_ratio(line.start.position, point.position, white);
+            white_ratio(line.begin.position, point.position, white);
             error += (1.5 - white) * l_error;
         }
         //keep the best
@@ -460,7 +477,7 @@ bool LineDetectorDNT::connect_complex(vector< scan_point > &scan_points, line_ca
     if(m_error < CONN_ERROR_COMPLEX)
     {
         line.scan_points.push_back(connection);
-        line.start = (start) ? line.start : connection;
+        line.begin = (start) ? line.begin : connection;
         line.end = (!start) ? line.end : connection;
         scan_points.erase(scan_points.begin() + index.pos);
         candidates.erase(candidates.begin() + index_can);
@@ -494,6 +511,14 @@ void LineDetectorDNT::explore_candidates(vector< scan_point > &scan_points, line
     return;
 }
 
+void LineDetectorDNT::store_line(line_candidate line, vector< Math::LineSegment > &extracted_lines)
+{
+    if(line.hasEnd)
+    {
+        Math::LineSegment tmp = Math::LineSegment(line.begin.position, line.end.position);
+        extracted_lines.push_back(tmp);
+    }
+}
 
 void LineDetectorDNT::line_extraction(vector< scan_point > scan_points, vector< Math::LineSegment > &extracted_lines)
 {
@@ -502,7 +527,7 @@ void LineDetectorDNT::line_extraction(vector< scan_point > scan_points, vector< 
         bool end = false;
         line_candidate lineTemp;
         lineTemp.scan_points.push_back(scan_points[0]);
-        lineTemp.start = scan_points[0];
+        lineTemp.begin = scan_points[0];
         lineTemp.hasEnd = false;
         scan_points.erase(scan_points.begin());
         do
@@ -512,15 +537,7 @@ void LineDetectorDNT::line_extraction(vector< scan_point > scan_points, vector< 
             explore_candidates(scan_points, lineTemp, candidates, end);
         }
         while(!end);
+        store_line(lineTemp, extracted_lines);
+
     }
 } //end line_extraction
-
-
-//            DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:extracted_lines",
-//                      CIRCLE_PX(ColorClasses::red, (int) lineTemp.start.position.x , (int) lineTemp.start.position.y, (int) 2);
-//            for(int i = 0; i < (int) candidates.size(); i ++)
-//            {
-//                CIRCLE_PX(ColorClasses::blue, (int) scan_points[candidates[i].pos].position.x , (int) scan_points[candidates[i].pos].position.y, (int) 2);
-//            }
-
-//            );

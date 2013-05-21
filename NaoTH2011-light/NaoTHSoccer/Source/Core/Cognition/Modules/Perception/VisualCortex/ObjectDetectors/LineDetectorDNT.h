@@ -76,7 +76,7 @@ struct scan_point
 {
     int id;
     Vector2<int> position;
-    Vector2<int> position_start;
+    Vector2<int> position_begin;
     Vector2<int> position_end;
     double weight;
     int thickness;
@@ -94,7 +94,7 @@ struct point_candidate
 struct line_candidate
 {
     vector< scan_point > scan_points;
-    scan_point start;
+    scan_point begin;
     scan_point end;
     double error;
     double length;
@@ -128,6 +128,8 @@ void white_ratio(Vector2<int> point1, Vector2<int> point2, double &ratio);
 void explore_candidates(vector< scan_point > &scan_points, line_candidate &line, vector<point_candidate> &candidates, bool &end_b);
 
 void line_error(line_candidate line, scan_point start, scan_point point, double &error);
+
+void store_line(line_candidate line, vector< Math::LineSegment > &extracted_lines);
 
 const ColorClassificationModel& getColorTable64() const
 {
