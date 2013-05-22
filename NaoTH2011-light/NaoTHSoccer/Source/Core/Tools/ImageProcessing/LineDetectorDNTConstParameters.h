@@ -8,13 +8,13 @@
 #ifndef __LineDetectorDNTConstParameters_H_
 #define __LineDetectorDNTConstParameters_H_
 
-#define MAX_LINE_THICKNESS 50
-#define MIN_LINE_THICKNESS 3
-#define SCAN_STEP 2
+#define MAX_LINE_THICKNESS 80
+#define MIN_LINE_THICKNESS 4
+#define SCAN_STEP MIN_LINE_THICKNESS - 1
 #define MAX_SCAN_RESOLUTION 25
-#define MIN_SCAN_RESOLUTION 10
+#define MIN_SCAN_RESOLUTION 15
 #define MAX_AREA 89600.0
-#define QUAL_WHITE_RATIO 0.60
+#define QUAL_WHITE_RATIO 0.55
 #define CONN_WHITE_RATIO 0.60
 #define BEST_CANDIDATE_BUFFER 4
 #define CONN_ERROR_SINGLE 3.00

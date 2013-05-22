@@ -106,22 +106,41 @@ void LineDetectorDNT::scanLinesHorizontal(FieldPercept::FieldPoly fieldPoly, vec
                                 if(thisPixelColor == ColorClasses::white || thisPixelColor == ColorClasses::none)
                                 {
                                     double whiteRatio = 0.00;
-                                    int numOfPixels = 1, numOfWhite = 0;
-                                    if(thisPixelColor == ColorClasses::white)
-                                        numOfWhite++;
-                                    do{
-                                        pixel = getImage().get(j++,i);
-                                        DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_area",
-                                                      POINT_PX(ColorClasses::gray, (int) j , (int) i);
+                                    int numOfPixels = 0, numOfWhite = 0;
 
-                                                );
+                                    // previous possibly missing pixel
+                                    for(int temp= 0; temp < SCAN_STEP; temp ++){
+                                        pixel = getImage().get(j - temp,i);
+                                        thisPixelColor = getColorTable64().getColorClass(pixel);
+                                        if(thisPixelColor == ColorClasses::green)
+                                            break;
+                                        else if(thisPixelColor == ColorClasses::white)
+                                            numOfWhite++;
+                                        numOfPixels++;
+                                    }
+                                    bool valid = true;
+                                    do{
+                                        if(getBodyContour().isOccupied(Vector2<int>(j, i)))
+                                        {
+                                            step = 0;
+                                            valid = false;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_area",
+                                                          POINT_PX(ColorClasses::gray, (int) j , (int) i);
+
+                                                    );
+                                        }
+                                        pixel = getImage().get(j++,i);
                                         thisPixelColor = getColorTable64().getColorClass(pixel);
                                         if(thisPixelColor == ColorClasses::white)
                                             numOfWhite ++;
                                         numOfPixels ++;
                                     }
                                     while(thisPixelColor != ColorClasses::green && j < stop);
-                                    if(j < stop)
+                                    if(j < stop && valid)
                                     {
                                         whiteRatio = (double) numOfWhite / (double) numOfPixels;
                                         if(whiteRatio > QUAL_WHITE_RATIO && numOfPixels <= MAX_LINE_THICKNESS)
@@ -201,20 +220,41 @@ void LineDetectorDNT::scanLinesVertical(FieldPercept::FieldPoly fieldPoly, vecto
                                 if(thisPixelColor == ColorClasses::white || thisPixelColor == ColorClasses::none)
                                 {
                                     double whiteRatio = 0.00;
-                                    int numOfPixels = 1, numOfWhite = 0;
-                                    if(thisPixelColor == ColorClasses::white)
-                                        numOfWhite++;
+                                    int numOfPixels = 0, numOfWhite = 0;
+
+                                    // previous possibly missing pixel
+                                    for(int temp= 0; temp < SCAN_STEP; temp ++){
+                                        pixel = getImage().get(i, j - temp);
+                                        thisPixelColor = getColorTable64().getColorClass(pixel);
+                                        if(thisPixelColor == ColorClasses::green)
+                                            break;
+                                        else if(thisPixelColor == ColorClasses::white)
+                                            numOfWhite++;
+                                        numOfPixels++;
+                                    }
+                                    bool valid = true;
                                     do{
+                                        if(getBodyContour().isOccupied(Vector2<int>(i, j)))
+                                        {
+                                            step = 0;
+                                            valid = false;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_area",
+                                                          POINT_PX(ColorClasses::gray, (int) i , (int) j);
+
+                                                    );
+                                        }
                                         pixel = getImage().get(i,j++);
-                                        DEBUG_REQUEST("ImageProcessor:LineDetectorDNT:scan_area",
-                                                      POINT_PX(ColorClasses::gray, (int) i , (int) j););
                                         thisPixelColor = getColorTable64().getColorClass(pixel);
                                         if(thisPixelColor == ColorClasses::white)
                                             numOfWhite ++;
                                         numOfPixels ++;
                                     }
                                     while(thisPixelColor != ColorClasses::green && j < stop);
-                                    if(j < stop)
+                                    if(j < stop && valid)
                                     {
                                         whiteRatio = (double) numOfWhite / (double) numOfPixels;
                                         if(whiteRatio > QUAL_WHITE_RATIO && numOfPixels <= MAX_LINE_THICKNESS)
