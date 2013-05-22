@@ -17,7 +17,7 @@
 #define QUAL_WHITE_RATIO 0.55
 #define CONN_WHITE_RATIO 0.60
 #define BEST_CANDIDATE_BUFFER 4
-#define CONN_ERROR_SINGLE 3.00
-#define CONN_ERROR_COMPLEX 10.00
+#define CONN_ERROR_SINGLE 2000000.0
+#define CONN_ERROR_COMPLEX 3.00
 
 #endif //__LineDetectorDNTConstParameters_H_

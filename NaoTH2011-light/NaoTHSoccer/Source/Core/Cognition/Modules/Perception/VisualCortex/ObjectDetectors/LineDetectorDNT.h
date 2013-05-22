@@ -87,7 +87,7 @@ struct scan_point
 
 struct point_candidate
 {
-    unsigned int pos;
+    int pos;
     double score;
 };
 
