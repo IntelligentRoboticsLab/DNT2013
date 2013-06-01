@@ -94,6 +94,8 @@ include "Options/Soccer/Goalie/critical_ball.xabsl";
 include "Options/Soccer/Goalie/spl_robust_goalie.xabsl";
 include "Options/Soccer/Goalie/spl_robust_inside_goalie.xabsl";
 include "Options/Soccer/Goalie/spl_robust_outside_goalie.xabsl";
+include "Options/Soccer/Goalie/dnt_static_goalie.xabsl";
+
 
 // SPL strategy
 include "Options/Soccer/Strategy/SPL_Strategy/decide_role.xabsl";
