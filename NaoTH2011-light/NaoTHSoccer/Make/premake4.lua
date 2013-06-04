@@ -127,32 +127,32 @@ solution "NaoTHSoccer"
 	  kind "ConsoleApp"
 	  links { "NaoTHSoccer", "NaoTH-Commons" }
   else
---    dofile (FRAMEWORK_PATH .. "/Platforms/Make/SimSpark.lua")
---	  kind "ConsoleApp"
---	  links { "NaoTHSoccer", "NaoTH-Commons" }
---	dofile (FRAMEWORK_PATH .. "/Platforms/Make/SPL_SimSpark.lua")
---	  kind "ConsoleApp"
---	  links { "NaoTHSoccer", "NaoTH-Commons" }
+      dofile (FRAMEWORK_PATH .. "/Platforms/Make/SimSpark.lua")
+  	  kind "ConsoleApp"
+  	  links { "NaoTHSoccer", "NaoTH-Commons" }
+  	dofile (FRAMEWORK_PATH .. "/Platforms/Make/SPL_SimSpark.lua")
+  	  kind "ConsoleApp"
+  	  links { "NaoTHSoccer", "NaoTH-Commons" }
 	  --debugargs { "--sync" }
---    dofile (FRAMEWORK_PATH .. "/Platforms/Make/Webots.lua")
---	  kind "ConsoleApp"
---	  links { "NaoTHSoccer", "NaoTH-Commons" }
+      dofile (FRAMEWORK_PATH .. "/Platforms/Make/Webots.lua")
+  	  kind "ConsoleApp"
+  	  links { "NaoTHSoccer", "NaoTH-Commons" }
     dofile (FRAMEWORK_PATH .. "/Platforms/Make/LogSimulator.lua")
 	  kind "ConsoleApp"
 	  links { "NaoTHSoccer", "NaoTH-Commons" }
---	dofile (FRAMEWORK_PATH .. "/Platforms/Make/OpenCVImageLoader.lua")
---	  kind "ConsoleApp"
---	  links { "NaoTHSoccer", "NaoTH-Commons" }
---	dofile (FRAMEWORK_PATH .. "/Platforms/Make/OpenCVWebCam.lua")
---	  kind "ConsoleApp"
---	  links { "NaoTHSoccer", "NaoTH-Commons" }
+  	dofile (FRAMEWORK_PATH .. "/Platforms/Make/OpenCVImageLoader.lua")
+  	  kind "ConsoleApp"
+  	  links { "NaoTHSoccer", "NaoTH-Commons" }
+  	dofile (FRAMEWORK_PATH .. "/Platforms/Make/OpenCVWebCam.lua")
+  	  kind "ConsoleApp"
+  	  links { "NaoTHSoccer", "NaoTH-Commons" }
   end
   
   
   -- tests
---  if(_OPTIONS["platform"] ~= "Nao") then
---	dofile (FRAMEWORK_PATH .. "/NaoTH-Commons/Make/Tests.lua")
---	dofile "Tests.lua"
---  end
+  if(_OPTIONS["platform"] ~= "Nao") then
+  	dofile (FRAMEWORK_PATH .. "/NaoTH-Commons/Make/Tests.lua")
+  	dofile "Tests.lua"
+  end
   
   
