@@ -36,8 +36,8 @@ ImageProcessor::ImageProcessor()
   theScanLineEdgelDetector = registerModule<ScanLineEdgelDetector>("ScanLineEdgelDetector");
   theScanLineEdgelDetector->setEnabled(true);
 
-//  theScanLineEdgelDetectorDifferential = registerModule<ScanLineEdgelDetectorDifferential>("ScanLineEdgelDetectorDifferential");
-//  theScanLineEdgelDetectorDifferential->setEnabled(false);
+  theScanLineEdgelDetectorDifferential = registerModule<ScanLineEdgelDetectorDifferential>("ScanLineEdgelDetectorDifferential");
+  theScanLineEdgelDetectorDifferential->setEnabled(false);
 
   theFieldDetector = registerModule<FieldDetector>("FieldDetector");
   theFieldDetector->setEnabled(true);
@@ -48,11 +48,18 @@ ImageProcessor::ImageProcessor()
   theRobotDetector = registerModule<RobotDetector>("RobotDetector");
   theRobotDetector->setEnabled(true);
 
-//  theLineDetector = registerModule<LineDetector>("LineDetector");
-//  theLineDetector->setEnabled(true);
+  theLineDetector = registerModule<LineDetector>("LineDetector");
+  theLineDetector->setEnabled(true);
 
   theGoalDetector = registerModule<GoalDetector>("GoalDetector");
   theGoalDetector->setEnabled(true);
+
+  // UNDER DEVELOPMENT...
+
+  theLineDetectorDNT = registerModule<LineDetectorDNT>("LineDetectorDNT");
+  theLineDetectorDNT->setEnabled(false);
+
+  // ...END OF UNDER DEVELOPMENT
 
 }//end constructor
 
@@ -64,7 +71,7 @@ void ImageProcessor::execute()
   getBallPercept().reset();
   getGoalPercept().reset();
   getScanLineEdgelPercept().reset();
-//  getLinePercept().reset();
+  getLinePercept().reset();
   getPlayersPercept().reset();
 
   GT_TRACE("executing HistogramFieldDetector");
@@ -92,10 +99,10 @@ void ImageProcessor::execute()
   theScanLineEdgelDetector->execute();
   STOPWATCH_STOP("ScanLineEdgelDetector");
 
-//  GT_TRACE("executing ScanLineEdgelDetectorDifferential");
-//  STOPWATCH_START("ScanLineEdgelDetectorDifferential");
-//  theScanLineEdgelDetectorDifferential->execute();
-//  STOPWATCH_STOP("ScanLineEdgelDetectorDifferential");
+  GT_TRACE("executing ScanLineEdgelDetectorDifferential");
+  STOPWATCH_START("ScanLineEdgelDetectorDifferential");
+  theScanLineEdgelDetectorDifferential->execute();
+  STOPWATCH_STOP("ScanLineEdgelDetectorDifferential");
 
   GT_TRACE("executing FieldDetector");
   STOPWATCH_START("FieldDetector");
@@ -107,10 +114,19 @@ void ImageProcessor::execute()
   theBallDetector->execute();
   STOPWATCH_STOP("BallDetector");
 
-//  GT_TRACE("executing LineDetector");
-//  STOPWATCH_START("LineDetector");
-//  theLineDetector->execute();
-//  STOPWATCH_STOP("LineDetector");
+  GT_TRACE("executing LineDetector");
+  STOPWATCH_START("LineDetector");
+  theLineDetector->execute();
+  STOPWATCH_STOP("LineDetector");
+
+  // UNDER DEVELOPMENT...
+
+  GT_TRACE("executing LineDetectorDNT");
+  STOPWATCH_START("LineDetectorDNT");
+  theLineDetectorDNT->execute();
+  STOPWATCH_STOP("LineDetectorDNT");
+
+  // ...END OF UNDER DEVELOPMENT
 
   GT_TRACE("executing rest of ImageProcessor::execute()");
 

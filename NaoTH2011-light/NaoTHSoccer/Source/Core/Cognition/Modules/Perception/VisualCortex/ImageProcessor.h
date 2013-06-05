@@ -28,6 +28,8 @@
 #include "ObjectDetectors/RobotDetector.h"
 #include "ObjectDetectors/GoalDetector.h"
 #include "../BodyContourProvider/BodyContourProvider.h"
+// evolution
+#include "ObjectDetectors/LineDetectorDNT.h"
 
 // Representations
 #include <Representations/Infrastructure/FrameInfo.h>
@@ -56,7 +58,7 @@ BEGIN_DECLARE_MODULE(ImageProcessor)
 
   PROVIDE(BallPercept)
   PROVIDE(PlayersPercept)
-//  PROVIDE(LinePercept)
+  PROVIDE(LinePercept)
   PROVIDE(GoalPercept)
   PROVIDE(ScanLineEdgelPercept)
 END_DECLARE_MODULE(ImageProcessor)
@@ -79,8 +81,12 @@ private:
   ModuleCreator<BallDetector>* theBallDetector;
   ModuleCreator<RobotDetector>* theRobotDetector;
   
-//  ModuleCreator<LineDetector>* theLineDetector;
+  ModuleCreator<LineDetector>* theLineDetector;
   ModuleCreator<GoalDetector>* theGoalDetector;
+
+  // UNDER DEVELOPMENT...
+  ModuleCreator<LineDetectorDNT>* theLineDetectorDNT;
+  // ...END OF UNDER DEVELOPMENT
 
   const ColorClassificationModel& getColorTable64() const
   {
