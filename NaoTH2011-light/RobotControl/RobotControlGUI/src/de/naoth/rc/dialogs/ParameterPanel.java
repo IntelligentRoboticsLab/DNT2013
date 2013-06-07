@@ -35,7 +35,7 @@ public class ParameterPanel extends AbstractDialog
   public ParameterPanel()
   {
     initComponents();
-	
+
     jTextArea.addKeyListener(new KeyAdapter()
     {
 
@@ -46,7 +46,7 @@ public class ParameterPanel extends AbstractDialog
         if (key == KeyEvent.VK_ENTER)
         {
           sendParameters();
-          
+
           int k = jTextArea.getCaretPosition();
           if(k > 0)
             jTextArea.setCaretPosition(k-1);
@@ -180,10 +180,10 @@ private void sendParameters()
       }
     }//end for
     sendCommand(cmd);
-    
+
     // update everything
     //listParameters();
-    
+
     // this is better, but less robust
     getParameterList();
   }
@@ -200,7 +200,7 @@ private void cbParameterIdActionPerformed(java.awt.event.ActionEvent evt)//GEN-F
 
 private void jToggleButtonListActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jToggleButtonListActionPerformed
 {//GEN-HEADEREND:event_jToggleButtonListActionPerformed
-  listParameters();
+    listParameters();
 }//GEN-LAST:event_jToggleButtonListActionPerformed
 
 private void listParameters()
@@ -255,19 +255,19 @@ private void listParameters()
         String selectedList = null;
         if(cbParameterId.getSelectedItem() != null)
             selectedList = cbParameterId.getSelectedItem().toString();
-        
+
         cbParameterId.removeAllItems();
-        
+
         String[] parameterLists = strResult.split("\n");
         for (String parameterList : parameterLists)
         {
           cbParameterId.addItem(parameterList);
         }
-        
+
         // try to set back the selection
         if(selectedList != null)
             cbParameterId.setSelectedItem(selectedList);
-        
+
         jToggleButtonList.setSelected(false);
       }
       else if (originalCommand.getName().compareTo("ParameterList:"+cbParameterId.getSelectedItem().toString() + ":get") == 0)

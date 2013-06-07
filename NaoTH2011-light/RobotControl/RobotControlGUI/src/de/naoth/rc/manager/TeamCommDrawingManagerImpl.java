@@ -32,7 +32,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
  *
  * @author Heinrich Mellmann
  */
-@PluginImplementation
+    @PluginImplementation
 public class TeamCommDrawingManagerImpl extends AbstractManager<DrawingsContainer>
         implements TeamCommDrawingManager
 {
