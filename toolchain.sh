@@ -1,3 +1,4 @@
+sudo apt-get install cmake build-essential zlib1g-dev
 wget http://www2.informatik.hu-berlin.de/~naoth/ressources/toolchains/NaoTHToolChain_Ubuntu64_453.tar.xz
 cd NaoTH2011-light
 tar -xvf ../NaoTHToolChain_Ubuntu64_453.tar.xz
