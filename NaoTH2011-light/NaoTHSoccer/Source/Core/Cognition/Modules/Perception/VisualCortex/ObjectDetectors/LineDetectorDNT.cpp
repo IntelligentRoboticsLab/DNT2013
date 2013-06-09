@@ -432,8 +432,8 @@ bool LineDetectorDNT::connect_single(vector< scan_point > &scan_points, line_can
     double m_error = DBL_MAX;
     double white;
     double error;
-    point_candidate index;
-    int index_can;
+    point_candidate* index = NULL;
+    int index_can = 0;
     for(unsigned int i = 0; i < candidates.size(); i++)
     {
         //candidate point
@@ -448,7 +448,7 @@ bool LineDetectorDNT::connect_single(vector< scan_point > &scan_points, line_can
         if(error < m_error){
             m_error = error;
             connection = point;
-            index = tmp;
+            index = &tmp;
         }
     }
     // point connected
@@ -457,7 +457,7 @@ bool LineDetectorDNT::connect_single(vector< scan_point > &scan_points, line_can
         line.scan_points.push_back(connection);
         line.end = connection;
         line.hasEnd = true;
-        scan_points.erase(scan_points.begin() + index.pos);
+        scan_points.erase(scan_points.begin() + index->pos);
         candidates.erase(candidates.begin() + index_can);
         return true;
     }
@@ -470,8 +470,8 @@ bool LineDetectorDNT::connect_complex(vector< scan_point > &scan_points, line_ca
     double m_error = DBL_MAX;
     double white;
     double error;
-    point_candidate index;
-    int index_can;
+    point_candidate* index = NULL;
+    int index_can = 0;
     bool start = true;
     for(unsigned int i = 0; i < candidates.size(); i++)
     {
@@ -511,7 +511,7 @@ bool LineDetectorDNT::connect_complex(vector< scan_point > &scan_points, line_ca
             m_error = error;
             connection = point;
             index_can = i;
-            index = tmp;
+            index = &tmp;
         }
     }
     if(m_error < CONN_ERROR_COMPLEX)
@@ -519,7 +519,7 @@ bool LineDetectorDNT::connect_complex(vector< scan_point > &scan_points, line_ca
         line.scan_points.push_back(connection);
         line.begin = (start) ? line.begin : connection;
         line.end = (!start) ? line.end : connection;
-        scan_points.erase(scan_points.begin() + index.pos);
+        scan_points.erase(scan_points.begin() + index->pos);
         candidates.erase(candidates.begin() + index_can);
         return true;
     }
