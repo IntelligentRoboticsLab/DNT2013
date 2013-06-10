@@ -25,6 +25,5 @@ public interface CommandSender
    * Needed when sending a command repetitively to the robot.
    * @return The command string that should be used.
    */
-  public Command getCurrentCommand();
-  
+  public Command getCurrentCommand(); 
 }
