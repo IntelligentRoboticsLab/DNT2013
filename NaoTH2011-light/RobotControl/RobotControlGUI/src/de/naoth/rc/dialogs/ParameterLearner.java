@@ -52,14 +52,10 @@ public class ParameterLearner extends AbstractDialog implements CommandSender {
     return this;
   }
 
-
-private void saveWalkingParameters() {
-  if (parent.checkConnected())
-  {
-    Command cmd = new Command("ParameterList:IKParameters:set");
-
-    String text = this.jTextAreaWalkingParams.getText();
-
+private static Command parseTextArea(String cmdName, String text)
+{
+    Command cmd = new Command(cmdName);
+    
     text = text.replaceAll("( |\t)+", "");
     String[] lines = text.split("(\n)+");
     for (String l : lines)
@@ -77,12 +73,16 @@ private void saveWalkingParameters() {
 
         cmd.addArg(key, value);
       }
-    }//end for
+    } // end for
+    return cmd;
+} // end parseTextArea
+  
+private void saveWalkingParameters() {
+  if (parent.checkConnected())
+  {
+    Command cmd = parseTextArea("ParameterList:IKParameters:set", 
+                                this.jTextAreaWalkingParams.getText());
     sendCommand(cmd);
-
-    // update everything
-    //listParameters();
-    // this is better, but less robust
     getWalkingParameterList();
     // stop learning when walking parameters are saved , for now
     // TODO save somewhere externally, or under some specific name
@@ -111,28 +111,8 @@ private void sendLearningParameters()
 {
   if (parent.checkConnected())
   {
-    Command cmd = new Command("ParameterList:" + cbLearningMethod.getSelectedItem().toString() + ":set");
-
-    String text = this.jTextAreaWalkingParams.getText();
-
-    text = text.replaceAll("( |\t)+", "");
-    String[] lines = text.split("(\n)+");
-    for (String l : lines)
-    {
-      String[] splitted = l.split("=");
-      if (splitted.length == 2)
-      {
-        String key = splitted[0].trim();
-        String value = splitted[1].trim();
-        // remove the last ;
-        if (value.charAt(value.length() - 1) == ';')
-        {
-          value = value.substring(0, value.length() - 1);
-        }
-
-        cmd.addArg(key, value);
-      }
-    }//end for
+    Command cmd = parseTextArea("ParameterList:" + cbLearningMethod.getSelectedItem().toString() + ":set",
+            this.jTextAreaWalkingParams.getText());
     sendCommand(cmd);
     getLearningParameterList();
   }
@@ -343,8 +323,7 @@ private void sendCommand(Command command)
     }//GEN-LAST:event_jButtonSaveMouseClicked
 
     private void jToggleButtonReceiveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButtonReceiveMouseClicked
-        // TODO Keep receiving walking params
-        
+        // TODO Keep receiving walking params  
     }//GEN-LAST:event_jToggleButtonReceiveMouseClicked
 
     private void jButtonGetLPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonGetLPMouseClicked
@@ -364,7 +343,6 @@ private void sendCommand(Command command)
         }
     }//GEN-LAST:event_jToggleButtonLearnActionPerformed
 
-    
     /**
      * @param args the command line arguments
      */
