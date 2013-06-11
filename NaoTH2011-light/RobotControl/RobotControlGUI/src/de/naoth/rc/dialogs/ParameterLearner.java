@@ -111,7 +111,7 @@ private void sendLearningParameters()
 {
   if (parent.checkConnected())
   {
-    Command cmd = parseTextArea("ParameterList:" + cbLearningMethod.getSelectedItem().toString() + ":set",
+    Command cmd = parseTextArea("ParameterList:IKOptimizationParameters:set",
             this.jTextAreaWalkingParams.getText());
     sendCommand(cmd);
     getLearningParameterList();
