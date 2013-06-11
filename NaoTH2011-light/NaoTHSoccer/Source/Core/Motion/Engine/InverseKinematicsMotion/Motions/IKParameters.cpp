@@ -16,7 +16,7 @@ IKParameters::IKParameters()
   PARAMETER_REGISTER(hipOffsetX) = 10;
   PARAMETER_REGISTER(footOffsetY) = 0;
   
-  // stand parameter
+  // stand parameterPARAMETER_REGISTER
   PARAMETER_REGISTER(stand.speed) = 0.04;
   PARAMETER_REGISTER(stand.enableStabilization) = false;
   

@@ -27,7 +27,7 @@ SimpleMotionBehaviorControl::SimpleMotionBehaviorControl()
 
   // test motion control
   DEBUG_REQUEST_REGISTER("SimpleMotionBehaviorControl:motion:standard_stand", "stand as standard or not", true);
-*
+
   // walk
   DEBUG_REQUEST_REGISTER("SimpleMotionBehaviorControl:motion:walk_forward", "Walk foraward as fast as possible", false);
   DEBUG_REQUEST_REGISTER("SimpleMotionBehaviorControl:motion:walk_backward", "Walk backward as fast as possible", false);

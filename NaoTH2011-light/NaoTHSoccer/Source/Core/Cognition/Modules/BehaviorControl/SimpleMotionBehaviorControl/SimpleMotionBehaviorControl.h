@@ -44,7 +44,7 @@ class SimpleMotionBehaviorControl: public SimpleMotionBehaviorControlBase
 {
 public:
   SimpleMotionBehaviorControl();
-  ~SimpleMotionBehaviorControl(){};
+  ~SimpleMotionBehaviorControl() {};
 
   virtual void execute();
 

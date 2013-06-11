@@ -79,6 +79,7 @@
 
 // Experiment
 #include "Modules/Experiment/Evolution/Evolution.h"
+#include "Modules/Experiment/MachineLearning/MachineLearning.h"
 //#include "Modules/Experiment/VisualAttention/SaliencyMap/SaliencyMapProvider.h"
 
 // tools
@@ -176,6 +177,7 @@ void Cognition::init(naoth::ProcessInterface& platformInterface, const naoth::Pl
 
   // experiment
   REGISTER_MODULE(Evolution);
+  REGISTER_MODULE(MachineLearning);
   //REGISTER_MODULE(SaliencyMapProvider);
 
   // infrastructure
