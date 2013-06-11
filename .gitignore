@@ -23,3 +23,10 @@ nbproject/private/
 /NaoTH2011-light/XabslEditor_1.0-rc2_source/*
 /NaoTH2011-light/NaoTHSoccer/Config/behavior-ic.dat
 /NaoTH2011-light/NaoTHSoccer/Deploy/
+
+# Files created by premake
+*.config
+*.creator
+*.creator.user
+*.files
+*.includes
