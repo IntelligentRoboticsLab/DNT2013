@@ -113,6 +113,8 @@ private void sendLearningParameters()
   {
     Command cmd = parseTextArea("ParameterList:IKOptimizationParameters:set",
             this.jTextAreaWalkingParams.getText());
+    //Command cmd = new Command("ParameterList:" + cbLearningMethod.getSelectedItem().toString() + ":set");
+
     sendCommand(cmd);
     getLearningParameterList();
   }
@@ -323,7 +325,7 @@ private void sendCommand(Command command)
     }//GEN-LAST:event_jButtonSaveMouseClicked
 
     private void jToggleButtonReceiveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButtonReceiveMouseClicked
-        // TODO Keep receiving walking params  
+        // TODO Keep receiving walking params
     }//GEN-LAST:event_jToggleButtonReceiveMouseClicked
 
     private void jButtonGetLPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonGetLPMouseClicked
@@ -373,6 +375,7 @@ private void sendCommand(Command command)
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
                 new ParameterLearner().setVisible(true);
             }
