@@ -3,7 +3,7 @@
 
 #include <Tools/DataStructures/ParameterList.h>
 
-class IKOptimizationParameters
+class IKOptimizationParameters : public ParameterList
 {
 public:
     struct Method1 {
@@ -17,7 +17,7 @@ public:
     } method2;
 
     IKOptimizationParameters();
-    ~IKOptimizationParameters();
+    virtual ~IKOptimizationParameters();
 };
 
 #endif // IKOPTIMIZATIONPARAMETERS_H

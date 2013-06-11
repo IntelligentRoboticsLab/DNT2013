@@ -1,5 +1,5 @@
--- special pathes which can be configured manualy. 
--- If a path is set to 'nil' the default value is used. 
+-- special pathes which can be configured manualy.
+-- If a path is set to 'nil' the default value is used.
 -- for default values check projectconfig.lua
 
 -- default: "../../Framework"
@@ -7,19 +7,19 @@ FRAMEWORK_PATH = nil
 
 -- for native platform
 -- default: "../../Extern"
-EXTERN_PATH_NATIVE = nil
+EXTERN_PATH_NATIVE = "../../NaoTHToolChain_Ubuntu64/toolchain_native/extern/"
 -- webots instalation if available
 -- default: os.getenv("WEBOTS_HOME")
 WEBOTS_HOME = "../../webots"
 
 -- path to the Nao crosscompiler and libs
 -- default: os.getenv("NAO_CTC")
-NAO_CTC = nil
+NAO_CTC = "../../NaoTHToolChain_Ubuntu64/toolchain_nao/"
 -- or set both explicitely
 -- default: NAO_CTC .. "/compiler"
-COMPILER_PATH_NAO = nil
+COMPILER_PATH_NAO = "../../NaoTHToolChain_Ubuntu64/toolchain_nao/compiler/"
 -- default: NAO_CTC .. "/extern"
-EXTERN_PATH_NAO = nil
+EXTERN_PATH_NAO = "../../NaoTHToolChain_Ubuntu64/toolchain_nao/extern/"
 
 
 -- naoqi toolchain needed to compile the NaoSMAL

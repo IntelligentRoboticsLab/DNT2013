@@ -121,10 +121,11 @@ void GAWalk::run()
 
     theTests.clear();
     theTests.push_back(Test(runningTime, Pose2D(0,10000,0)));
-//    theTests.push_back(Test(runningTime/4, Pose2D(0,1000,0)));
-//    theTests.push_back(Test(runningTime/4, Pose2D(Math::fromDegrees(30),500,0)));
-//    theTests.push_back(Test(runningTime/4, Pose2D(Math::fromDegrees(-30),500,0)));
-//    theTests.push_back(Test(runningTime/4, Pose2D(0,-1000,0)));
+    //theTests.push_back(Test(runningTime/4, Pose2D(0,1000,0)));
+    //theTests.push_back(Test(runningTime/4, Pose2D(Math::fromDegrees(30),500,0)));
+    //theTests.push_back(Test(runningTime/4, Pose2D(Math::fromDegrees(-30),500,0)));
+    //theTests.push_back(Test(runningTime/4, Pose2D(0,-1000,0)));
+
     theTest = theTests.begin();
   } else if (lastResetTime + resetingTime > theFrameInfo.getTime())
   {

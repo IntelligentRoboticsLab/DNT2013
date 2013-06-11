@@ -65,6 +65,8 @@ public:
     // load config
     theConfiguration.loadFromDir(
       theConfigDirectory, theScheme, theHardwareIdentity, theHeadHardwareIdentity);
+    std::cout << theConfigDirectory << std::endl << theScheme << std::endl << theHardwareIdentity << std::endl;
+
   }//end init
 
   // const accessors

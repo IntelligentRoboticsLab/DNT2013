@@ -1381,7 +1381,7 @@ void SimSparkController::autoBeam()
       string group = "PoseBeforeKickOff";
       if ( !cfg.hasGroup(group) )
       {
-        cerr<<"SimSparkController: can not beam, because there is no configuration"<<endl;
+        cerr<<"SimSparkController: can not beam, because there is no configuration for player "<<theGameData.playerNumber<<endl;
         return;
       }
 
