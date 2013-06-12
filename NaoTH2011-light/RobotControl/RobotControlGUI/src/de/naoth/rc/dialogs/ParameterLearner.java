@@ -73,6 +73,7 @@ private static Command parseTextArea(String cmdName, String text)
 private static Command parseTextArea(String cmdName, String text, String method)
 {
     
+    Command cmd = new Command(cmdName);
     
     text = text.replaceAll("( |\t)+", "");
     String[] lines = text.split("(\n)+");
