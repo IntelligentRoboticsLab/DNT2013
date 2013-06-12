@@ -7,8 +7,11 @@ package de.naoth.rc.dialogs;
 
 import de.naoth.rc.AbstractDialog;
 import de.naoth.rc.RobotControl;
+import de.naoth.rc.dataformats.JanusImage;
+import de.naoth.rc.manager.ObjectListener;
 import de.naoth.rc.server.Command;
 import de.naoth.rc.server.CommandSender;
+import java.awt.TextArea;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -215,9 +218,9 @@ private void sendCommand(Command command)
         jToggleButtonReceive.setFocusable(false);
         jToggleButtonReceive.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButtonReceive.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToggleButtonReceive.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jToggleButtonReceiveMouseClicked(evt);
+        jToggleButtonReceive.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButtonReceiveActionPerformed(evt);
             }
         });
         jToolBar1.add(jToggleButtonReceive);
@@ -337,10 +340,6 @@ private void sendCommand(Command command)
         saveWalkingParameters();
     }//GEN-LAST:event_jButtonSaveMouseClicked
 
-    private void jToggleButtonReceiveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButtonReceiveMouseClicked
-        // TODO Keep receiving walking params
-    }//GEN-LAST:event_jToggleButtonReceiveMouseClicked
-
     private void jButtonGetLPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonGetLPMouseClicked
         getLearningParameterList();
     }//GEN-LAST:event_jButtonGetLPMouseClicked
@@ -361,6 +360,24 @@ private void sendCommand(Command command)
     private void cbLearningMethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbLearningMethodActionPerformed
         getLearningParameterList();
     }//GEN-LAST:event_cbLearningMethodActionPerformed
+
+    private void jToggleButtonReceiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonReceiveActionPerformed
+        if (jToggleButtonReceive.isSelected())
+        {
+          if (parent.checkConnected())
+          {
+            paramManager.addListener(this.paramListener);
+          }
+          else
+          {
+            jToggleButtonReceive.setSelected(false);
+          }
+        }
+        else
+        {
+          paramManager.removeListener(this.paramListener);
+        }
+    }//GEN-LAST:event_jToggleButtonReceiveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -478,4 +495,37 @@ private void sendCommand(Command command)
   {
     return commandToExecute;
   }
+  
+  
+  class ParamListener implements ObjectListener<JanusImage>
+  {
+      private TextArea dstTextArea;
+      
+    ParamListener(TextArea dstTextArea)
+    {
+        this.dstTextArea = dstTextArea;
+    }
+      
+    @Override
+    public void newObjectReceived(JanusImage object)
+    {
+      if(object == null) return;
+      
+      dstTextArea.setText(object.;
+      
+      imageCanvas.repaint();
+
+      updateResolution(object.getRgb().getWidth(), object.getRgb().getHeight());
+      updateFPS();
+    }//end newObjectReceived
+
+    @Override
+    public void errorOccured(String cause)
+    {
+      btReceiveImages.setSelected(false);
+      imageManager.removeListener(this);
+    }//end errorOccured
+  }//end ImageListener
+
+  
 }
