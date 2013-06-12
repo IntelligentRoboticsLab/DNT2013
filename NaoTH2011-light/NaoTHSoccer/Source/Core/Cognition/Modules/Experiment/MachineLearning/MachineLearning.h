@@ -19,11 +19,11 @@ public:
     ~MachineLearning();
     virtual void execute();
 
-    //const IKOptimizationParameters& getParameters() { return theParameters; }
+    //const MachineLearningParameters& getParameters() { return theParameters; }
 private:
-    IKOptimizationParameters theParameters;
-    //const IKOptimizationParameters::Method1& theMethod1Parameters;
-    //const IKOptimizationParameters::Method2& theMethod2Parameters;
+    MachineLearningParameters theParameters;
+    //const MachineLearningParameters::Method1& theMethod1Parameters;
+    //const MachineLearningParameters::Method2& theMethod2Parameters;
 
 };
 

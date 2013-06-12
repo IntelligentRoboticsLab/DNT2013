@@ -7,19 +7,15 @@ package de.naoth.rc.dialogs;
 
 import de.naoth.rc.AbstractDialog;
 import de.naoth.rc.RobotControl;
-import de.naoth.rc.dataformats.JanusImage;
-import de.naoth.rc.manager.ObjectListener;
 import de.naoth.rc.server.Command;
 import de.naoth.rc.server.CommandSender;
-import java.awt.TextArea;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -37,7 +33,7 @@ public class ParameterLearner extends AbstractDialog implements CommandSender {
 
   private Command commandToExecute;
   private final String strIKParameters = "ParameterList:IKParameters";
-  private final String strMLParameters = "ParameterList:MachineLearningParamters";
+  private final String strMLParameters = "ParameterList:MachineLearningParameters";
   
   @InjectPlugin
   public RobotControl parent;
@@ -47,6 +43,8 @@ public class ParameterLearner extends AbstractDialog implements CommandSender {
     /** Creates new form ParameterLearner */
      public ParameterLearner() {
         initComponents();
+        // LOL HACKS
+        cbLearningMethod.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "" }));
     }
 
   @Init
@@ -98,7 +96,7 @@ private void saveWalkingParameters() {
     sendCommand(cmd);
     // stop learning when walking parameters are saved , for now
     // TODO save somewhere externally, or under some specific name, e.g.
-      DateFormat dateFormat = new SimpleDateFormat("_yy/MM/dd_HHmmss");
+    DateFormat dateFormat = new SimpleDateFormat("_yy/MM/dd_HHmmss");
     String savefilename = cbLearningMethod.getSelectedItem().toString() + 
                             dateFormat.format(new Date());
                           
@@ -129,9 +127,11 @@ private void getWalkingParameterList() {
 }//end getWalkingParameterList
 
 private void getLearningParameterList() {
-    if(!getParameterList(strMLParameters + ":get"))
-    {
-        jToggleButtonLearn.setSelected(false);
+    if (cbLearningMethod.getSelectedItem() != null) {
+        if(!getParameterList(strMLParameters + ":get"))
+        {
+            jToggleButtonLearn.setSelected(false);
+        }
     }
 }//end getLearningParameterList
 
@@ -183,7 +183,7 @@ private void sendCommand(Command command)
         jToolBar2 = new javax.swing.JToolBar();
         jToggleButtonLearn = new javax.swing.JToggleButton();
         jButtonSetLP = new javax.swing.JButton();
-        jButtonGetLP = new javax.swing.JButton();
+        jToggleButtonList = new javax.swing.JToggleButton();
         cbLearningMethod = new javax.swing.JComboBox();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -264,16 +264,16 @@ private void sendCommand(Command command)
         });
         jToolBar2.add(jButtonSetLP);
 
-        jButtonGetLP.setText("Get");
-        jButtonGetLP.setFocusable(false);
-        jButtonGetLP.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButtonGetLP.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButtonGetLP.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButtonGetLPMouseClicked(evt);
+        jToggleButtonList.setText("List");
+        jToggleButtonList.setFocusable(false);
+        jToggleButtonList.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButtonList.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToggleButtonList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButtonListActionPerformed(evt);
             }
         });
-        jToolBar2.add(jButtonGetLP);
+        jToolBar2.add(jToggleButtonList);
 
         cbLearningMethod.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbLearningMethod.addActionListener(new java.awt.event.ActionListener() {
@@ -344,10 +344,6 @@ private void sendCommand(Command command)
         saveWalkingParameters();
     }//GEN-LAST:event_jButtonSaveMouseClicked
 
-    private void jButtonGetLPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonGetLPMouseClicked
-        getLearningParameterList();
-    }//GEN-LAST:event_jButtonGetLPMouseClicked
-
     private void jToggleButtonLearnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonLearnActionPerformed
     if (jToggleButtonLearn.isSelected())
         {
@@ -382,6 +378,10 @@ private void sendCommand(Command command)
           //paramManager.removeListener(this.paramListener);
         }
     }//GEN-LAST:event_jToggleButtonReceiveActionPerformed
+
+    private void jToggleButtonListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonListActionPerformed
+        getLearningParameterList();
+    }//GEN-LAST:event_jToggleButtonListActionPerformed
 
     /**
      * @param args the command line arguments
@@ -422,7 +422,6 @@ private void sendCommand(Command command)
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cbLearningMethod;
     private javax.swing.Box.Filler filler1;
-    private javax.swing.JButton jButtonGetLP;
     private javax.swing.JButton jButtonSave;
     private javax.swing.JButton jButtonSetLP;
     private javax.swing.JLabel jLabelInfoDisplay;
@@ -434,6 +433,7 @@ private void sendCommand(Command command)
     private javax.swing.JTextArea jTextAreaWalkingParams;
     private javax.swing.JTextField jTextFieldConsole;
     private javax.swing.JToggleButton jToggleButtonLearn;
+    private javax.swing.JToggleButton jToggleButtonList;
     private javax.swing.JToggleButton jToggleButtonReceive;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
@@ -443,7 +443,7 @@ private void sendCommand(Command command)
   public void handleResponse(byte[] result, Command originalCommand)
   {
     String strResult = new String(result);
-    if (strResult.contains("[DebugServer] unknown command: "))
+    if (strResult.contains("[DebugServer] unknown command: ") || strResult.contains("Unknown command"))
     {
       JOptionPane.showMessageDialog(this, "Can not send parameters!", 
               "Parameter Learner", JOptionPane.ERROR_MESSAGE);
@@ -461,39 +461,30 @@ private void sendCommand(Command command)
             String selectedMethod = null;
             if (cbLearningMethod.getSelectedItem() != null)
                 selectedMethod = cbLearningMethod.getSelectedItem().toString();
-            
-            cbLearningMethod.removeAllItems();
-            String[] mlParameterList = strResult.split("\n");
-            
-            LinkedList <String> methods = new LinkedList <String>();
-            
-             for (String method : mlParameterList)
-            {
-              System.out.println(method);
-            }
-            for (String method : mlParameterList)
-            {
-              methods.add(method.split(".")[0]);
-            }
-            
-            LinkedList<String> methodsNoDuplicates = new LinkedList<String>(new HashSet<String>(methods));
-           
-             for (String method : methodsNoDuplicates)
-            {
-              cbLearningMethod.addItem(method);
-              System.out.println(method);
-            }
-             
-             if(selectedMethod != null){
-               String parameterList = getMethodParameters(selectedMethod, strResult);
-               jTextAreaLearningParams.setText(parameterList);
+            if (jToggleButtonList.isSelected()) {
+                cbLearningMethod.removeAllItems();
+                String[] mlParameterList = strResult.split("\n");
+
+                ArrayList <String> methods = new ArrayList <String>();
+
+                for (String method : mlParameterList)
+                {
+                    String methodname = method.split("\\.")[0];
+                    if (!methods.contains(methodname)) {
+                        methods.add(methodname);
+                    }
+                }
+                for (String method : methods)
+                {
+                    cbLearningMethod.addItem(method);
+                }
              }
-
-            // try to set back the selection
-            if(selectedMethod != null)
-                cbLearningMethod.setSelectedItem(selectedMethod);
-
-            jToggleButtonLearn.setSelected(false);
+             if(selectedMethod != null) {
+                 String parameterList = getMethodParameters(selectedMethod, strResult);
+                 jTextAreaLearningParams.setText(parameterList);
+                 cbLearningMethod.setSelectedItem(selectedMethod);
+             }
+             jToggleButtonList.setSelected(false);
         } 
     }
   }//end handleResponse
@@ -511,8 +502,7 @@ private void sendCommand(Command command)
   {
     return commandToExecute;
   }
-  
-  
+    
   public String getMethodParameters(String method, String parameters){
      
       String [] params = parameters.split("\n");
@@ -522,11 +512,10 @@ private void sendCommand(Command command)
       String res = "";
       
       for(String p : params){
-          split = p.split(".");
+          split = p.split("\\.");
           if (split[0].equals(method)) res+=split[1]+"\n"; 
       }
       
       return res;
-     
   }
 }
