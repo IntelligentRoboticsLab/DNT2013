@@ -4,6 +4,7 @@ nbproject/private/
 # Binary files and their locations
 *.class
 *.o
+*~
 /NaoTH2011-light/NaoTHToolChain_Ubuntu64
 /NaoTH2011-light/NaoTHSoccer/doc
 /NaoTH2011-light/Framework/doc
