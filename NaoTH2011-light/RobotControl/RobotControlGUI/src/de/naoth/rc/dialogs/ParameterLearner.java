@@ -9,14 +9,13 @@ import de.naoth.rc.AbstractDialog;
 import de.naoth.rc.RobotControl;
 import de.naoth.rc.server.Command;
 import de.naoth.rc.server.CommandSender;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -45,6 +44,38 @@ public class ParameterLearner extends AbstractDialog implements CommandSender {
         initComponents();
         // LOL HACKS
         cbLearningMethod.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "" }));
+        
+        jTextAreaLearningParams.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e)
+            { 
+                int key = e.getKeyCode();
+                if (key == KeyEvent.VK_ENTER)
+                {
+                    sendLearningParameters();
+
+                    int k = jTextAreaLearningParams.getCaretPosition();
+                    if(k > 0)
+                        jTextAreaLearningParams.setCaretPosition(k-1);
+                }
+            }
+        });
+        
+        jTextAreaWalkingParams.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e)
+            { 
+                int key = e.getKeyCode();
+                if (key == KeyEvent.VK_ENTER)
+                {
+                    saveWalkingParameters();
+
+                    int k = jTextAreaWalkingParams.getCaretPosition();
+                    if(k > 0)
+                        jTextAreaWalkingParams.setCaretPosition(k-1);
+                }
+            }
+        });
     }
 
   @Init
@@ -137,7 +168,7 @@ private void getWalkingParameterList() {
     if(!getParameterList(strIKParameters + ":get"))
     {
          jToggleButtonReceive.setSelected(false);
-    }
+    } 
 }//end getWalkingParameterList
 
 private void getLearningParameterList() {
@@ -189,7 +220,6 @@ private void sendCommand(Command command)
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextAreaLearningParams = new javax.swing.JTextArea();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0));
-        jTextFieldConsole = new javax.swing.JTextField();
         jLabelInfoDisplay = new javax.swing.JLabel();
         jToolBar1 = new javax.swing.JToolBar();
         jToggleButtonReceive = new javax.swing.JToggleButton();
@@ -220,13 +250,6 @@ private void sendCommand(Command command)
         jTextAreaLearningParams.setColumns(20);
         jTextAreaLearningParams.setRows(5);
         jScrollPane2.setViewportView(jTextAreaLearningParams);
-
-        jTextFieldConsole.setText("Console");
-        jTextFieldConsole.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextFieldConsoleKeyReleased(evt);
-            }
-        });
 
         jLabelInfoDisplay.setText("Infodisplay");
 
@@ -282,6 +305,11 @@ private void sendCommand(Command command)
         jToggleButtonList.setFocusable(false);
         jToggleButtonList.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButtonList.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToggleButtonList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jToggleButtonListMouseClicked(evt);
+            }
+        });
         jToggleButtonList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButtonListActionPerformed(evt);
@@ -301,7 +329,6 @@ private void sendCommand(Command command)
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jTextFieldConsole)
             .add(layout.createSequentialGroup()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(jToolBar2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 250, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -325,30 +352,16 @@ private void sendCommand(Command command)
                     .add(jToolBar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jToolBar2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 152, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 152, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                    .add(jScrollPane1))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jTextFieldConsole, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
                 .add(filler1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jLabelInfoDisplay, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+                .add(jLabelInfoDisplay, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTextFieldConsoleKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldConsoleKeyReleased
-        int key = evt.getKeyCode();
-        if (key == KeyEvent.VK_ENTER)
-        {
-            Command command = new Command(this.jTextFieldConsole.getText());
-            sendCommand(command);
-            int k = jTextFieldConsole.getCaretPosition();
-            if(k > 0)
-               jTextFieldConsole.setCaretPosition(k-1);
-        }
-    }//GEN-LAST:event_jTextFieldConsoleKeyReleased
 
     private void jButtonSetLPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonSetLPMouseClicked
         sendLearningParameters();
@@ -394,8 +407,15 @@ private void sendCommand(Command command)
     }//GEN-LAST:event_jToggleButtonReceiveActionPerformed
 
     private void jToggleButtonListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonListActionPerformed
-        getLearningParameterList();
+        if (jToggleButtonLearn.isSelected()) 
+        {
+            getLearningParameterList();
+        }
     }//GEN-LAST:event_jToggleButtonListActionPerformed
+
+    private void jToggleButtonListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButtonListMouseClicked
+        getLearningParameterList();
+    }//GEN-LAST:event_jToggleButtonListMouseClicked
 
     /**
      * @param args the command line arguments
@@ -445,7 +465,6 @@ private void sendCommand(Command command)
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextAreaLearningParams;
     private javax.swing.JTextArea jTextAreaWalkingParams;
-    private javax.swing.JTextField jTextFieldConsole;
     private javax.swing.JToggleButton jToggleButtonLearn;
     private javax.swing.JToggleButton jToggleButtonList;
     private javax.swing.JToggleButton jToggleButtonReceive;
@@ -468,13 +487,20 @@ private void sendCommand(Command command)
         String strCommand = originalCommand.getName();
         if(strCommand.compareTo(strIKParameters + ":get") == 0)
         {
+            int k = jTextAreaWalkingParams.getCaretPosition();
             jTextAreaWalkingParams.setText(strResult);
+            try {
+                jTextAreaWalkingParams.setCaretPosition(k);
+            } catch(IllegalArgumentException ex) { /* do nothing */ }
         } 
         else if(strCommand.compareTo(strMLParameters + ":get") == 0)
         {
+            int k = jTextAreaLearningParams.getCaretPosition();
+            
             String selectedMethod = null;
             if (cbLearningMethod.getSelectedItem() != null)
                 selectedMethod = cbLearningMethod.getSelectedItem().toString();
+            
             if (jToggleButtonList.isSelected()) {
                 cbLearningMethod.removeAllItems();
                 String[] mlParameterList = strResult.split("\n");
@@ -496,9 +522,18 @@ private void sendCommand(Command command)
              if(selectedMethod != null) {
                  String parameterList = getMethodParameters(selectedMethod, strResult);
                  jTextAreaLearningParams.setText(parameterList);
-                 cbLearningMethod.setSelectedItem(selectedMethod);
+                 
+                 // Reset method lister combo box if items were removed
+                 if(jToggleButtonList.isSelected()) {
+                    cbLearningMethod.setSelectedItem(selectedMethod);
+                 }
              }
              jToggleButtonList.setSelected(false);
+
+             try {
+                jTextAreaLearningParams.setCaretPosition(k);
+             } catch(IllegalArgumentException ex) { /* do nothing */ }
+
         } 
     }
   }//end handleResponse

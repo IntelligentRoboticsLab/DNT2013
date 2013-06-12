@@ -39,7 +39,6 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jTextFieldConsole" alignment="0" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="jToolBar2" min="-2" pref="250" max="-2" attributes="0"/>
@@ -71,16 +70,14 @@
                   <Component id="jToolBar2" min="-2" pref="25" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jScrollPane1" min="-2" pref="152" max="-2" attributes="0"/>
-                  <Component id="jScrollPane2" min="-2" pref="152" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jScrollPane2" pref="198" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTextFieldConsole" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               <Component id="filler1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabelInfoDisplay" pref="152" max="32767" attributes="0"/>
+              <Component id="jLabelInfoDisplay" pref="149" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -118,14 +115,6 @@
       </SubComponents>
     </Container>
     <Component class="javax.swing.Box$Filler" name="filler1">
-    </Component>
-    <Component class="javax.swing.JTextField" name="jTextFieldConsole">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Console"/>
-      </Properties>
-      <Events>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldConsoleKeyReleased"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelInfoDisplay">
       <Properties>
@@ -200,6 +189,7 @@
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
           <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jToggleButtonListMouseClicked"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButtonListActionPerformed"/>
           </Events>
         </Component>
