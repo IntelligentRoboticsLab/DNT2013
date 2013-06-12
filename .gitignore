@@ -4,25 +4,25 @@ nbproject/private/
 # Binary files and their locations
 *.class
 *.o
-/NaoTH2011-light/NaoTHToolChain_Ubuntu64
-/NaoTH2011-light/NaoTHSoccer/doc
-/NaoTH2011-light/Framework/doc
-/NaoTH2011-light/RobotControl/RobotConnector/dist
-/NaoTH2011-light/NaoTHSoccer/build
-/NaoTH2011-light/NaoTHSoccer/dist
-/NaoTH2011-light/naoqi-sdk-1.14.1-linux32
-/NaoTH2011-light/NaoScp/nbproject/private
-/NaoTH2011-light/NaoScp/build
-/NaoTH2011-light/NaoScp/dist
-/NaoTH2011-light/RobotControl/RobotControlGUI/nbproject/private/
-/NaoTH2011-light/RobotControl/RobotControlGUI/robot-control.jspf.cache
-/NaoTH2011-light/RobotControl/RobotControlGUI/build/
-/NaoTH2011-light/RobotControl/RobotControlGUI/dist/
-/NaoTH2011-light/webots
-/NaoTH2011-light/RobotControl/RobotConnector/build/
-/NaoTH2011-light/XabslEditor_1.0-rc2_source/*
-/NaoTH2011-light/NaoTHSoccer/Config/behavior-ic.dat
-/NaoTH2011-light/NaoTHSoccer/Deploy/
+NaoTH2011-light/NaoTHToolChain_Ubuntu64
+NaoTH2011-light/NaoTHSoccer/doc
+NaoTH2011-light/Framework/doc
+NaoTH2011-light/RobotControl/RobotConnector/dist
+NaoTH2011-light/NaoTHSoccer/build
+NaoTH2011-light/NaoTHSoccer/dist
+NaoTH2011-light/naoqi-sdk-1.14.1-linux32
+NaoTH2011-light/NaoScp/nbproject/private
+NaoTH2011-light/NaoScp/build
+NaoTH2011-light/NaoScp/dist
+NaoTH2011-light/RobotControl/RobotControlGUI/nbproject/private/
+NaoTH2011-light/RobotControl/RobotControlGUI/robot-control.jspf.cache
+NaoTH2011-light/RobotControl/RobotControlGUI/build/
+NaoTH2011-light/RobotControl/RobotControlGUI/dist/
+NaoTH2011-light/webots
+NaoTH2011-light/RobotControl/RobotConnector/build/
+NaoTH2011-light/XabslEditor_1.0-rc2_source/*
+NaoTH2011-light/NaoTHSoccer/Config/behavior-ic.dat
+NaoTH2011-light/NaoTHSoccer/Deploy/
 
 # Files created by premake
 *.config
@@ -30,3 +30,7 @@ nbproject/private/
 *.creator.user
 *.files
 *.includes
+
+NaoTH2011-light/NaoTHSoccer/Config/private/IKParameters.cfg
+NaoTH2011-light/RobotControl/RobotConnector/nbproject/private/
+
