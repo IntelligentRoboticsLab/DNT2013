@@ -6,10 +6,20 @@
 class MachineLearningParameters : public ParameterList
 {
 public:
-    struct Method1 {
-        double param1;
-        double param2;
-    } method1;
+    struct Evolution {
+        double transmitRate;
+        double crossoverRate;
+        double mutationRate;
+
+        int parentsNum; //(10),
+        int population; //(100),
+        int surviveNum; //(10),
+        int maxGeneration; //(50),
+
+        unsigned int resettingTime; // = 3000;
+        unsigned int standingTime; // = 2000;
+        unsigned int runningTime; // = 20000;
+    } naothEvolutionParams;
 
     struct Method2 {
         double param1;

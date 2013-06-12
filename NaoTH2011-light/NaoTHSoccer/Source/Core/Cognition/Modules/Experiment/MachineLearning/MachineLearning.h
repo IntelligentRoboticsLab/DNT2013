@@ -2,13 +2,26 @@
 #define MACHINELEARNING_H
 
 #include <ModuleFramework/Module.h>
-
-#include <Tools/DataStructures/ParameterList.h>
-#include "Representations/Motion/Request/MotionRequest.h"
 #include "MachineLearningParameters.h"
 
+#include "Representations/Infrastructure/VirtualVision.h"
+#include "Representations/Modeling/RobotPose.h"
+#include "Representations/Perception/CameraMatrix.h"
+#include "Representations/Infrastructure/FieldInfo.h"
+#include "Representations/Infrastructure/FrameInfo.h"
+#include "Representations/Modeling/BallModel.h"
+#include "Representations/Motion/Request/MotionRequest.h"
+
+
 BEGIN_DECLARE_MODULE(MachineLearning)
-    PROVIDE(MotionRequest)
+  REQUIRE(FrameInfo)
+  REQUIRE(FieldInfo)
+  REQUIRE(VirtualVision)
+  REQUIRE(RobotPose)
+  REQUIRE(CameraMatrix)
+  REQUIRE(BallModel)
+
+  PROVIDE(MotionRequest)
 END_DECLARE_MODULE(MachineLearning)
 
 class MachineLearning : public MachineLearningBase

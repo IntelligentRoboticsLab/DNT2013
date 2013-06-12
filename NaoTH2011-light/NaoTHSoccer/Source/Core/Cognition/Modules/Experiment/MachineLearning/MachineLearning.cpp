@@ -2,14 +2,16 @@
 
 MachineLearning::MachineLearning()
 {
-    //theParameters.method1.param1 = 0.1;
+    // TODO instantiate correct classes for used methods
 }
 
 MachineLearning::~MachineLearning() {
-    //theParameters.method1.param1 = 0.0000;
+    // TODO remove classes etc gbc
 }
 
 void MachineLearning::execute() {
-    //theParameters.method1.param1 = 0.99999;
+    // TODO Call a selected class using the prespecified settings
+    // TODO Find out how to enable/disable services
+    // REGISTER_DEBUG_COMMAND will be useful here
 }
 

@@ -11,9 +11,21 @@
 MachineLearningParameters::MachineLearningParameters()
     : ParameterList("MachineLearningParameters")
 {
-    PARAMETER_REGISTER(method1.param1) = 0.9;
-    PARAMETER_REGISTER(method1.param2) = 0.2;
+    // Evolution parameters
+    PARAMETER_REGISTER(naothEvolutionParams.transmitRate) = 1.0;
+    PARAMETER_REGISTER(naothEvolutionParams.crossoverRate) = 1.0;
+    PARAMETER_REGISTER(naothEvolutionParams.mutationRate) = 1.0;
 
+    PARAMETER_REGISTER(naothEvolutionParams.parentsNum) = 10;
+    PARAMETER_REGISTER(naothEvolutionParams.population) = 100;
+    PARAMETER_REGISTER(naothEvolutionParams.surviveNum) = 10;
+    PARAMETER_REGISTER(naothEvolutionParams.maxGeneration) = 50;
+
+    PARAMETER_REGISTER(naothEvolutionParams.resettingTime) = 3000;
+    PARAMETER_REGISTER(naothEvolutionParams.standingTime) = 2000;
+    PARAMETER_REGISTER(naothEvolutionParams.runningTime) = 20000;
+
+    // Dummy method parameters
     PARAMETER_REGISTER(method2.param1) = 0.212;
     PARAMETER_REGISTER(method2.param2) = true;
 
