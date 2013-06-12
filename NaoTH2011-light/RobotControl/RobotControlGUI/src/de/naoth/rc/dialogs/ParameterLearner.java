@@ -17,6 +17,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -366,7 +370,7 @@ private void sendCommand(Command command)
         {
           if (parent.checkConnected())
           {
-            paramManager.addListener(this.paramListener);
+            //paramManager.addListener(this.paramListener);
           }
           else
           {
@@ -375,7 +379,7 @@ private void sendCommand(Command command)
         }
         else
         {
-          paramManager.removeListener(this.paramListener);
+          //paramManager.removeListener(this.paramListener);
         }
     }//GEN-LAST:event_jToggleButtonReceiveActionPerformed
 
@@ -459,19 +463,31 @@ private void sendCommand(Command command)
                 selectedMethod = cbLearningMethod.getSelectedItem().toString();
             
             cbLearningMethod.removeAllItems();
-            
             String[] mlParameterList = strResult.split("\n");
-            // TODO iterate over parameterList, find out which methods
-            // exist based on prefix (separate by '.'), list them in combobox
-            // example:  returned is 
-            // method1.param1
-            // method2.param1
-            // Only method1 is selected: only display param1
             
+            LinkedList <String> methods = new LinkedList <String>();
+            
+             for (String method : mlParameterList)
+            {
+              System.out.println(method);
+            }
             for (String method : mlParameterList)
             {
-              cbLearningMethod.addItem(method);
+              methods.add(method.split(".")[0]);
             }
+            
+            LinkedList<String> methodsNoDuplicates = new LinkedList<String>(new HashSet<String>(methods));
+           
+             for (String method : methodsNoDuplicates)
+            {
+              cbLearningMethod.addItem(method);
+              System.out.println(method);
+            }
+             
+             if(selectedMethod != null){
+               String parameterList = getMethodParameters(selectedMethod, strResult);
+               jTextAreaLearningParams.setText(parameterList);
+             }
 
             // try to set back the selection
             if(selectedMethod != null)
@@ -497,35 +513,20 @@ private void sendCommand(Command command)
   }
   
   
-  class ParamListener implements ObjectListener<JanusImage>
-  {
-      private TextArea dstTextArea;
+  public String getMethodParameters(String method, String parameters){
+     
+      String [] params = parameters.split("\n");
       
-    ParamListener(TextArea dstTextArea)
-    {
-        this.dstTextArea = dstTextArea;
-    }
+      String [] split = new String[2];  
       
-    @Override
-    public void newObjectReceived(JanusImage object)
-    {
-      if(object == null) return;
+      String res = "";
       
-      dstTextArea.setText(object.;
+      for(String p : params){
+          split = p.split(".");
+          if (split[0].equals(method)) res+=split[1]+"\n"; 
+      }
       
-      imageCanvas.repaint();
-
-      updateResolution(object.getRgb().getWidth(), object.getRgb().getHeight());
-      updateFPS();
-    }//end newObjectReceived
-
-    @Override
-    public void errorOccured(String cause)
-    {
-      btReceiveImages.setSelected(false);
-      imageManager.removeListener(this);
-    }//end errorOccured
-  }//end ImageListener
-
-  
+      return res;
+     
+  }
 }
