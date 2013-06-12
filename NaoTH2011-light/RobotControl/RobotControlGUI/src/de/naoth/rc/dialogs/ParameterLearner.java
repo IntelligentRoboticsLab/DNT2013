@@ -26,6 +26,8 @@ import net.xeoh.plugins.base.annotations.injections.InjectPlugin;
 public class ParameterLearner extends AbstractDialog implements CommandSender {
 
   private Command commandToExecute;
+  private final String strIKParameters = "ParameterList:IKParameters";
+  private final String strMLParameters = "ParameterList:MachineLearningParamters";
   
   @InjectPlugin
   public RobotControl parent;
@@ -80,10 +82,10 @@ private static Command parseTextArea(String cmdName, String text)
 private void saveWalkingParameters() {
   if (parent.checkConnected())
   {
-    Command cmd = parseTextArea("ParameterList:IKParameters:set", 
+    getWalkingParameterList();
+    Command cmd = parseTextArea(strIKParameters + ":set", 
                                 this.jTextAreaWalkingParams.getText());
     sendCommand(cmd);
-    getWalkingParameterList();
     // stop learning when walking parameters are saved , for now
     // TODO save somewhere externally, or under some specific name
     jToggleButtonLearn.setSelected(false);
@@ -93,26 +95,39 @@ private void saveWalkingParameters() {
     jToggleButtonLearn.setSelected(false);
   }    
 }
-  
-private void getWalkingParameterList()
-  {
+
+private boolean getParameterList(String strCommand)
+{
     if (parent.checkConnected())
     {
-      Command cmd = new Command("ParameterList:IKParameters:get");
+      Command cmd = new Command(strCommand);
       sendCommand(cmd);
+      return true;
     }
-    else
+    return false;
+}
+
+private void getWalkingParameterList() {
+    if(!getParameterList(strIKParameters + ":get"))
     {
-      jToggleButtonReceive.setSelected(false);
+         jToggleButtonReceive.setSelected(false);
     }
-  }//end getWalkingParameterList
+}//end getWalkingParameterList
+
+private void getLearningParameterList() {
+    if(!getParameterList(strMLParameters + ":get"))
+    {
+        jToggleButtonLearn.setSelected(false);
+    }
+}//end getLearningParameterList
 
 private void sendLearningParameters()
 {
   if (parent.checkConnected())
   {
-    Command cmd = parseTextArea("ParameterList:IKOptimizationParameters:set",
-            this.jTextAreaWalkingParams.getText());
+     // TODO add combobox method name, send correct parameters only
+    Command cmd = parseTextArea(strMLParameters + ":set",
+            this.jTextAreaLearningParams.getText());
     //Command cmd = new Command("ParameterList:" + cbLearningMethod.getSelectedItem().toString() + ":set");
 
     sendCommand(cmd);
@@ -124,20 +139,6 @@ private void sendLearningParameters()
   }
 }
 
-private void getLearningParameterList()
-  {
-    if (parent.checkConnected())
-    {
-      Command cmd = new Command("ParameterList:LearningParameters:get");
-      sendCommand(cmd);
-    }
-    else
-    {
-      jToggleButtonLearn.setSelected(false);
-    }
-  }//end getLearningParameterList
-
-  
 private void sendCommand(Command command)
   {
     commandToExecute = command;
@@ -261,6 +262,11 @@ private void sendCommand(Command command)
         jToolBar2.add(jButtonGetLP);
 
         cbLearningMethod.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbLearningMethod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbLearningMethodActionPerformed(evt);
+            }
+        });
         jToolBar2.add(cbLearningMethod);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
@@ -345,6 +351,10 @@ private void sendCommand(Command command)
         }
     }//GEN-LAST:event_jToggleButtonLearnActionPerformed
 
+    private void cbLearningMethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbLearningMethodActionPerformed
+        getLearningParameterList();
+    }//GEN-LAST:event_cbLearningMethodActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -413,6 +423,34 @@ private void sendCommand(Command command)
     }
     else
     {
+        String strCommand = originalCommand.getName();
+        if(strCommand.compareTo(strIKParameters + ":get") == 0)
+        {
+            jTextAreaWalkingParams.setText(strResult);
+        } 
+        else if(strCommand.compareTo(strMLParameters + ":get") == 0)
+        {
+            String selectedMethod = null;
+            if (cbLearningMethod.getSelectedItem() != null)
+                selectedMethod = cbLearningMethod.getSelectedItem().toString();
+            
+            cbLearningMethod.removeAllItems();
+            
+            String[] mlParameterList = strResult.split("\n");
+            // TODO iterate over parameterList, find out which methods
+            // exist based on prefix (separate by '.'), list them in combobox
+            
+            for (String method : mlParameterList)
+            {
+              cbLearningMethod.addItem(method);
+            }
+
+            // try to set back the selection
+            if(selectedMethod != null)
+                cbLearningMethod.setSelectedItem(selectedMethod);
+
+            jToggleButtonLearn.setSelected(false);
+        } 
     }
   }//end handleResponse
 
