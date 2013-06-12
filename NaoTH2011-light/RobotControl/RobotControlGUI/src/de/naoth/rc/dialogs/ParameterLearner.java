@@ -10,6 +10,9 @@ import de.naoth.rc.RobotControl;
 import de.naoth.rc.server.Command;
 import de.naoth.rc.server.CommandSender;
 import java.awt.event.KeyEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -87,7 +90,11 @@ private void saveWalkingParameters() {
                                 this.jTextAreaWalkingParams.getText());
     sendCommand(cmd);
     // stop learning when walking parameters are saved , for now
-    // TODO save somewhere externally, or under some specific name
+    // TODO save somewhere externally, or under some specific name, e.g.
+      DateFormat dateFormat = new SimpleDateFormat("_yy/MM/dd_HHmmss");
+    String savefilename = cbLearningMethod.getSelectedItem().toString() + 
+                            dateFormat.format(new Date());
+                          
     jToggleButtonLearn.setSelected(false);
   }
   else
@@ -439,6 +446,10 @@ private void sendCommand(Command command)
             String[] mlParameterList = strResult.split("\n");
             // TODO iterate over parameterList, find out which methods
             // exist based on prefix (separate by '.'), list them in combobox
+            // example:  returned is 
+            // method1.param1
+            // method2.param1
+            // Only method1 is selected: only display param1
             
             for (String method : mlParameterList)
             {
