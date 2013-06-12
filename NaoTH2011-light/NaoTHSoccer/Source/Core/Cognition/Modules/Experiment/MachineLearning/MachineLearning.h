@@ -5,7 +5,7 @@
 
 #include <Tools/DataStructures/ParameterList.h>
 #include "Representations/Motion/Request/MotionRequest.h"
-#include "IKOptimizationParameters.h"
+#include "MachineLearningParameters.h"
 
 BEGIN_DECLARE_MODULE(MachineLearning)
     PROVIDE(MotionRequest)
