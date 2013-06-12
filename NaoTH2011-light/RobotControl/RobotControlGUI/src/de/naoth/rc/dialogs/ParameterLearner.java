@@ -95,29 +95,24 @@ public class ParameterLearner extends AbstractDialog implements CommandSender {
 
 private static Command parseTextArea(String cmdName, String text)
 {
-   
     return parseTextArea(cmdName, text, "");
 } // end parseTextArea
 
 private static Command parseTextArea(String cmdName, String text, String method)
 {
-    
     Command cmd = new Command(cmdName);
     
     text = text.replaceAll("( |\t)+", "");
     String[] lines = text.split("(\n)+");
-    if (!method.equals("")) 
-    for (int i = 0; i < lines.length; i++){
-        lines[i] = method+"."+lines[i];
-        }
-    
+    if (!method.isEmpty())
+        method += ".";
     
     for (String l : lines)
     {
       String[] splitted = l.split("=");
       if (splitted.length == 2)
       {
-        String key = splitted[0].trim();
+        String key = method + splitted[0].trim();
         String value = splitted[1].trim();
         // remove the last ;
         if (value.charAt(value.length() - 1) == ';')
@@ -184,10 +179,10 @@ private void sendLearningParameters()
 {
   if (parent.checkConnected())
   {
-     // TODO add combobox method name, send correct parameters only
+     // TODO add combobox methsendCommandod name, send correct parameters only
     Command cmd = parseTextArea(strMLParameters + ":set",
-            this.jTextAreaLearningParams.getText(), cbLearningMethod.getSelectedItem().toString());
-    //Command cmd = new Command("ParameterList:" + cbLearningMethod.getSelectedItem().toString() + ":set");
+            this.jTextAreaLearningParams.getText(), 
+            cbLearningMethod.getSelectedItem().toString());
 
     sendCommand(cmd);
     getLearningParameterList();
@@ -553,15 +548,12 @@ private void sendCommand(Command command)
   }
     
   public String getMethodParameters(String method, String parameters){
-     
       String [] params = parameters.split("\n");
-      
       String [] split = new String[2];  
-      
       String res = "";
       
       for(String p : params){
-          split = p.split("\\.");
+          split = p.split("\\.", 2);
           if (split[0].equals(method)) res+=split[1]+"\n"; 
       }
       
