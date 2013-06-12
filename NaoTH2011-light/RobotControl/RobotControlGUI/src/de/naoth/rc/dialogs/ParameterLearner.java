@@ -66,10 +66,22 @@ public class ParameterLearner extends AbstractDialog implements CommandSender {
 
 private static Command parseTextArea(String cmdName, String text)
 {
-    Command cmd = new Command(cmdName);
+   
+    return parseTextArea(cmdName, text, "");
+} // end parseTextArea
+
+private static Command parseTextArea(String cmdName, String text, String method)
+{
+    
     
     text = text.replaceAll("( |\t)+", "");
     String[] lines = text.split("(\n)+");
+    if (!method.equals("")) 
+    for (int i = 0; i < lines.length; i++){
+        lines[i] = method+"."+lines[i];
+        }
+    
+    
     for (String l : lines)
     {
       String[] splitted = l.split("=");
@@ -88,6 +100,7 @@ private static Command parseTextArea(String cmdName, String text)
     } // end for
     return cmd;
 } // end parseTextArea
+  
   
 private void saveWalkingParameters() {
   if (parent.checkConnected())
@@ -141,7 +154,7 @@ private void sendLearningParameters()
   {
      // TODO add combobox method name, send correct parameters only
     Command cmd = parseTextArea(strMLParameters + ":set",
-            this.jTextAreaLearningParams.getText());
+            this.jTextAreaLearningParams.getText(), cbLearningMethod.getSelectedItem().toString());
     //Command cmd = new Command("ParameterList:" + cbLearningMethod.getSelectedItem().toString() + ":set");
 
     sendCommand(cmd);
