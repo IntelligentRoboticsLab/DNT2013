@@ -3,6 +3,7 @@
 
 #include <ModuleFramework/Module.h>
 
+#include "LearnToWalk.h"
 #include "Representations/Infrastructure/VirtualVision.h"
 #include "Representations/Modeling/RobotPose.h"
 #include "Representations/Perception/CameraMatrix.h"
@@ -35,6 +36,7 @@ public:
             std::ostream &outstreclassesam);
 private:
     GeneticAlgorithm* ga;
+    LearnToWalk ltw;
 };
 
 #endif // MACHINELEARNING_H
