@@ -40,7 +40,6 @@ void MachineLearning::executeDebugCommand(const std::string &command,
     {
         // enable/disable method
         if (arguments.find("on")!=arguments.end()) {
-
             if (strcmp(arguments.at("Task1"),"on") == 0)
             {
                 ltw.theTests.push_back(Test(runningTime, Pose2D(0,10000,0)));
@@ -65,8 +64,6 @@ void MachineLearning::executeDebugCommand(const std::string &command,
     else if (strcmp(command,"machinelearning:getinfo") == 0)
     {
         //TODO return info in the right format (in GitHub)
-
     }
-
 }
 

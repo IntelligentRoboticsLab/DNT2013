@@ -37,6 +37,7 @@ public:
             std::ostream &outstreclassesam);
 private:
     LearnToWalk ltw;
+    bool finished;
 };
 
 #endif // MACHINELEARNING_H

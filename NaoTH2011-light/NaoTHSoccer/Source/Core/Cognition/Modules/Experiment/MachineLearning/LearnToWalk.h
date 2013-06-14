@@ -67,7 +67,7 @@ private:
 
     std::list<Test> theTests;
     std::list<Test>::iterator theTest;
-    MachineLearningMethod* method;
+    MachineLearningMethod *method;
 
     void reset();
 
