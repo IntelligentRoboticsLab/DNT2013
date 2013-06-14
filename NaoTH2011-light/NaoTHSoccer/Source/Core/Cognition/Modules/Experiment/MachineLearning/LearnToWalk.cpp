@@ -62,7 +62,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
 //  REG_WALK_PARAMETER(dynamicStabilizer.inertialSensorFactorY, -100);
 //  REG_WALK_PARAMETER(dynamicStabilizer.inertialSensorMinX, 1.5); // in degrees
 //  REG_WALK_PARAMETER(dynamicStabilizer.inertialSensorMinY, 1.5);
-
+    this->method = NULL;
 }
 
 LearnToWalk::run()

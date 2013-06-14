@@ -49,7 +49,7 @@ public:
                 MotionRequest& mq);
     virtual ~LearnToWalk();
     virtual void run();
-    MachineLearningMethod* method = NULL;
+    MachineLearningMethod* method;
 
 private:
     const naoth::VirtualVision& theVirtualVision;
