@@ -3,6 +3,7 @@
 
 #include <ModuleFramework/Module.h>
 
+#include "Learners/GA.h"
 #include "Representations/Infrastructure/VirtualVision.h"
 #include "Representations/Modeling/RobotPose.h"
 #include "Representations/Perception/CameraMatrix.h"

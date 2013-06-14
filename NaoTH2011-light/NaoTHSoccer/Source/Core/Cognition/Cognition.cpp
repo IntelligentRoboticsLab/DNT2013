@@ -78,7 +78,6 @@
 #include "Modules/BehaviorControl/CalibrationBehaviorControl/CalibrationBehaviorControl.h"
 
 // Experiment
-#include "Modules/Experiment/Evolution/Evolution.h"
 #include "Modules/Experiment/MachineLearning/MachineLearning.h"
 //#include "Modules/Experiment/VisualAttention/SaliencyMap/SaliencyMapProvider.h"
 
@@ -176,7 +175,6 @@ void Cognition::init(naoth::ProcessInterface& platformInterface, const naoth::Pl
   REGISTER_MODULE(XABSLBehaviorControl);
 
   // experiment
-  REGISTER_MODULE(Evolution);
   REGISTER_MODULE(MachineLearning);
   //REGISTER_MODULE(SaliencyMapProvider);
 
