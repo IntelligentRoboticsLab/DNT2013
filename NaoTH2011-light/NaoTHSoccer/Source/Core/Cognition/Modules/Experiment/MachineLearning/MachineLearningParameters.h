@@ -26,6 +26,7 @@ public:
         bool param2;
     } method2;
 
+    MachineLearningParameters();
     virtual ~MachineLearningParameters();
 };
 
