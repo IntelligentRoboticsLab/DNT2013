@@ -23,7 +23,7 @@ void MachineLearning::execute() {
     if(!finished) {
       // Until convergence, run the correct method
       if (!ltw->method->isFinished()) {
-        ltw->method->run();
+        ltw->run();
       }
     } else {
        // TODO save values
@@ -39,7 +39,7 @@ void MachineLearning::executeDebugCommand(const std::string &command,
                                           const std::map<std::string, std::string> &arguments,
                                           std::ostream &outstream)
 {
-    if(string::compare(command, "machinelearning:method1") == 0)
+    if(!command.compare("machinelearning:method1"))
     {
         // enable/disable method
         if (arguments.find("on")!=arguments.end()) {
