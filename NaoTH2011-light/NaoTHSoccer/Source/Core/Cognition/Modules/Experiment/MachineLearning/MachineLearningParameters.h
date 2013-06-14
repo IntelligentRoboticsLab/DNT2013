@@ -19,14 +19,13 @@ public:
         unsigned int resettingTime; // = 3000;
         unsigned int standingTime; // = 2000;
         unsigned int runningTime; // = 20000;
-    } naothEvolutionParams;
+    } evolution;
 
     struct Method2 {
         double param1;
         bool param2;
     } method2;
 
-    MachineLearningParameters();
     virtual ~MachineLearningParameters();
 };
 

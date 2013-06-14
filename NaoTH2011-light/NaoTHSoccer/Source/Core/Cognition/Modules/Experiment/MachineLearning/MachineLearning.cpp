@@ -43,6 +43,7 @@ void MachineLearning::executeDebugCommand(const std::string &command,
         // enable/disable method
         if (arguments.find("on")!=arguments.end()) {
             ltw->method = new GA::GA();
+            unsigned int runningTime = ltw->theParameters.evolution.runningTime;
 
             if (strcmp(arguments.at("Task1"),"on") == 0)
             {

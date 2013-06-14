@@ -50,6 +50,7 @@ public:
     virtual ~LearnToWalk();
     virtual void run();
     MachineLearningMethod* method;
+    MachineLearningParameters theParameters;
 
 private:
     const naoth::VirtualVision& theVirtualVision;
@@ -59,7 +60,6 @@ private:
     const FieldInfo& theFieldInfo;
     MotionRequest& theMotionRequest;
 
-    MachineLearningParameters theParameters;
     std::vector<std::string> parameterNames;
     std::map<std::string, Vector2<double> > parameterBounds;
 
