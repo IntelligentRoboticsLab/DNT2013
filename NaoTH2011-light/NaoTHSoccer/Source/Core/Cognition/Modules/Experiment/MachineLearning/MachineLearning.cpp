@@ -3,6 +3,7 @@
 
 MachineLearning::MachineLearning()
 {
+    REGISTER_DEBUG_COMMAND("machinelearning:evolution", "start/stop evolutionary method with current parameter settings", this);
     // TODO instantiate correct classes for used methods
     ltw = new LearnToWalk(getVirtualVision(),
                           getRobotPose(),
@@ -17,19 +18,20 @@ MachineLearning::~MachineLearning() {
 }
 
 void MachineLearning::execute() {
-  if (ltw.method != NULL) {
+  if (ltw->method != NULL) {
     if(!finished) {
       // Until convergence, run the correct method
-      if (!ltw.method.isFinished()) {
-        ltw.method.run();
+      if (!ltw->method.isFinished()) {
+        ltw->method.run();
       }
     } else {
        // TODO save values
-       std::cout<<"MachineLearning method " << ltw.method << " finished!"<<std::endl;
+       std::cout<<"MachineLearning method " << ltw->method << " finished!"<<std::endl;
        finished = true;
        // exit(0);
     }
   }
+
 }
 
 void MachineLearning::executeDebugCommand(const std::string &command,
@@ -40,21 +42,23 @@ void MachineLearning::executeDebugCommand(const std::string &command,
     {
         // enable/disable method
         if (arguments.find("on")!=arguments.end()) {
+            ltw->method = new GA::GA();
+
             if (strcmp(arguments.at("Task1"),"on") == 0)
             {
-                ltw.theTests.push_back(LearnToWalk::Test(runningTime, Pose2D(0,10000,0)));
+                ltw->theTests.push_back(LearnToWalk::Test(runningTime, Pose2D(0,10000,0)));
             }
             if (strcmp(arguments.at("Task2"),"on") == 0)
             {
-                ltw.theTests.push_back(LearnToWalk::Test(runningTime/4, Pose2D(0,1000,0)));
+                ltw->theTests.push_back(LearnToWalk::Test(runningTime/4, Pose2D(0,1000,0)));
             }
             if (strcmp(arguments.at("Task3"),"on") == 0)
             {
-                ltw.theTests.push_back(LearnToWalk::Test(runningTime/4, Pose2D(Math::fromDegrees(30),500,0)));
+                ltw->theTests.push_back(LearnToWalk::Test(runningTime/4, Pose2D(Math::fromDegrees(30),500,0)));
             }
             if (strcmp(arguments.at("Task4"),"on") == 0)
             {
-                ltw.theTests.push_back(LearnToWalk::Test(runningTime/4, Pose2D(Math::fromDegrees(-30),500,0)));
+                ltw->theTests.push_back(LearnToWalk::Test(runningTime/4, Pose2D(Math::fromDegrees(-30),500,0)));
             }
 
         } else if (arguments.find("off")) {

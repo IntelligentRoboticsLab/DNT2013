@@ -18,9 +18,6 @@
 
 #include "MachineLearningParameters.h"
 #include "Learners/MachineLearningMethod.h"
-#include <DebugCommunication/DebugCommandManager.h>
-
-REGISTER_DEBUG_COMMAND("machinelearning:evolution", "start/stop evolutionary method with current parameter settings", this)
 
 class LearnToWalk
 {
@@ -52,6 +49,7 @@ public:
                 MotionRequest& mq);
     virtual ~LearnToWalk();
     virtual void run();
+    MachineLearningMethod* method = NULL;
 
 private:
     const naoth::VirtualVision& theVirtualVision;
@@ -66,12 +64,11 @@ private:
     std::map<std::string, Vector2<double> > parameterBounds;
 
     std::list<Test> theTests;
-    std::list<Test>::iterator theTest;
-    MachineLearningMethod *method = NULL;
+
 
     void reset();
 
-    Vector3 getPosition();
+    Vector3<double> getPosition();
 };
 
 #endif // LEARNTOWALK_H

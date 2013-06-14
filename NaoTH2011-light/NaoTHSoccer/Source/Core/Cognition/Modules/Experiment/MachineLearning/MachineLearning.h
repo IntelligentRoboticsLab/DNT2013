@@ -12,6 +12,7 @@
 #include "Representations/Infrastructure/FrameInfo.h"
 #include "Representations/Modeling/BallModel.h"
 #include "Representations/Motion/Request/MotionRequest.h"
+#include <DebugCommunication/DebugCommandManager.h>
 
 BEGIN_DECLARE_MODULE(MachineLearning)
   REQUIRE(FrameInfo)
@@ -36,7 +37,7 @@ public:
             const std::map<std::string, std::string>& arguments,
             std::ostream &outstreclassesam);
 private:
-    LearnToWalk ltw;
+    LearnToWalk *ltw;
     bool finished;
 };
 

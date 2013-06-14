@@ -1,7 +1,9 @@
 #ifndef _GA_H
 #define _GA_H
 
-class GA : MachineLearningMethod
+#include "MachineLearningMethod.h"
+
+class GA : public MachineLearningMethod
 {
 public:
     GA();
