@@ -1,4 +1,5 @@
 #include "MachineLearning.h"
+#include <string>
 
 
 MachineLearning::MachineLearning()
@@ -21,8 +22,8 @@ void MachineLearning::execute() {
   if (ltw->method != NULL) {
     if(!finished) {
       // Until convergence, run the correct method
-      if (!ltw->method.isFinished()) {
-        ltw->method.run();
+      if (!ltw->method->isFinished()) {
+        ltw->method->run();
       }
     } else {
        // TODO save values
@@ -38,12 +39,13 @@ void MachineLearning::executeDebugCommand(const std::string &command,
                                           const std::map<std::string, std::string> &arguments,
                                           std::ostream &outstream)
 {
-    if(strcmp(command, "machinelearning:method1") == 0)
+    if(string::compare(command, "machinelearning:method1") == 0)
     {
         // enable/disable method
         if (arguments.find("on")!=arguments.end()) {
-            ltw->method = new GA::GA();
+
             unsigned int runningTime = ltw->theParameters.evolution.runningTime;
+            ltw->method = new GA();
 
             if (strcmp(arguments.at("Task1"),"on") == 0)
             {

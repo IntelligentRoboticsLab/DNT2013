@@ -21,6 +21,7 @@
 
 class LearnToWalk
 {
+public:
     class Test
     {
     public:
@@ -39,8 +40,6 @@ class LearnToWalk
       Pose2D theWalkRequest;
     };
 
-
-public:
     LearnToWalk(const naoth::VirtualVision& vv,
                 const RobotPose& rp,
                 const CameraMatrix& cm,
