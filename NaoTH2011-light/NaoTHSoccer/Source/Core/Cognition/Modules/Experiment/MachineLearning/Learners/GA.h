@@ -4,6 +4,10 @@
 #include "MachineLearningMethod.h"
 #include "GeneticAlgorithms.h"
 #include <math.h>
+#include <iostream>
+#include <vector>
+#include "Tools/Math/Common.h"
+#include "Tools/NaoInfo.h"
 
 class GA : public MachineLearningMethod, public GeneticAlgorithms
 {
@@ -12,8 +16,9 @@ public:
     ~GA();
 
     void update(double fitness);
-    bool isFinished() {return false;}
-    void run() = 0;
+    virtual bool isFinished() const; // implemented by geneticalgorithms
+private:
+    std::map<std::string, Vector2<double> > genes;
 };
 
 #endif // _GA_H

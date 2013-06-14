@@ -8,7 +8,7 @@ public:
     virtual ~MachineLearningMethod();
 
     virtual void update(double fitness);
-    virtual bool isFinished();
+    virtual bool isFinished() const;
 };
 
 #endif // MACHINELEARNINGMETHOD_H

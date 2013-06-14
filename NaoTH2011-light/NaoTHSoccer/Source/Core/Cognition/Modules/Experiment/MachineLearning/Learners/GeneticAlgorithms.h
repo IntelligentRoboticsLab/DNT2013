@@ -50,8 +50,6 @@ public:
 
   bool isFinished() const;
 
-  virtual void run() = 0;
-
 private:
   std::vector<Individual> newGeneration(const std::vector<Individual>& old);
   

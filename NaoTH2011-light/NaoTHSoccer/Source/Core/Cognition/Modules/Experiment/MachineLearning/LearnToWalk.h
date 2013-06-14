@@ -31,6 +31,7 @@ public:
       Pose2D update(unsigned int time, const Vector2<double>& pos);
       bool isFinished() const;
       double getDistance() const;
+      double getFitness() const;
 
     private:
       bool started;
@@ -66,7 +67,9 @@ private:
 
     std::vector<std::string> theIKParameterNames;
     std::map<std::string, Vector2<double> > theIKParameterBounds;
+    std::map<std::string, double> theIKParameterValues;
     void reset();
+    double evaluate();
 
     Vector3<double> getPosition();
     std::list<Test>::iterator theTest;

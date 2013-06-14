@@ -26,7 +26,8 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
 {
   #define REG_WALK_PARAMETER(name, minv, maxv)\
   theIKParameterBounds[#name] = Vector2<double>(minv, maxv);\
-    theIKParameterNames.push_back(#name);
+    theIKParameterNames.push_back(#name);\
+    theIKParameterValues[#name]
 
   REG_WALK_PARAMETER(bodyOffsetX, 0, 20) = 10;
 //  REG_WALK_PARAMETER(walk.doubleSupportTime, 0);
@@ -70,21 +71,26 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
 
 void LearnToWalk::run()
 {
+    // TODO change
+    unsigned int resettingTime = theParameters.evolution.resettingTime;
+    unsigned int standingTime = theParameters.evolution.standingTime;
+    unsigned int runningTime = theParameters.evolution.runningTime;
+
     // TODO use staggering to see if the nao is unstable. (Stop before actually falling).
-    Vector3 mypos = getPosition();
+    Vector3<double> mypos = getPosition();
     if ( mypos.z < NaoInfo::TibiaLength + NaoInfo::ThighLength ) {
       fallenCount++;
     } else {
       fallenCount = 0;
     }
-    bool isFallenDown = (fallenCount > 3 && theParameters.lastResetTime + theParameters.resettingTime < theFrameInfo.getTime());
+    bool isFallenDown = (fallenCount > 3 && lastResetTime + resettingTime < theFrameInfo.getTime());
 
     // If stopping condition for evaluation is met
-    if (lastResetTime + theParameters.resettingTime + theParameters.runningTime + theParameters.standingTime < theFrameInfo.getTime()
+    if (lastResetTime + resettingTime + runningTime + standingTime < theFrameInfo.getTime()
       || isFallenDown || theTest == theTests.end() )
     {
         double fitness = 0;
-        for( list<Test>::const_iterator iter=theTests.begin(); iter!=theTests.end(); ++iter)
+        for( std::list<LearnToWalk::Test>::const_iterator iter=theTests.begin(); iter!=theTests.end(); ++iter)
         {
           fitness += iter->getDistance();
         }
@@ -92,16 +98,16 @@ void LearnToWalk::run()
         reset();
     }
     // else if during resetting time
-    else if (lastResetTime + theParameters.resettingTime > theFrameInfo.getTime())
+    else if (lastResetTime + resettingTime > theFrameInfo.getTime())
     {
         theMotionRequest.id = motion::stand;
         theMotionRequest.forced = true;
     // else if during standing time
-    } else if (lastResetTime + theParameters.resettingTime + theParameters.standingTime > theFrameInfo.getTime()) // Reset done
+    } else if (lastResetTime + resettingTime + standingTime > theFrameInfo.getTime()) // Reset done
     {
       // stop trying to beam
-      stringstream answer;
-      map<string, string> args;
+      std::stringstream answer;
+      std::map<std::string, std::string> args;
       args["off"] = "";
       DebugRequest::getInstance().executeDebugCommand("SimSparkController:beam", args, answer);
       theMotionRequest.id = motion::stand;
@@ -114,9 +120,10 @@ void LearnToWalk::run()
     // else, regular walk request
     {
       // run
-      Pose2D walkReq = theTest->update(theFrameInfo.getTime() - lastTime, currentPos);
-      theMotionRequest.id = motion::walk;
-      theMotionRequest.walkRequest.target = walkReq;
+        Vector2<double> currentPos(mypos.x, mypos.y);
+        Pose2D walkReq = theTest->update(theFrameInfo.getTime() - lastTime, currentPos);
+        theMotionRequest.id = motion::walk;
+        theMotionRequest.walkRequest.target = walkReq;
     }
   }
 
@@ -141,7 +148,7 @@ Vector3<double> LearnToWalk::getPosition()
 double LearnToWalk::evaluate()
 {
     double fitness =0;
-    for( list<Test>::const_iterator iter=theTests.begin(); iter!=theTests.end(); ++iter)
+    for( std::list<Test>::const_iterator iter=theTests.begin(); iter!=theTests.end(); ++iter)
     {
       fitness += iter->getDistance();
     }
@@ -154,8 +161,8 @@ void LearnToWalk::reset()
   lastResetTime = theFrameInfo.getTime();
 
   // Reset position in simspark if needded
-  stringstream answer;
-  map<string,string> args;
+  std::stringstream answer;
+  std::map<std::string,std::string> args;
   args["on"] = "";
   DebugRequest::getInstance().executeDebugCommand("SimSparkController:beam",args,answer);
 
