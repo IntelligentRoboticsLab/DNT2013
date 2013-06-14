@@ -23,12 +23,10 @@ void MachineLearning::execute() {
        ltw.method.run();
      } else
        // TODO save values
-       finished = true;
+       std::cout<<"MachineLearning method " << ltw.method << " finished!"<<std::endl;
+       exit(0);
      }
-
-   std::cout<<"MachineLearning finished!"<<std::endl;
-   exit(0);
-  }
+   }
 }
 
 void MachineLearning::executeDebugCommand(const std::string &command,

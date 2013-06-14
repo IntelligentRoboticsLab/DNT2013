@@ -34,7 +34,6 @@ public:
             const std::map<std::string, std::string>& arguments,
             std::ostream &outstreclassesam);
 private:
-    GeneticAlgorithm* ga;
 };
 
 #endif // MACHINELEARNING_H
