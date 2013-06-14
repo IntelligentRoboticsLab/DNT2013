@@ -25,8 +25,8 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
   fallenCount(0)
 {
   #define REG_WALK_PARAMETER(name, minv, maxv)\
-  parameterBounds[#name] = Vector2<double>(minv, maxv);\
-    parameterNames.push_back(#name);
+  theIKParameterBounds[#name] = Vector2<double>(minv, maxv);\
+    theIKParameterNames.push_back(#name);
 
   REG_WALK_PARAMETER(bodyOffsetX, 0, 20) = 10;
 //  REG_WALK_PARAMETER(walk.doubleSupportTime, 0);

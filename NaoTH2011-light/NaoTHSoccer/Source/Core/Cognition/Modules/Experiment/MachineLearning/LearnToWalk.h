@@ -51,6 +51,7 @@ public:
     virtual void run();
     MachineLearningMethod* method;
     MachineLearningParameters theParameters;
+    std::list<Test> theTests;
 
 private:
     const naoth::VirtualVision& theVirtualVision;
@@ -60,12 +61,8 @@ private:
     const FieldInfo& theFieldInfo;
     MotionRequest& theMotionRequest;
 
-    std::vector<std::string> parameterNames;
-    std::map<std::string, Vector2<double> > parameterBounds;
-
-    std::list<Test> theTests;
-
-
+    std::vector<std::string> theIKParameterNames;
+    std::map<std::string, Vector2<double> > theIKParameterBounds;
     void reset();
 
     Vector3<double> getPosition();
