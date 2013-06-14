@@ -59,7 +59,17 @@
               </Group>
               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
-          <Component id="jLabelInfoDisplay" alignment="0" max="32767" attributes="0"/>
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="task1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="task2" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="task3" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="task4" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -71,14 +81,22 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane2" pref="198" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" pref="188" max="32767" attributes="0"/>
                   <Component id="jScrollPane1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="filler1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabelInfoDisplay" pref="149" max="32767" attributes="0"/>
+              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="task1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="task2" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="task3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="task4" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -91,7 +109,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTextArea" name="jTextAreaWalkingParams">
+        <Component class="javax.swing.JTextArea" name="jTextAreaInfo">
           <Properties>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
@@ -116,11 +134,6 @@
     </Container>
     <Component class="javax.swing.Box$Filler" name="filler1">
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabelInfoDisplay">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Infodisplay"/>
-      </Properties>
-    </Component>
     <Container class="javax.swing.JToolBar" name="jToolBar1">
       <Properties>
         <Property name="rollover" type="boolean" value="true"/>
@@ -128,26 +141,15 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JToggleButton" name="jToggleButtonReceive">
+        <Component class="javax.swing.JToggleButton" name="jToggleButtonGetInfo">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Receive"/>
+            <Property name="text" type="java.lang.String" value="GetInfo"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButtonReceiveActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="jButtonSave">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Save"/>
-            <Property name="focusable" type="boolean" value="false"/>
-            <Property name="horizontalTextPosition" type="int" value="0"/>
-            <Property name="verticalTextPosition" type="int" value="3"/>
-          </Properties>
-          <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jButtonSaveMouseClicked"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButtonGetInfoActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
@@ -170,17 +172,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButtonLearnActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButtonSetLP">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Set"/>
-            <Property name="focusable" type="boolean" value="false"/>
-            <Property name="horizontalTextPosition" type="int" value="0"/>
-            <Property name="verticalTextPosition" type="int" value="3"/>
-          </Properties>
-          <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jButtonSetLPMouseClicked"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JToggleButton" name="jToggleButtonList">
           <Properties>
             <Property name="text" type="java.lang.String" value="List"/>
@@ -189,7 +180,6 @@
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
           <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jToggleButtonListMouseClicked"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButtonListActionPerformed"/>
           </Events>
         </Component>
@@ -210,5 +200,30 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Evaluation tasks"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task1"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task2">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task2"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task3">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task3"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task4">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task4"/>
+      </Properties>
+    </Component>
   </SubComponents>
 </Form>
