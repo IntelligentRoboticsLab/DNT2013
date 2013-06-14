@@ -2,7 +2,6 @@
 #define MACHINELEARNING_H
 
 #include <ModuleFramework/Module.h>
-#include "MachineLearningParameters.h"
 
 #include "Representations/Infrastructure/VirtualVision.h"
 #include "Representations/Modeling/RobotPose.h"
@@ -11,7 +10,6 @@
 #include "Representations/Infrastructure/FrameInfo.h"
 #include "Representations/Modeling/BallModel.h"
 #include "Representations/Motion/Request/MotionRequest.h"
-
 
 BEGIN_DECLARE_MODULE(MachineLearning)
   REQUIRE(FrameInfo)
@@ -24,22 +22,19 @@ BEGIN_DECLARE_MODULE(MachineLearning)
   PROVIDE(MotionRequest)
 END_DECLARE_MODULE(MachineLearning)
 
-class MachineLearning : public MachineLearningBase
+class MachineLearning : public MachineLearningBase, public DebugCommandExecutor
 {
-
 public:
     MachineLearning();
     ~MachineLearning();
+
     virtual void execute();
-
-    //const MachineLearningParameters& getParameters() { return theParameters; }
+    virtual void executeDebugCommand(
+            const std::string& command,
+            const std::map<std::string, std::string>& arguments,
+            std::ostream &outstreclassesam);
 private:
-    MachineLearningParameters theParameters;
-    //const MachineLearningParameters::Method1& theMethod1Parameters;
-    //const MachineLearningParameters::Method2& theMethod2Parameters;
-
+    GeneticAlgorithm* ga;
 };
-
-
 
 #endif // MACHINELEARNING_H
