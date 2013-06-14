@@ -4,6 +4,7 @@
 #include <ModuleFramework/Module.h>
 
 #include "Learners/GA.h"
+#include "LearnToWalk.h"
 #include "Representations/Infrastructure/VirtualVision.h"
 #include "Representations/Modeling/RobotPose.h"
 #include "Representations/Perception/CameraMatrix.h"
@@ -35,6 +36,7 @@ public:
             const std::map<std::string, std::string>& arguments,
             std::ostream &outstreclassesam);
 private:
+    LearnToWalk ltw;
 };
 
 #endif // MACHINELEARNING_H
