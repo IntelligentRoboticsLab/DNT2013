@@ -42,19 +42,19 @@ void MachineLearning::executeDebugCommand(const std::string &command,
         if (arguments.find("on")!=arguments.end()) {
             if (strcmp(arguments.at("Task1"),"on") == 0)
             {
-                ltw.theTests.push_back(Test(runningTime, Pose2D(0,10000,0)));
+                ltw.theTests.push_back(LearnToWalk::Test(runningTime, Pose2D(0,10000,0)));
             }
             if (strcmp(arguments.at("Task2"),"on") == 0)
             {
-                ltw.theTests.push_back(Test(runningTime/4, Pose2D(0,1000,0)));
+                ltw.theTests.push_back(LearnToWalk::Test(runningTime/4, Pose2D(0,1000,0)));
             }
             if (strcmp(arguments.at("Task3"),"on") == 0)
             {
-                ltw.theTests.push_back(Test(runningTime/4, Pose2D(Math::fromDegrees(30),500,0)));
+                ltw.theTests.push_back(LearnToWalk::Test(runningTime/4, Pose2D(Math::fromDegrees(30),500,0)));
             }
             if (strcmp(arguments.at("Task4"),"on") == 0)
             {
-                ltw.theTests.push_back(Test(runningTime/4, Pose2D(Math::fromDegrees(-30),500,0)));
+                ltw.theTests.push_back(LearnToWalk::Test(runningTime/4, Pose2D(Math::fromDegrees(-30),500,0)));
             }
 
         } else if (arguments.find("off")) {
