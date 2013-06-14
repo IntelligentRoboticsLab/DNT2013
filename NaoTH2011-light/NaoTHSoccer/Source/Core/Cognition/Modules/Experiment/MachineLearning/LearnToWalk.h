@@ -17,7 +17,7 @@
 #include "Representations/Motion/Request/MotionRequest.h"
 
 #include "MachineLearningParameters.h"
-#include "MachineLearningMethod.h"
+#include "Learners/MachineLearningMethod.h"
 #include <DebugCommunication/DebugCommandManager.h>
 
 REGISTER_DEBUG_COMMAND("machinelearning:evolution", "start/stop evolutionary method with current parameter settings", this)
@@ -70,7 +70,6 @@ private:
     MachineLearningMethod* method;
 
     void reset();
-    virtual bool isConverged();
 
     Vector3 getPosition();
 };
