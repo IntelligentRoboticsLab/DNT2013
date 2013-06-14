@@ -2,14 +2,18 @@
 #define _GA_H
 
 #include "MachineLearningMethod.h"
+#include "GeneticAlgorithms.h"
+#include <math.h>
 
-class GA : public MachineLearningMethod
+class GA : public MachineLearningMethod, public GeneticAlgorithms
 {
 public:
     GA();
-    virtual ~GA();
+    ~GA();
 
-    virtual void update(double fitness);
+    void update(double fitness);
+    bool isFinished() {return false;}
+    void run() = 0;
 };
 
 #endif // _GA_H

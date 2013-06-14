@@ -63,9 +63,12 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
 //  REG_WALK_PARAMETER(dynamicStabilizer.inertialSensorMinX, 1.5); // in degrees
 //  REG_WALK_PARAMETER(dynamicStabilizer.inertialSensorMinY, 1.5);
     this->method = NULL;
+
+    lastTime = theFrameInfo.getTime();
+    theTest = theTests.end();
 }
 
-LearnToWalk::run()
+void LearnToWalk::run()
 {
     // TODO use staggering to see if the nao is unstable. (Stop before actually falling).
     Vector3 mypos = getPosition();
@@ -77,7 +80,7 @@ LearnToWalk::run()
     bool isFallenDown = (fallenCount > 3 && theParameters.lastResetTime + theParameters.resettingTime < theFrameInfo.getTime());
 
     // If stopping condition for evaluation is met
-    if (lastResetTime + resettingTime + runningTime + standingTime < theFrameInfo.getTime()
+    if (lastResetTime + theParameters.resettingTime + theParameters.runningTime + theParameters.standingTime < theFrameInfo.getTime()
       || isFallenDown || theTest == theTests.end() )
     {
         double fitness = 0;
@@ -89,12 +92,12 @@ LearnToWalk::run()
         reset();
     }
     // else if during resetting time
-    else if (lastResetTime + resettingTime > theFrameInfo.getTime())
+    else if (lastResetTime + theParameters.resettingTime > theFrameInfo.getTime())
     {
         theMotionRequest.id = motion::stand;
         theMotionRequest.forced = true;
     // else if during standing time
-    } else if (lastResetTime + resetingTime + standingTime > theFrameInfo.getTime()) // Reset done
+    } else if (lastResetTime + theParameters.resettingTime + theParameters.standingTime > theFrameInfo.getTime()) // Reset done
     {
       // stop trying to beam
       stringstream answer;

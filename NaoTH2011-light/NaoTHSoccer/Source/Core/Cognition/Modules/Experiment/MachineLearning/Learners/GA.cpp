@@ -1,30 +1,17 @@
 #include "GA.h"
 
-
-using namespace std;
-
 GA::GA() {
 }
 
-bool GA::Test::isFinished() const
-{
-	return theMaxTime <= 0;
-}
-
-double GA::Test::getDistance() const
-{
-	return (theStopPos-theStartPos).abs();
-}
-
-GA::update(double fitness) {
-	cout << "GAWalk: fitness = " << fitness << endl;
+void GA::update(double fitness) {
+    std::cout << "GA: fitness = " << fitness << std::endl;
 	GeneticAlgorithms::Individual& i = getIndividual();
 	i.fitness = max(0.0, fitness);
 
 	GeneticAlgorithms::Individual& j = getIndividual();
 
 	// set the parameters
-	map<string, string> args;
+    std::map<std::string, std::string> args;
 	for( std::map<std::string, Vector2<double> >::const_iterator g=genes.begin();
 			g!=genes.end(); ++g)
 	{
@@ -34,7 +21,7 @@ GA::update(double fitness) {
 		else
 			args[g->first] = naoth::DataConversion::toStr(j.gene[g->first]);
 	}
-	stringstream answer;
+    std::stringstream answer;
 	DebugCommandManager::getInstance().handleCommand("ParameterList:IKParameters:set", args, answer);
 }
 

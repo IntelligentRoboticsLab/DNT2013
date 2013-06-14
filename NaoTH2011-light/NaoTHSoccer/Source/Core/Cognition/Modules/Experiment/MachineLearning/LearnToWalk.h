@@ -60,11 +60,17 @@ private:
     const FieldInfo& theFieldInfo;
     MotionRequest& theMotionRequest;
 
+    unsigned int lastResetTime;
+    unsigned int lastTime;
+    unsigned int fallenCount;
+
     std::vector<std::string> theIKParameterNames;
     std::map<std::string, Vector2<double> > theIKParameterBounds;
     void reset();
 
     Vector3<double> getPosition();
+    std::list<Test>::iterator theTest;
+
 };
 
 #endif // LEARNTOWALK_H
