@@ -4,11 +4,8 @@
 class MachineLearningMethod
 {
 public:
-    MachineLearningMethod();
-    virtual ~MachineLearningMethod();
-
-    virtual void update(double fitness);
-    virtual bool isFinished() const;
+    virtual void update(double fitness) = 0;
+    virtual bool isFinished() const = 0;
 };
 
 #endif // MACHINELEARNINGMETHOD_H

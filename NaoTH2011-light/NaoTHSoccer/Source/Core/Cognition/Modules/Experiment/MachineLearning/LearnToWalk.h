@@ -18,6 +18,11 @@
 
 #include "MachineLearningParameters.h"
 #include "Learners/MachineLearningMethod.h"
+#include "Learners/GA.h"
+#include "Tools/NaoInfo.h"
+#include "Tools/Debug/DebugRequest.h"
+#include <DebugCommunication/DebugCommandManager.h>
+
 
 class LearnToWalk
 {
@@ -47,7 +52,7 @@ public:
                 const naoth::FrameInfo& fi,
                 const FieldInfo& field,
                 MotionRequest& mq);
-    virtual ~LearnToWalk();
+    virtual ~LearnToWalk() {}
     virtual void run();
     MachineLearningMethod* method;
     MachineLearningParameters theParameters;

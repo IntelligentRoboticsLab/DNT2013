@@ -3,6 +3,7 @@
 GA::GA() {
 }
 
+
 void GA::update(double fitness) {
     std::cout << "GA: fitness = " << fitness << std::endl;
 	GeneticAlgorithms::Individual& i = getIndividual();

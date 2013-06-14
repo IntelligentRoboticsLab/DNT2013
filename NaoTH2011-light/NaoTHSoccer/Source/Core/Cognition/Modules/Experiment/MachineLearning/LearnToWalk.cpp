@@ -4,10 +4,6 @@
   */
 
 #include "LearnToWalk.h"
-#include "Tools/NaoInfo.h"
-#include "Tools/Debug/DebugRequest.h"
-#include <DebugCommunication/DebugCommandManager.h>
-
 
 LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
                          const RobotPose &rp,

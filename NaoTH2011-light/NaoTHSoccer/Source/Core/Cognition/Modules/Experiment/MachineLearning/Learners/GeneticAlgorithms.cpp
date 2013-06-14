@@ -110,7 +110,7 @@ void GeneticAlgorithms::init(const vector<Individual>& initial)
   generations.push_back( initial );
 }
 
-bool GeneticAlgorithms::isFinished() const
+bool GeneticAlgorithms::converged() const
 {
   return generations.size() > maxGeneration;
 }

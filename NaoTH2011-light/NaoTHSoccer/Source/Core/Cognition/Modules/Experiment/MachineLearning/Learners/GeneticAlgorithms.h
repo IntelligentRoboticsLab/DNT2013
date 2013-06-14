@@ -8,8 +8,12 @@
 #define  _GENETICALGORITHMS_H
 
 #include <map>
-#include <vector>
 #include <string>
+#include <math.h>
+#include <iostream>
+#include <vector>
+#include "Tools/Math/Common.h"
+#include "Tools/Math/Vector2.h"
 
 class GeneticAlgorithms
 {
@@ -48,7 +52,7 @@ public:
 
   Individual& getIndividual();
 
-  bool isFinished() const;
+  bool converged() const;
 
 private:
   std::vector<Individual> newGeneration(const std::vector<Individual>& old);

@@ -3,20 +3,18 @@
 
 #include "MachineLearningMethod.h"
 #include "GeneticAlgorithms.h"
-#include <math.h>
-#include <iostream>
-#include <vector>
-#include "Tools/Math/Common.h"
 #include "Tools/NaoInfo.h"
+#include <DebugCommunication/DebugCommandManager.h>
+#include "Tools/DataConversion.h"
 
 class GA : public MachineLearningMethod, public GeneticAlgorithms
 {
 public:
     GA();
-    ~GA();
+    virtual ~GA() {}
 
     void update(double fitness);
-    virtual bool isFinished() const; // implemented by geneticalgorithms
+    bool isFinished() const { return converged(); } // implemented by geneticalgorithms, but must be called directly
 private:
     std::map<std::string, Vector2<double> > genes;
 };
