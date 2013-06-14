@@ -88,26 +88,34 @@ LearnToWalk::run()
         method->update(fitness);
         reset();
     }
-    // else if time passed
-    else if (lastResetTime + resetingTime > theFrameInfo.getTime())
+    // else if during resetting time
+    else if (lastResetTime + resettingTime > theFrameInfo.getTime())
     {
         theMotionRequest.id = motion::stand;
         theMotionRequest.forced = true;
+    // else if during standing time
     } else if (lastResetTime + resetingTime + standingTime > theFrameInfo.getTime()) // Reset done
     {
+      // stop trying to beam
       stringstream answer;
       map<string, string> args;
       args["off"] = "";
       DebugRequest::getInstance().executeDebugCommand("SimSparkController:beam", args, answer);
       theMotionRequest.id = motion::stand;
       theMotionRequest.forced = false;
-} else
-{
-  // run
-  Pose2D walkReq = theTest->update(theFrameInfo.getTime() - lastTime, currentPos);
-  theMotionRequest.id = motion::walk;
-  theMotionRequest.walkRequest.target = walkReq;
-}
+
+      // try to stand up, I guess?
+      // TODO stand up if needed
+
+    } else
+    // else, regular walk request
+    {
+      // run
+      Pose2D walkReq = theTest->update(theFrameInfo.getTime() - lastTime, currentPos);
+      theMotionRequest.id = motion::walk;
+      theMotionRequest.walkRequest.target = walkReq;
+    }
+  }
 
 Vector3<double> LearnToWalk::getPosition()
 {
@@ -127,20 +135,15 @@ Vector3<double> LearnToWalk::getPosition()
     return mypos;
 }
 
-void LearnToWalk::evaluate()
+double LearnToWalk::evaluate()
 {
     double fitness =0;
     for( list<Test>::const_iterator iter=theTests.begin(); iter!=theTests.end(); ++iter)
     {
       fitness += iter->getDistance();
     }
-    updateFitness(fitness);
 
-}
-
-void LearnToWalk::update()
-{
-
+    return fitness;
 }
 
 void LearnToWalk::reset()
@@ -164,7 +167,6 @@ void LearnToWalk::reset()
   //theTests.push_back(Test(runningTime/4, Pose2D(Math::fromDegrees(-30),500,0)));
   //theTests.push_back(Test(runningTime/4, Pose2D(0,-1000,0)));
   theTest = theTests.begin();
-
 }
 
 LearnToWalk::Test::Test(unsigned int maxTime, const Pose2D& walkReq)
