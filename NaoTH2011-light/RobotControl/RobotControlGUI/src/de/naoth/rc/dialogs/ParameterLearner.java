@@ -32,7 +32,6 @@ public class ParameterLearner extends AbstractDialog implements CommandSender {
   private final String strIKParameters = "ParameterList:IKParameters";
   private final String strMLParameters = "ParameterList:MachineLearningParameters";
   private final String strGetInfoML = "machinelearning:getinfo";
-  private boolean learnEnabled = false;
           
   @InjectPlugin
   public RobotControl parent;
@@ -126,28 +125,6 @@ private static Command parseTextArea(String cmdName, String text, String method)
     return cmd;
 } // end parseTextArea
   
-  
-/*private void saveWalkingParameters() {
-  if (parent.checkConnected())
-  {
-    getWalkingParameterList();
-    Command cmd = parseTextArea(strIKParameters + ":set", 
-                                this.jTextAreaWalkingParams.getText());
-    sendCommand(cmd);
-    // stop learning when walking parameters are saved , for now
-    // TODO save somewhere externally, or under some specific name, e.g.
-    DateFormat dateFormat = new SimpleDateFormat("_yy/MM/dd_HHmmss");
-    String savefilename = cbLearningMethod.getSelectedItem().toString() + 
-                            dateFormat.format(new Date());
-                          
-    jToggleButtonLearn.setSelected(false);
-  }
-  else
-  {
-    jToggleButtonLearn.setSelected(false);
-  }    
-}*/
-
 private boolean getParameterList(String strCommand)
 {
     if (parent.checkConnected())
@@ -158,8 +135,6 @@ private boolean getParameterList(String strCommand)
     }
     return false;
 }
-
-
 
 private void getLearningParameterList() {
     if (cbLearningMethod.getSelectedItem() != null) {
@@ -353,35 +328,24 @@ private void sendCommand(Command command)
     }// </editor-fold>//GEN-END:initComponents
 
     private void jToggleButtonLearnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonLearnActionPerformed
-    String method = cbLearningMethod.getSelectedItem().toString();
-        if(learnEnabled){
-                learnEnabled = false;
-                cbLearningMethod.setFocusable(true);
-                 jTextAreaLearningParams.setFocusable(true);
-                sendCommand("machinelearning:"+method, false);
-                return;
-            }
-    if (jToggleButtonLearn.isSelected())
-        {
+        String method = cbLearningMethod.getSelectedItem().toString();
         if (parent.checkConnected()) {
-            learnEnabled = true;
-            
-            jTextAreaLearningParams.setFocusable(false);
-            cbLearningMethod.setFocusable(false);
-            
-            sendLearningParameters();
-            
-            Map <String, String> tests = getSelectedTests();
-            
-            sendCommand("machinelearning:"+method,true,tests);
-            
-            
-         // TODO create manager which refreshes commands, see debugrequestmanager
-          } else {
-            jToggleButtonLearn.setSelected(false);
-          }
+            if (jToggleButtonLearn.isSelected()) {
+                jTextAreaLearningParams.setFocusable(false);
+                cbLearningMethod.setFocusable(false);
+
+                sendLearningParameters();
+
+                Map <String, String> tests = getSelectedTests();
+
+                sendCommand("machinelearning:"+method,true,tests);
+            } else {
+                cbLearningMethod.setFocusable(true);
+                jTextAreaLearningParams.setFocusable(true);
+                sendCommand("machinelearning:"+method, false);
+            }
         } else {
-          // TODO remove listener
+            jToggleButtonLearn.setSelected(false);
         }
     }//GEN-LAST:event_jToggleButtonLearnActionPerformed
 

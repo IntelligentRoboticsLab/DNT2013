@@ -12,6 +12,7 @@ MachineLearning::MachineLearning()
                           getFrameInfo(),
                           getFieldInfo(),
                           getMotionRequest());
+    finished = false;
 }
 
 MachineLearning::~MachineLearning() {
@@ -39,7 +40,7 @@ void MachineLearning::executeDebugCommand(const std::string &command,
                                           const std::map<std::string, std::string> &arguments,
                                           std::ostream &outstream)
 {
-    if(!command.compare("machinelearning:method1"))
+    if(!command.compare("machinelearning:evolution"))
     {
         // enable/disable method
         if (arguments.find("on")!=arguments.end()) {
