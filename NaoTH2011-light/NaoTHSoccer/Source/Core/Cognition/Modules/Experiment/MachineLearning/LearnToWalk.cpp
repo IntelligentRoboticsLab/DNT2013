@@ -65,6 +65,20 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
     theTest = theTests.end();
 }
 
+void LearnToWalk::setMethod(std::string methodName)
+{
+    if(!methodName.compare("evolution")) {
+        this->method = new GA(theParameters.evolution, theIKParameterValues, theIKParameterBounds);
+    } else  {
+        std::cout << "Trying to use unknown method '"  << methodName << "'.";
+    }
+}
+
+bool LearnToWalk::isFinished() const
+{
+    return method->isFinished();
+}
+
 void LearnToWalk::run()
 {
     // TODO change

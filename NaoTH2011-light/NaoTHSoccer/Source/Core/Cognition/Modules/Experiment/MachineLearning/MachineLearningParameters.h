@@ -12,7 +12,7 @@ public:
         double mutationRate;
 
         int parentsNum; //(10),
-        int population; //(100),
+        int populationSize; //(100),
         int surviveNum; //(10),
         int maxGeneration; //(50),
 

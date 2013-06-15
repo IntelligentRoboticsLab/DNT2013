@@ -23,12 +23,12 @@ void MachineLearning::execute() {
   if (ltw->method != NULL) {
     if(!finished) {
       // Until convergence, run the correct method
-      if (!ltw->method->isFinished()) {
+      if (!ltw->isFinished()) {
         ltw->run();
       }
     } else {
        // TODO save values
-       std::cout<<"MachineLearning method " << ltw->method << " finished!"<<std::endl;
+       std::cout<<"MachineLearning method " << ltw->method->name << " finished!"<<std::endl;
        finished = true;
        // exit(0);
     }
@@ -45,16 +45,19 @@ void MachineLearning::executeDebugCommand(const std::string &command,
         // enable/disable method
         if (arguments.find("on")!=arguments.end()) {
 
+            // TODO set running time based on tests instead of other way around
+            // TODO define tests based on arguments method
+            // TODO create better structure (instead of sending strings around, more private vars etc)
             unsigned int runningTime = ltw->theParameters.evolution.runningTime;
-            ltw->method = new GA();
+            ltw->setMethod("evolution");
 
             if (!arguments.at("Task1").compare("on"))
             {
-                ltw->theTests.push_back(LearnToWalk::Test(runningTime, Pose2D(0,10000,0)));
+                ltw->theTests.push_back(LearnToWalk::Test(runningTime/2, Pose2D(0,10000,0)));
             }
             if (!arguments.at("Task2").compare("on"))
             {
-                ltw->theTests.push_back(LearnToWalk::Test(runningTime/4, Pose2D(0,1000,0)));
+                ltw->theTests.push_back(LearnToWalk::Test(runningTime/2, Pose2D(0,1000,0)));
             }
             if (!arguments.at("Task3").compare("on"))
             {

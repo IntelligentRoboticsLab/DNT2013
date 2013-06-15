@@ -55,15 +55,22 @@ GeneticAlgorithms::Individual::Individual(const Individual& father, const Indivi
   }
 }
 
-GeneticAlgorithms::GeneticAlgorithms()
-:parentsNum(10),
-  population(100),
-  surviveNum(10),
-  maxGeneration(50),
-  transmitRate(1),
-  crossoverRate(1),
-  mutationRate(1)
+GeneticAlgorithms::GeneticAlgorithms(int parentsNum,
+                                     int populationSize,
+                                     int surviveNum,
+                                     int maxGeneration,
+                                     double transmitRate,
+                                     double crossoverRate,
+                                     double mutationRate)
+:parentsNum(parentsNum),
+  populationSize(populationSize),
+  surviveNum(surviveNum),
+  maxGeneration(maxGeneration),
+  transmitRate(transmitRate),
+  crossoverRate(crossoverRate),
+  mutationRate(mutationRate)
 {
+    // TODO specify folder ourselves?
   GDateTime* dateTime = g_date_time_new_now_local();
   dataDir = "ga"+string( g_date_time_format(dateTime, "%Y-%m-%d-%H-%M-%S") );
   g_date_time_unref(dateTime);
@@ -85,7 +92,7 @@ vector<GeneticAlgorithms::Individual> GeneticAlgorithms::newGeneration(const vec
   }
 
   // generate children
-  while (children.size() < population)
+  while (children.size() < populationSize)
   {
     // selected parents
     const Individual& father = selectParent(old);

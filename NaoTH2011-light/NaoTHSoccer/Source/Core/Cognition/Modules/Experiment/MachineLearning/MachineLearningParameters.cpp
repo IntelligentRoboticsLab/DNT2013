@@ -17,7 +17,7 @@ MachineLearningParameters::MachineLearningParameters()
     PARAMETER_REGISTER(evolution.mutationRate) = 1.0;
 
     PARAMETER_REGISTER(evolution.parentsNum) = 10;
-    PARAMETER_REGISTER(evolution.population) = 100;
+    PARAMETER_REGISTER(evolution.populationSize) = 100;
     PARAMETER_REGISTER(evolution.surviveNum) = 10;
     PARAMETER_REGISTER(evolution.maxGeneration) = 50;
 

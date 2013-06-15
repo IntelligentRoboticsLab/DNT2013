@@ -125,31 +125,23 @@ private static Command parseTextArea(String cmdName, String text, String method)
     return cmd;
 } // end parseTextArea
   
-private boolean getParameterList(String strCommand)
-{
-    if (parent.checkConnected())
-    {
-      Command cmd = new Command(strCommand);
-      sendCommand(cmd);
-      return true;
-    }
-    return false;
-}
-
 private void getLearningParameterList() {
-    if (cbLearningMethod.getSelectedItem() != null) {
-        if(!getParameterList(strMLParameters + ":get"))
-        {
+    if (parent.checkConnected()) {
+        if (cbLearningMethod.getSelectedItem() != null) {
+            sendCommand(new Command(strMLParameters + ":get"));
+        } else {
             jToggleButtonLearn.setSelected(false);
         }
-    }
+    } else {
+        jToggleButtonLearn.setSelected(false);
+    }    
 }//end getLearningParameterList
 
 private void sendLearningParameters()
 {
   if (parent.checkConnected())
   {
-     // TODO add combobox methsendCommandod name, send correct parameters only
+     // TODO save under correct name
     Command cmd = parseTextArea(strMLParameters + ":set",
             this.jTextAreaLearningParams.getText(), 
             cbLearningMethod.getSelectedItem().toString());
@@ -361,10 +353,8 @@ private void sendCommand(Command command)
     }//GEN-LAST:event_jToggleButtonListActionPerformed
 
     private void jToggleButtonGetInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonGetInfoActionPerformed
-        Command cmd = new Command();
-        cmd.setName("machinelearning:getinfo");
+        Command cmd = new Command("machinelearning:getinfo");
         sendCommand(cmd);
-        
     }//GEN-LAST:event_jToggleButtonGetInfoActionPerformed
 
     /**
@@ -433,6 +423,8 @@ private void sendCommand(Command command)
       JOptionPane.showMessageDialog(this, "Can not send parameters!", 
               "Parameter Learner", JOptionPane.ERROR_MESSAGE);
       jToggleButtonLearn.setSelected(false);
+      jToggleButtonList.setSelected(false);
+      jToggleButtonGetInfo.setSelected(false);
     }
     else
     {

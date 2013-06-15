@@ -1,6 +1,27 @@
 #include "GA.h"
 
-GA::GA() {
+GA::GA(MachineLearningParameters::Evolution params,
+       std::map<std::string, double > initialGene,
+       std::map<std::string, Vector2<double> > genes ) :
+    GeneticAlgorithms(params.parentsNum,
+                      params.populationSize,
+                      params.surviveNum,
+                      params.maxGeneration,
+                      params.transmitRate,
+                      params.crossoverRate,
+                      params.mutationRate),
+    genes(genes)
+{
+    std::vector<Individual> initialGeneration;
+
+    Individual i;
+    i.gene =  initialGene ;
+
+    initialGeneration.push_back(i);
+    initialGeneration.push_back(i); // to make sure inital value is tested correctly (?! ok)
+    init(initialGeneration);
+
+    this->name = "Evolution";
 }
 
 

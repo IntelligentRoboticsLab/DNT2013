@@ -44,7 +44,13 @@ public:
     std::map<std::string, double> gene;
   };
 
-  GeneticAlgorithms();
+  GeneticAlgorithms(int parentsNum,
+                    int populationSize,
+                    int surviveNum,
+                    int maxGeneration,
+                    double transmitRate,
+                    double crossoverRate,
+                    double mutationRate);
 
   virtual ~GeneticAlgorithms(){}
 
@@ -65,7 +71,7 @@ protected:
   std::string dataDir;
 
   size_t parentsNum;
-  size_t population;
+  size_t populationSize;
   size_t surviveNum;
   size_t maxGeneration;
   double transmitRate, crossoverRate, mutationRate;

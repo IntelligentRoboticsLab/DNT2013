@@ -6,11 +6,14 @@
 #include "Tools/NaoInfo.h"
 #include <DebugCommunication/DebugCommandManager.h>
 #include "Tools/DataConversion.h"
+#include "../MachineLearningParameters.h"
 
 class GA : public MachineLearningMethod, public GeneticAlgorithms
 {
 public:
-    GA();
+    GA(MachineLearningParameters::Evolution params,
+       std::map<std::string, double> initialGene,
+       std::map<std::string, Vector2<double> > genes);
     virtual ~GA() {}
 
     void update(double fitness);

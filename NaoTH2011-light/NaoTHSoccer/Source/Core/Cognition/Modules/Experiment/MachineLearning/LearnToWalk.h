@@ -54,6 +54,10 @@ public:
                 MotionRequest& mq);
     virtual ~LearnToWalk() {}
     virtual void run();
+
+    void setMethod(std::string methodName);
+    bool isFinished() const;
+
     MachineLearningMethod* method;
     MachineLearningParameters theParameters;
     std::list<Test> theTests;
