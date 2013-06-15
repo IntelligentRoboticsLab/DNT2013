@@ -30,17 +30,19 @@ public:
     class Test
     {
     public:
-      Test():started(false),theMaxTime(0){}
+      Test():started(false),theMaxTime(0),theTimeLeft(0){}
       Test(unsigned int maxTime, const Pose2D& walkReq);
 
       Pose2D update(unsigned int time, const Vector2<double>& pos);
       bool isFinished() const;
       double getDistance() const;
       double getFitness() const;
+      void reset();
 
     private:
       bool started;
       int theMaxTime;
+      int theTimeLeft;
       Vector2<double> theStartPos;
       Vector2<double> theStopPos;
       Pose2D theWalkRequest;
@@ -78,6 +80,7 @@ private:
     std::vector<std::string> theIKParameterNames;
     std::map<std::string, Vector2<double> > theIKParameterBounds;
     std::map<std::string, double> theIKParameterValues;
+
     void reset();
     double evaluate();
 

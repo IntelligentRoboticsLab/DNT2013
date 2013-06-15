@@ -106,9 +106,10 @@ void LearnToWalk::run()
       || isFallenDown || theTest == theTests.end() )
     {
         double fitness = 0;
-        for( std::list<LearnToWalk::Test>::const_iterator iter=theTests.begin(); iter!=theTests.end(); ++iter)
+        for( std::list<LearnToWalk::Test>::iterator iter=theTests.begin(); iter!=theTests.end(); ++iter)
         {
           fitness += iter->getDistance();
+          iter->reset();
         }
         method->update(fitness);
         reset();
@@ -138,6 +139,12 @@ void LearnToWalk::run()
       // run
         Vector2<double> currentPos(mypos.x, mypos.y);
         Pose2D walkReq = theTest->update(theFrameInfo.getTime() - lastTime, currentPos);
+        lastTime = theFrameInfo.getTime();
+
+        if (theTest->isFinished()) {
+            theTest++;
+        }
+
         theMotionRequest.id = motion::walk;
         theMotionRequest.walkRequest.target = walkReq;
     }
@@ -163,7 +170,7 @@ Vector3<double> LearnToWalk::getPosition()
 
 double LearnToWalk::evaluate()
 {
-    double fitness =0;
+    double fitness = 0;
     for( std::list<Test>::const_iterator iter=theTests.begin(); iter!=theTests.end(); ++iter)
     {
       fitness += iter->getDistance();
@@ -174,8 +181,6 @@ double LearnToWalk::evaluate()
 
 void LearnToWalk::reset()
 {
-  lastResetTime = theFrameInfo.getTime();
-
   // Reset position in simspark if needded
   std::stringstream answer;
   std::map<std::string,std::string> args;
@@ -185,21 +190,29 @@ void LearnToWalk::reset()
   // TODO get up if necessary
   fallenCount = 0;
 
-  // Reset test iterator
+  // Reset test iterator and tests themselves
   theTest = theTests.begin();
+  lastResetTime = theFrameInfo.getTime();
+  lastTime = theFrameInfo.getTime();
 }
 
 LearnToWalk::Test::Test(unsigned int maxTime, const Pose2D& walkReq)
 : started(false),
 theMaxTime(maxTime),
+theTimeLeft(maxTime),
 theWalkRequest(walkReq)
 {
 
 }
 
+void LearnToWalk::Test::reset() {
+    theTimeLeft = theMaxTime;
+    started = false;
+}
+
 Pose2D LearnToWalk::Test::update(unsigned int time, const Vector2<double>& pos)
 {
-  theMaxTime -= time;
+  theTimeLeft -= time;
 
   if ( !started )
   {
@@ -215,12 +228,12 @@ Pose2D LearnToWalk::Test::update(unsigned int time, const Vector2<double>& pos)
 
 bool LearnToWalk::Test::isFinished() const
 {
-  return theMaxTime <= 0;
+  return theTimeLeft <= 0;
 }
 
 double LearnToWalk::Test::getFitness() const
 {
-    // Currently just the distance from the goal
+    //currently just walked distance
     return getDistance();
 }
 

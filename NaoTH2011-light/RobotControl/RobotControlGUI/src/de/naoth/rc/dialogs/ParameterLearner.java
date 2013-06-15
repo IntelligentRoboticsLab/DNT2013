@@ -488,7 +488,7 @@ private void sendCommand(Command command)
             // Commented out for now.....
             String info = strResult;
             jTextAreaInfo.setText(info);
-            
+            jToggleButtonGetInfo.setSelected(false);
         }
     }
   }//end handleResponse
