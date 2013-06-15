@@ -111,6 +111,10 @@ void LearnToWalk::run()
           fitness += iter->getDistance();
           iter->reset();
         }
+
+        if (fallenCount > 3)
+          fitness = std::max(0.0, fitness-1000);
+
         method->update(fitness);
         reset();
     }

@@ -51,21 +51,25 @@ void MachineLearning::executeDebugCommand(const std::string &command,
             // TODO define tests based on arguments method
             // TODO create better structure (instead of sending strings around, more private vars etc)
             // TODO assign testing weights (emphasis on walking forward/backward etc) through runningtime
-            unsigned int runningTime = ltw->theParameters.evolution.runningTime;
+            //unsigned int runningTime = ltw->theParameters.evolution.runningTime;
             ltw->setMethod("evolution");
             ltw->theTests.clear();
 
             if (!arguments.at("Task1").compare("on"))
             {
-                ltw->theTests.push_back(LearnToWalk::Test(runningTime/3, Pose2D(0,10000,0)));
-            }
-            if (!arguments.at("Task2").compare("on"))
-            {
-                ltw->theTests.push_back(LearnToWalk::Test(runningTime/3, Pose2D(0,0,10000)));
+                ltw->theTests.push_back(LearnToWalk::Test(10000, Pose2D(0,10000,0)));
             }
             if (!arguments.at("Task3").compare("on"))
             {
-                ltw->theTests.push_back(LearnToWalk::Test(runningTime/3, Pose2D(Math::fromDegrees(30),500,0)));
+                ltw->theTests.push_back(LearnToWalk::Test(4000, Pose2D(Math::fromDegrees(30),500,0)));
+            }
+            if (!arguments.at("Task2").compare("on"))
+            {
+                ltw->theTests.push_back(LearnToWalk::Test(10000, Pose2D(0,0,10000)));
+            }
+            if (!arguments.at("Task3").compare("on"))
+            {
+                ltw->theTests.push_back(LearnToWalk::Test(4000, Pose2D(Math::fromDegrees(-30),500,0)));
             }
             finished = false;
 

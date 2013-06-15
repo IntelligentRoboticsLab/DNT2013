@@ -85,10 +85,12 @@ GeneticAlgorithms::GeneticAlgorithms(int parentsNum,
 vector<GeneticAlgorithms::Individual> GeneticAlgorithms::newGeneration(const vector<GeneticAlgorithms::Individual>& old)
 {
   vector<Individual> children;
+  childNr = 0;
   // survive indivisuals
   for( size_t i=0; i<surviveNum&&i<old.size(); i++)
   {
     children.push_back(old[old.size()-1-i]);
+    childNr++;
   }
 
   // generate children
@@ -98,6 +100,7 @@ vector<GeneticAlgorithms::Individual> GeneticAlgorithms::newGeneration(const vec
     const Individual& father = selectParent(old);
     const Individual& mother = selectParent(old);
     children.push_back( Individual(father, mother, transmitRate, crossoverRate, mutationRate) );
+    childNr++;
   }
   
   return children;

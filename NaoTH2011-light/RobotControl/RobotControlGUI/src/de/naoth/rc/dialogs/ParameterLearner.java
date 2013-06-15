@@ -520,7 +520,7 @@ private void sendCommand(Command command)
       return res;
   }
   
-   private void sendCommand(String path, boolean enable)
+  private void sendCommand(String path, boolean enable)
   {
     Command command = new Command();
     command.setName(path);
@@ -532,21 +532,16 @@ private void sendCommand(Command command)
   }
    
    
-    private void sendCommand(String path, boolean enable, Map <String, String> tasks)
+  private void sendCommand(String path, boolean enable, Map <String, String> tasks)
   {
     Command command = new Command();
     command.setName(path);
     String arg = enable ? "on" : "off";
     command.addArg(arg);
-    
-    Iterator i = tasks.entrySet().iterator();
-    
-    while(i.hasNext()){
-        Map.Entry task = (Map.Entry) i.next();
-        command.addArg((String)task.getKey(), (String)task.getValue());
-    }
+      for (Map.Entry task : tasks.entrySet()) {
+          command.addArg((String)task.getKey(), (String)task.getValue());
+      }
         
-
     System.err.println(path + " " + arg);
     sendCommand(command);
   }

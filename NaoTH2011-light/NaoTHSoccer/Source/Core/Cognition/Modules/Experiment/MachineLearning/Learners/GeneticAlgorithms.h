@@ -59,10 +59,11 @@ public:
   Individual& getIndividual();
 
   bool converged() const;
+  int childNr;
 
 private:
   std::vector<Individual> newGeneration(const std::vector<Individual>& old);
-  
+
   const Individual& selectParent(const std::vector<Individual>& old);
 
   void saveGeneration(const std::vector<Individual>& gen, const std::string& file);
