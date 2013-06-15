@@ -303,6 +303,7 @@ void Walk::plan(const MotionRequest& motionRequest)
   }
   else
   {
+      // TODO staggering, use for fitness
     if (motionRequest.standardStand) // should end with typical stand
     {
       stopWalking();

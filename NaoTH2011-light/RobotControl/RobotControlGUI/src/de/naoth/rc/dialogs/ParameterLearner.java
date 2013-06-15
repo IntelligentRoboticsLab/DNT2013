@@ -479,12 +479,14 @@ private void sendCommand(Command command)
              } catch(IllegalArgumentException ex) { /* do nothing */ }
 
         }
-        else if (strCommand.compareTo(strGetInfoML + ":get") == 0){
-            String[] infoVals = strResult.split("\n");
-            String[] infoNames = {"best fitness", "fittest gen", "fittest individual", "current gen", "current individual"};
-            String info = "";
-            for (int i = 0; i < infoNames.length; i++)
-                info += infoNames+":"+infoVals[i];
+        else if (strCommand.compareTo(strGetInfoML) == 0){
+            //String[] infoVals = strResult.split("\n");
+            //String[] infoNames = {"best fitness", "fittest gen", "fittest individual", "current gen", "current individual"};
+            //String info = "";
+            //for (int i = 0; i < infoNames.length; i++)
+            //    info += infoNames+":"+infoVals[i];
+            // Commented out for now.....
+            String info = strResult;
             jTextAreaInfo.setText(info);
             
         }

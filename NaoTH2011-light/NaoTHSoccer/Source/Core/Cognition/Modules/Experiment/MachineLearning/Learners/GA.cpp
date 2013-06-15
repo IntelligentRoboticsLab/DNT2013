@@ -24,11 +24,15 @@ GA::GA(MachineLearningParameters::Evolution params,
     this->name = "Evolution";
 }
 
-
 void GA::update(double fitness) {
     std::cout << "GA: fitness = " << fitness << std::endl;
+
 	GeneticAlgorithms::Individual& i = getIndividual();
     i.fitness = std::max(0.0, fitness);
+
+    if (fittest < i) {
+        fittest = i;
+    }
 
 	GeneticAlgorithms::Individual& j = getIndividual();
 
@@ -47,3 +51,9 @@ void GA::update(double fitness) {
 	DebugCommandManager::getInstance().handleCommand("ParameterList:IKParameters:set", args, answer);
 }
 
+std::string GA::getInfo()
+{
+   std::stringstream outputstream;
+   outputstream << "Fittest individual has fitness " << fittest.fitness << "." << std::endl;
+   return outputstream.str();
+}

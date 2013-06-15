@@ -79,6 +79,11 @@ bool LearnToWalk::isFinished() const
     return method->isFinished();
 }
 
+std::string LearnToWalk::getInfo()
+{
+    return method->getInfo();
+}
+
 void LearnToWalk::run()
 {
     // TODO change
@@ -87,6 +92,7 @@ void LearnToWalk::run()
     unsigned int runningTime = theParameters.evolution.runningTime;
 
     // TODO use staggering to see if the nao is unstable. (Stop before actually falling).
+
     Vector3<double> mypos = getPosition();
     if ( mypos.z < NaoInfo::TibiaLength + NaoInfo::ThighLength ) {
       fallenCount++;

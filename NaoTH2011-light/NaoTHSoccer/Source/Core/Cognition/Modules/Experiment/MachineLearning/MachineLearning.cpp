@@ -5,7 +5,10 @@
 MachineLearning::MachineLearning()
 {
     REGISTER_DEBUG_COMMAND("machinelearning:evolution", "start/stop evolutionary method with current parameter settings", this);
+    REGISTER_DEBUG_COMMAND("machinelearning:getinfo", "get info about a currently running machine learning method",  this)
     // TODO instantiate correct classes for used methods
+
+
     ltw = new LearnToWalk(getVirtualVision(),
                           getRobotPose(),
                           getCameraMatrix(),
@@ -57,12 +60,13 @@ void MachineLearning::executeDebugCommand(const std::string &command,
             }
             if (!arguments.at("Task2").compare("on"))
             {
-                ltw->theTests.push_back(LearnToWalk::Test(runningTime/2, Pose2D(0,1000,0)));
+                ltw->theTests.push_back(LearnToWalk::Test(runningTime/2, Pose2D(0,0,10000)));
             }
             if (!arguments.at("Task3").compare("on"))
             {
                 ltw->theTests.push_back(LearnToWalk::Test(runningTime/4, Pose2D(Math::fromDegrees(30),500,0)));
             }
+            finished = false;
 
         } else if (arguments.find("off")!=arguments.end()) {
             finished = true;
@@ -70,7 +74,11 @@ void MachineLearning::executeDebugCommand(const std::string &command,
     }
     else if (!command.compare("machinelearning:getinfo"))
     {
-        //TODO return info in the right format (in GitHub)
+        if (ltw->method != NULL) {
+            outstream << ltw->getInfo() << std::endl;
+        } else {
+            outstream << "No machine learning method selected." << std::endl;
+        }
     }
 }
 

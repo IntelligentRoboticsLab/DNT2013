@@ -57,6 +57,7 @@ public:
 
     void setMethod(std::string methodName);
     bool isFinished() const;
+    std::string getInfo();
 
     MachineLearningMethod* method;
     MachineLearningParameters theParameters;

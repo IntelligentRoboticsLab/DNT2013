@@ -18,8 +18,10 @@ public:
 
     void update(double fitness);
     bool isFinished() const { return converged(); } // implemented by geneticalgorithms, but must be called directly
+    std::string getInfo();
 private:
     std::map<std::string, Vector2<double> > genes;
+    Individual fittest;
 };
 
 #endif // _GA_H
