@@ -42,4 +42,4 @@ Issues are also used by our team members to keep track of problems, improvements
 =========================================
 DO NOT push your code when it doesn't compile.
 Especially to the master branch. The master branch contains the
-complete bug-free code, which we are going to put to the robots.
+complete bug-free code, which we are going to put in the robots.
