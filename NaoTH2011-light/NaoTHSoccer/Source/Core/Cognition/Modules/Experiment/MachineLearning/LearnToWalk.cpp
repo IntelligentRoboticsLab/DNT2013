@@ -11,7 +11,8 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
                          const naoth::FrameInfo &fi,
                          const FieldInfo &field,
                          MotionRequest &mq)
-:theVirtualVision(vv),
+:killCurrent(false),
+  theVirtualVision(vv),
   theRobotPose(rp),
   theCameraMatrix(cm),
   theFrameInfo(fi),
@@ -27,7 +28,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
 
   REG_WALK_PARAMETER(bodyOffsetX, 0, 20) = 10;
 //  REG_WALK_PARAMETER(walk.doubleSupportTime, 0);
-  REG_WALK_PARAMETER(walk.singleSupportTime, 100, 500) = 400;
+  REG_WALK_PARAMETER(walk.singleSupportTime, 100, 400) = 300;
 //  REG_WALK_PARAMETER(walk.bodyRollOffset, 0);
   REG_WALK_PARAMETER(walk.bodyPitchOffset, 0, 10) = 5;
   REG_WALK_PARAMETER(walk.ZMPOffsetY, -10, 10) =  0;
@@ -83,7 +84,7 @@ std::string LearnToWalk::getInfo()
 {
     std::string methodInfo = method->getInfo();
     std::stringstream ltwInfo;
-    ltwInfo << "Current test: " << theTest->name << std::endl;
+    ltwInfo << "Current test:\n" << theTest->name << std::endl;
     return methodInfo + "\n" + ltwInfo.str();
 }
 
@@ -106,14 +107,14 @@ void LearnToWalk::run()
 
     // If stopping condition for evaluation is met
     if (lastResetTime + resettingTime + runningTime + standingTime < theFrameInfo.getTime()
-      || isFallenDown || theTest == theTests.end() )
+      || isFallenDown || theTest == theTests.end() || killCurrent )
     {
         //if (theMotionRequest.emergencyStop) { std::cout << "Emergency stop!" << std::endl; }
 
         double fitness = 0;
         for( std::list<LearnToWalk::Test>::iterator iter=theTests.begin(); iter!=theTests.end(); ++iter)
         {
-          fitness += iter->getDistance();
+          fitness += iter->fitness;
           iter->reset();
         }
 
@@ -199,6 +200,7 @@ void LearnToWalk::reset()
 
   // TODO get up if necessary
   fallenCount = 0;
+  killCurrent = false;
 
   // Reset test iterator and tests themselves
   theTest = theTests.begin();
@@ -208,6 +210,7 @@ void LearnToWalk::reset()
 
 LearnToWalk::Test::Test(std::string name, unsigned int maxTime, const Pose2D& walkReq, bool absolute)
 : name(name),
+  fitness(0),
 started(false),
 theMaxTime(maxTime),
 theTimeLeft(maxTime),
@@ -220,6 +223,7 @@ theWalkRequest(walkReq)
 void LearnToWalk::Test::reset() {
     theTimeLeft = theMaxTime;
     started = false;
+    fitness = 0;
 }
 
 Pose2D LearnToWalk::Test::update(unsigned int time, const Pose2D& pos)
@@ -239,6 +243,8 @@ Pose2D LearnToWalk::Test::update(unsigned int time, const Pose2D& pos)
     return (theStartPos + theWalkRequest) - pos;
   }
 
+  fitness = getFitness();
+
   return theWalkRequest;
 }
 
@@ -249,8 +255,13 @@ bool LearnToWalk::Test::isFinished() const
 
 double LearnToWalk::Test::getFitness() const
 {
-    //currently just walked distance
+  if (absolute) {
+    Pose2D difference = (theWalkRequest - (theStopPos - theStartPos));
+    // TODO use orientation, perhaps?
+    return pow( pow(difference.translation.x, 2.0) + pow(difference.translation.y, 2), 0.5);
+  } else {
     return getDistance();
+  }
 }
 
 double LearnToWalk::Test::getDistance() const

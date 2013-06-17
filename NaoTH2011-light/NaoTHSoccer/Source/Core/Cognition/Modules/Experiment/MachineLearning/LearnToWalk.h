@@ -41,6 +41,7 @@ public:
       void reset();
 
       std::string name;
+      double fitness;
     private:
       bool started;
       int theMaxTime;
@@ -58,6 +59,7 @@ public:
                 const naoth::FrameInfo& fi,
                 const FieldInfo& field,
                 MotionRequest& mq);
+
     virtual ~LearnToWalk() {}
     virtual void run();
 
@@ -68,6 +70,7 @@ public:
     MachineLearningMethod* method;
     MachineLearningParameters theParameters;
     std::list<Test> theTests;
+    bool killCurrent;
 
 private:
     const naoth::VirtualVision& theVirtualVision;

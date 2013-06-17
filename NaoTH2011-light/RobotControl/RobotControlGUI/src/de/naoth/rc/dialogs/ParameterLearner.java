@@ -179,6 +179,7 @@ private void sendCommand(Command command)
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0));
         jToolBar1 = new javax.swing.JToolBar();
         jToggleButtonGetInfo = new javax.swing.JToggleButton();
+        jToggleButtonKill = new javax.swing.JToggleButton();
         jToolBar2 = new javax.swing.JToolBar();
         jToggleButtonLearn = new javax.swing.JToggleButton();
         jToggleButtonList = new javax.swing.JToggleButton();
@@ -222,6 +223,17 @@ private void sendCommand(Command command)
             }
         });
         jToolBar1.add(jToggleButtonGetInfo);
+
+        jToggleButtonKill.setText("Kill current");
+        jToggleButtonKill.setFocusable(false);
+        jToggleButtonKill.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButtonKill.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToggleButtonKill.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButtonKillActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jToggleButtonKill);
 
         jToolBar2.setRollover(true);
 
@@ -357,6 +369,11 @@ private void sendCommand(Command command)
         sendCommand(cmd);
     }//GEN-LAST:event_jToggleButtonGetInfoActionPerformed
 
+    private void jToggleButtonKillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonKillActionPerformed
+        Command cmd = new Command("machinelearning:killcurrent");
+        sendCommand(cmd);
+    }//GEN-LAST:event_jToggleButtonKillActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -404,6 +421,7 @@ private void sendCommand(Command command)
     private javax.swing.JTextArea jTextAreaInfo;
     private javax.swing.JTextArea jTextAreaLearningParams;
     private javax.swing.JToggleButton jToggleButtonGetInfo;
+    private javax.swing.JToggleButton jToggleButtonKill;
     private javax.swing.JToggleButton jToggleButtonLearn;
     private javax.swing.JToggleButton jToggleButtonList;
     private javax.swing.JToolBar jToolBar1;
@@ -489,6 +507,8 @@ private void sendCommand(Command command)
             String info = strResult;
             jTextAreaInfo.setText(info);
             jToggleButtonGetInfo.setSelected(false);
+        } else if (strCommand.compareTo("machinelearning:killcurrent") == 0) {
+            jToggleButtonKill.setSelected(false);
         }
     }
   }//end handleResponse
