@@ -174,13 +174,15 @@ Vector3<double> LearnToWalk::getPosition()
 
 double LearnToWalk::evaluate()
 {
-    double fitness = 0;
+    double num = 1;
+    double den = 0;
     for( std::list<Test>::const_iterator iter=theTests.begin(); iter!=theTests.end(); ++iter)
     {
-      fitness += iter->getDistance();
+      num *= iter->getDistance();
+      den += iter->getDistance();
     }
 
-    return fitness;
+    return nom/den;
 }
 
 void LearnToWalk::reset()
