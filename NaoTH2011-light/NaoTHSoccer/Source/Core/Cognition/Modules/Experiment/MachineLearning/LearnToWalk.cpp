@@ -40,10 +40,10 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
 //  REG_WALK_PARAMETER(walk.leftFootRollOffset, 0.0);
 //  REG_WALK_PARAMETER(walk.rightFootRollOffset, 0.0);
   REG_WALK_PARAMETER(walk.footCurveFactor, 5, 15) = 10;
-  REG_WALK_PARAMETER(walk.maxStepLength, 50, 150) = 100.0;
-//  REG_WALK_PARAMETER(walk.maxStepWidth, 20, 50) = 30.0;
-//  REG_WALK_PARAMETER(walk.maxStepTurn, 20, 60) = 40.0;
-  REG_WALK_PARAMETER(walk.comHeight, 220, 265) = 260;
+  REG_WALK_PARAMETER(walk.maxStepLength, 50, 120) = 100.0;
+  REG_WALK_PARAMETER(walk.maxStepWidth, 20, 50) = 30.0;
+  REG_WALK_PARAMETER(walk.maxStepTurn, 20, 60) = 40.0;
+  REG_WALK_PARAMETER(walk.comHeight, 230, 265) = 260;
 //  REG_WALK_PARAMETER(walk.stiffness, 1);
   //REG_WALK_PARAMETER(walk.useArm, -1, 1) = 0;
 //  REG_WALK_PARAMETER(walk.enableDynamicStabilizer, 0);
@@ -81,7 +81,10 @@ bool LearnToWalk::isFinished() const
 
 std::string LearnToWalk::getInfo()
 {
-    return method->getInfo();
+    std::string methodInfo = method->getInfo();
+    std::stringstream ltwInfo;
+    ltwInfo << "Current test: " << theTest->name << std::endl;
+    return methodInfo + "\n" + ltwInfo.str();
 }
 
 void LearnToWalk::run()
@@ -89,12 +92,12 @@ void LearnToWalk::run()
     // TODO change
     unsigned int resettingTime = theParameters.evolution.resettingTime;
     unsigned int standingTime = theParameters.evolution.standingTime;
-    unsigned int runningTime = theParameters.evolution.runningTime;
+    unsigned int runningTime = theParameters.evolution.runningTime * theTests.size();
 
     // TODO use staggering to see if the nao is unstable. (Stop before actually falling).
 
-    Vector3<double> mypos = getPosition();
-    if ( mypos.z < NaoInfo::TibiaLength + NaoInfo::ThighLength ) {
+    Pose2D mypos = getPosition();
+    if ( theCameraMatrix.translation.z < NaoInfo::TibiaLength + NaoInfo::ThighLength ) {
       fallenCount++;
     } else {
       fallenCount = 0;
@@ -105,6 +108,8 @@ void LearnToWalk::run()
     if (lastResetTime + resettingTime + runningTime + standingTime < theFrameInfo.getTime()
       || isFallenDown || theTest == theTests.end() )
     {
+        //if (theMotionRequest.emergencyStop) { std::cout << "Emergency stop!" << std::endl; }
+
         double fitness = 0;
         for( std::list<LearnToWalk::Test>::iterator iter=theTests.begin(); iter!=theTests.end(); ++iter)
         {
@@ -141,8 +146,7 @@ void LearnToWalk::run()
     // else, regular walk request
     {
       // run
-        Vector2<double> currentPos(mypos.x, mypos.y);
-        Pose2D walkReq = theTest->update(theFrameInfo.getTime() - lastTime, currentPos);
+        Pose2D walkReq = theTest->update(theFrameInfo.getTime() - lastTime, mypos);
         lastTime = theFrameInfo.getTime();
 
         if (theTest->isFinished()) {
@@ -154,22 +158,22 @@ void LearnToWalk::run()
     }
   }
 
-Vector3<double> LearnToWalk::getPosition()
+Pose2D LearnToWalk::getPosition()
 {
-    Vector3<double> mypos;
-    if (theVirtualVision.data.find("mypos") != theVirtualVision.data.end())
-    {
-      // use debug infomation from simulation server
-      mypos = theVirtualVision.data.find("mypos")->second;
-    } else
-    {
-      // use self location
-      mypos.x = theRobotPose.translation.x;
-      mypos.y = theRobotPose.translation.y;
-      mypos.z = theCameraMatrix.translation.z;
-    }
+  Pose2D mypos;
+  //Vector4<double> mypos;
+  if (theVirtualVision.data.find("mypos") != theVirtualVision.data.end())
+  {
+    // use debug infomation from simulation server
+    std::cout << theVirtualVision.data.at("mypos") << std::endl;
+    mypos = Pose2D(0,0,0); // theVirtualVision.data.find("mypos")->second );
+  } else
+  {
+    // use self location
+    mypos = theRobotPose;
+  }
 
-    return mypos;
+  return mypos;
 }
 
 double LearnToWalk::evaluate()
@@ -202,10 +206,12 @@ void LearnToWalk::reset()
   lastTime = theFrameInfo.getTime();
 }
 
-LearnToWalk::Test::Test(unsigned int maxTime, const Pose2D& walkReq)
-: started(false),
+LearnToWalk::Test::Test(std::string name, unsigned int maxTime, const Pose2D& walkReq, bool absolute)
+: name(name),
+started(false),
 theMaxTime(maxTime),
 theTimeLeft(maxTime),
+absolute(absolute),
 theWalkRequest(walkReq)
 {
 
@@ -216,7 +222,7 @@ void LearnToWalk::Test::reset() {
     started = false;
 }
 
-Pose2D LearnToWalk::Test::update(unsigned int time, const Vector2<double>& pos)
+Pose2D LearnToWalk::Test::update(unsigned int time, const Pose2D& pos)
 {
   theTimeLeft -= time;
 
@@ -228,9 +234,13 @@ Pose2D LearnToWalk::Test::update(unsigned int time, const Vector2<double>& pos)
 
   theStopPos = pos;
 
+  if ( absolute )
+  {
+    return (theStartPos + theWalkRequest) - pos;
+  }
+
   return theWalkRequest;
 }
-
 
 bool LearnToWalk::Test::isFinished() const
 {
@@ -245,6 +255,7 @@ double LearnToWalk::Test::getFitness() const
 
 double LearnToWalk::Test::getDistance() const
 {
-  return (theStopPos-theStartPos).abs();
+  return pow(pow(theStopPos.translation.x-theStartPos.translation.x, 2.0) +
+             pow(theStopPos.translation.y-theStartPos.translation.y, 2.0), 0.5);
 }
 

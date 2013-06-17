@@ -23,6 +23,7 @@
 #include "Tools/Debug/DebugRequest.h"
 #include <DebugCommunication/DebugCommandManager.h>
 
+#include <math.h>
 
 class LearnToWalk
 {
@@ -30,22 +31,25 @@ public:
     class Test
     {
     public:
-      Test():started(false),theMaxTime(0),theTimeLeft(0){}
-      Test(unsigned int maxTime, const Pose2D& walkReq);
+      Test():started(false),theMaxTime(0),theTimeLeft(0), absolute(false){}
+      Test(std::string name, unsigned int maxTime, const Pose2D& walkReq, bool absolute);
 
-      Pose2D update(unsigned int time, const Vector2<double>& pos);
+      Pose2D update(unsigned int time, const Pose2D& pos);
       bool isFinished() const;
       double getDistance() const;
       double getFitness() const;
       void reset();
 
+      std::string name;
     private:
       bool started;
       int theMaxTime;
       int theTimeLeft;
-      Vector2<double> theStartPos;
-      Vector2<double> theStopPos;
+      bool absolute;
       Pose2D theWalkRequest;
+
+      Pose2D theStartPos;
+      Pose2D theStopPos;
     };
 
     LearnToWalk(const naoth::VirtualVision& vv,
@@ -84,7 +88,7 @@ private:
     void reset();
     double evaluate();
 
-    Vector3<double> getPosition();
+    Pose2D getPosition();
     std::list<Test>::iterator theTest;
 
 };

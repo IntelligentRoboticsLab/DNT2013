@@ -151,7 +151,6 @@ private:
   /** */
   void adaptStepSize(FootStep& step) const;
 
-
 private:
   // TODO: does it have to be static?
   static unsigned int theStepID; // use for step control

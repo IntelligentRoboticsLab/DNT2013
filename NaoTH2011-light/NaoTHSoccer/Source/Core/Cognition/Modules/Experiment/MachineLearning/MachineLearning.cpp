@@ -1,21 +1,45 @@
 #include "MachineLearning.h"
-#include <string>
-
 
 MachineLearning::MachineLearning()
 {
-    REGISTER_DEBUG_COMMAND("machinelearning:evolution", "start/stop evolutionary method with current parameter settings", this);
-    REGISTER_DEBUG_COMMAND("machinelearning:getinfo", "get info about a currently running machine learning method",  this)
-    // TODO instantiate correct classes for used methods
+  REGISTER_DEBUG_COMMAND("machinelearning:evolution", "start/stop evolutionary method with current parameter settings", this);
+  REGISTER_DEBUG_COMMAND("machinelearning:getinfo", "get info about a currently running machine learning method",  this)
+  // TODO instantiate correct classes for used methods
 
 
-    ltw = new LearnToWalk(getVirtualVision(),
-                          getRobotPose(),
-                          getCameraMatrix(),
-                          getFrameInfo(),
-                          getFieldInfo(),
-                          getMotionRequest());
-    finished = false;
+  ltw = new LearnToWalk(getVirtualVision(),
+                        getRobotPose(),
+                        getCameraMatrix(),
+                        getFrameInfo(),
+                        getFieldInfo(),
+                        getMotionRequest());
+  finished = false;
+}
+
+void MachineLearning::setTests(unsigned int runningtime)
+{
+  // tests[name] = Test( runningtime, Pose2D(rotation, translation_x, translation_y), absolute)
+  // Simple running tests, absolute=false
+  tests["forward"]       = LearnToWalk::Test("forward", runningtime, Pose2D(0,  1000,  0), false);
+  tests["backward"]      = LearnToWalk::Test("backward", runningtime, Pose2D(0, -1000,  0), false);
+  tests["right"]         = LearnToWalk::Test("right", runningtime, Pose2D(0,  0,    -1000), false);
+  tests["left"]          = LearnToWalk::Test("left", runningtime, Pose2D(0,  0,     1000), false);
+  tests["forwardleft"]   = LearnToWalk::Test("forwardleft" ,runningtime, Pose2D(0,  1000,  1000), false);
+  tests["forwardright"]  = LearnToWalk::Test("forwardright", runningtime, Pose2D(0,  1000, -1000), false);
+  tests["backwardleft"]  = LearnToWalk::Test("backwardleft", runningtime, Pose2D(0, -1000,  1000), false);
+  tests["backwardright"] = LearnToWalk::Test("backwardright", runningtime, Pose2D(0, -1000, -1000), false);
+
+  // GoToTarget tests, absolute=true
+  for(int angle=-150; angle != 150; angle+=30) {
+    std::stringstream methodname;
+    double rads = Math::fromDegrees(angle);
+    double x = cos(rads);
+    double y = sin(rads);
+    methodname << "x " << std::setprecision(3) << x <<
+                  "y" << std::setprecision(3) << y <<
+                  "angle " << std::setprecision(3) << rads;
+    tests[methodname.str()] = LearnToWalk::Test(methodname.str(), runningtime, Pose2D(rads, 1000 * x, 1000 * y), true);
+  }
 }
 
 MachineLearning::~MachineLearning() {
@@ -52,25 +76,15 @@ void MachineLearning::executeDebugCommand(const std::string &command,
             // TODO create better structure (instead of sending strings around, more private vars etc)
             // TODO assign testing weights (emphasis on walking forward/backward etc) through runningtime
             //unsigned int runningTime = ltw->theParameters.evolution.runningTime;
+            setTests(ltw->theParameters.evolution.runningTime);
             ltw->setMethod("evolution");
             ltw->theTests.clear();
 
-            if (!arguments.at("Task1").compare("on"))
+            for(std::map<std::string, LearnToWalk::Test >::iterator test=tests.begin(); test!=tests.end(); test++)
             {
-                ltw->theTests.push_back(LearnToWalk::Test(10000, Pose2D(0,10000,0)));
+              ltw->theTests.push_back(test->second);
             }
-            if (!arguments.at("Task3").compare("on"))
-            {
-                ltw->theTests.push_back(LearnToWalk::Test(4000, Pose2D(Math::fromDegrees(30),500,0)));
-            }
-            if (!arguments.at("Task2").compare("on"))
-            {
-                ltw->theTests.push_back(LearnToWalk::Test(10000, Pose2D(0,0,10000)));
-            }
-            if (!arguments.at("Task3").compare("on"))
-            {
-                ltw->theTests.push_back(LearnToWalk::Test(4000, Pose2D(Math::fromDegrees(-30),500,0)));
-            }
+
             finished = false;
 
         } else if (arguments.find("off")!=arguments.end()) {

@@ -288,7 +288,6 @@ void Walk::plan(const MotionRequest& motionRequest)
   ASSERT(!Math::isNan(walkRequest.target.translation.y));
   ASSERT(!Math::isNan(walkRequest.target.rotation));
   
-
   double emergency_stop = 500;
   MODIFY("Walk:emergency_stop", emergency_stop);
 
@@ -303,7 +302,7 @@ void Walk::plan(const MotionRequest& motionRequest)
   }
   else
   {
-      // TODO staggering, use for fitness
+    // staggering TODO
     if (motionRequest.standardStand) // should end with typical stand
     {
       stopWalking();
