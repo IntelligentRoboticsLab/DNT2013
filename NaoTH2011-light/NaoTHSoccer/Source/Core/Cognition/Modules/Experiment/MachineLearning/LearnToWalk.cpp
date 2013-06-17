@@ -182,7 +182,7 @@ double LearnToWalk::evaluate()
       den += iter->getDistance();
     }
 
-    return nom/den;
+    return num/den;
 }
 
 void LearnToWalk::reset()
