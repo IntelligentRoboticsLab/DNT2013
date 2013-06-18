@@ -7,6 +7,7 @@
 
 LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
                          const naoth::GyrometerData &gd,
+                         const naoth::ButtonData &bd,
                          const RobotPose &rp,
                          const CameraMatrix &cm,
                          const naoth::FrameInfo &fi,
@@ -17,6 +18,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
 :killCurrent(false),
   theVirtualVision(vv),
   theGyrometerData(gd),
+  theButtonData(bd),
   theRobotPose(rp),
   theCameraMatrix(cm),
   theFrameInfo(fi),
@@ -25,7 +27,8 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
   theMotionRequest(mq),
   theHeadMotionRequest(hmq),
   lastResetTime(0),
-  fallenCount(0)
+  fallenCount(0),
+  lastChestButtonEventCounter(0)
 {
   #define REG_WALK_PARAMETER(name, minv, maxv)\
   theIKParameterBounds[#name] = Vector2<double>(minv, maxv);\
@@ -34,7 +37,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
 
   REG_WALK_PARAMETER(bodyOffsetX, 0, 20) = 10;
 //  REG_WALK_PARAMETER(walk.doubleSupportTime, 0);
-  REG_WALK_PARAMETER(walk.singleSupportTime, 150, 400) = 300;
+  REG_WALK_PARAMETER(walk.singleSupportTime, 200, 500) = 300;
 //  REG_WALK_PARAMETER(walk.bodyRollOffset, 0);
   REG_WALK_PARAMETER(walk.bodyPitchOffset, 0, 10) = 5;
   REG_WALK_PARAMETER(walk.ZMPOffsetY, -10, 10) =  0;
@@ -50,7 +53,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
   REG_WALK_PARAMETER(walk.maxStepLength, 50, 120) = 100.0;
   REG_WALK_PARAMETER(walk.maxStepWidth, 20, 50) = 30.0;
   REG_WALK_PARAMETER(walk.maxStepTurn, 20, 60) = 40.0;
-  REG_WALK_PARAMETER(walk.comHeight, 230, 265) = 260;
+  REG_WALK_PARAMETER(walk.comHeight, 245, 265) = 260;
 //  REG_WALK_PARAMETER(walk.stiffness, 1);
   //REG_WALK_PARAMETER(walk.useArm, -1, 1) = 0;
 //  REG_WALK_PARAMETER(walk.enableDynamicStabilizer, 0);
@@ -70,12 +73,14 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
 
     lastTime = theFrameInfo.getTime();
     theTest = theTests.end();
+    state = RUNTESTS;
 }
 
 void LearnToWalk::setMethod(std::string methodName)
 {
     if(!methodName.compare("evolution")) {
         this->method = new GA(theParameters.evolution, theIKParameterValues, theIKParameterBounds);
+        this->manualReset = theParameters.evolution.manualReset;
     } else  {
         std::cout << "Trying to use unknown method '"  << methodName << "'.";
     }
@@ -108,9 +113,17 @@ void LearnToWalk::run()
 
     // TODO use staggering to see if the nao is unstable. (Stop before actually falling).
 
+    // fallprotection
     if (abs(theGyrometerData.data.y) > 20)
     {
-      // fall down, stiffness off
+      theMotionRequest.id = motion::dead; // fall down
+      fallenCount = 4;
+    }
+    // killbutton
+    if (theButtonData.eventCounter[naoth::ButtonData::Chest] > lastChestButtonEventCounter )
+    {
+      lastChestButtonEventCounter = theButtonData.eventCounter[naoth::ButtonData::Chest];
+      killCurrent = true;
     }
 
     Pose2D mypos = getPosition();
@@ -122,59 +135,87 @@ void LearnToWalk::run()
     bool isFallenDown = (fallenCount > 3 && lastResetTime + resettingTime < theFrameInfo.getTime());
 
     // If stopping condition for evaluation is met
-    if (lastResetTime + resettingTime + runningTime + standingTime < theFrameInfo.getTime()
-      || isFallenDown || theTest == theTests.end() || killCurrent )
-    {
-        //if (theMotionRequest.emergencyStop) { std::cout << "Emergency stop!" << std::endl; }
-
-        double fitness = 0;
-        for( std::list<LearnToWalk::Test>::iterator iter=theTests.begin(); iter!=theTests.end(); ++iter)
-        {
-          fitness += iter->fitness;
-          iter->reset();
-        }
-
-        if (fallenCount > 3)
-          fitness = std::max(0.0, fitness-1000);
-
-        method->update(fitness);
-        reset();
+    if(state == RUNTESTS && (lastResetTime + runningTime < theFrameInfo.getTime() ||
+                              isFallenDown || theTest == theTests.end() || killCurrent)) {
+      state = RESET;
     }
-    // else if during resetting time
-    else if (lastResetTime + resettingTime > theFrameInfo.getTime())
-    {
-        theMotionRequest.id = motion::stand;
-        theMotionRequest.forced = true;
-    // else if during standing time
-    std::cout << theBodyState << std::endl;
-    } else if (lastResetTime + resettingTime + standingTime > theFrameInfo.getTime()) // Reset done
-    {
-      // stop trying to beam
-      std::stringstream answer;
-      std::map<std::string, std::string> args;
-      args["off"] = "";
-      DebugRequest::getInstance().executeDebugCommand("SimSparkController:beam", args, answer);
-      theMotionRequest.id = motion::stand;
-      theMotionRequest.forced = false;
 
-      // try to stand up, I guess?
-      // TODO stand up if needed
-
-    } else
-    // else, regular walk request
-    {
-      // run
-        Pose2D walkReq = theTest->update(theFrameInfo.getTime() - lastTime, mypos);
-        lastTime = theFrameInfo.getTime();
-
-        if (theTest->isFinished()) {
-            theTest++;
+    switch(state) {
+      case RESET:
+        allTestsDone();    // Reset all, evaluate
+        state = GETTINGUP;
+        break;
+      case GETTINGUP:
+        if (manualReset) {
+          theMotionRequest.id = motion::stand;
+          theMotionRequest.forced = true;
+          if (lastResetTime + resettingTime < theFrameInfo.getTime()) {
+            state = PREPAREFORTESTS;
+          }
+        } else {
+           switch (theBodyState.fall_down_state) {
+             case BodyState::lying_on_front:
+               theMotionRequest.id = motion::stand_up_from_front;
+               break;
+             case BodyState::lying_on_back:
+               theMotionRequest.id = motion::stand_up_from_back;
+               break;
+             case BodyState::upright:
+               if(theMotionRequest.id != motion::stand_up_from_back && theMotionRequest.id != motion::stand_up_from_front)
+                 state = PREPAREFORTESTS;
+               break;
+             default:
+               break;
+           }
         }
+        break;
+      case PREPAREFORTESTS:
+        {// stop trying to beam
+          std::stringstream answer;
+          std::map<std::string, std::string> args;
+          args["off"] = "";
+          DebugRequest::getInstance().executeDebugCommand("SimSparkController:beam", args, answer);
+          theMotionRequest.id = motion::stand;
+          theMotionRequest.forced = false;
+          if (lastResetTime + resettingTime + standingTime < theFrameInfo.getTime()) {
+            state = RUNTESTS;
+          }
+          break;
+        }
+      case RUNTESTS:
+        {
+          Pose2D walkReq = theTest->update(theFrameInfo.getTime() - lastTime, mypos);
+          lastTime = theFrameInfo.getTime();
 
-        theMotionRequest.id = motion::walk;
-        theMotionRequest.walkRequest.target = walkReq;
+          if (theTest->isFinished()) {
+              theTest++;
+          }
+
+          theMotionRequest.id = motion::walk;
+          theMotionRequest.walkRequest.target = walkReq;
+
+          break;
+        }
+      default:
+        break;
     }
   }
+
+void LearnToWalk::allTestsDone()
+{
+  double fitness = 0;
+  for( std::list<LearnToWalk::Test>::iterator iter=theTests.begin(); iter!=theTests.end(); ++iter)
+  {
+    fitness += iter->fitness;
+    iter->reset();
+  }
+
+  if (fallenCount > 3)
+    fitness = std::max(0.0, fitness-1000);
+
+  method->update(fitness);
+  reset();
+}
 
 Pose2D LearnToWalk::getPosition()
 {
@@ -213,36 +254,10 @@ void LearnToWalk::reset()
   std::stringstream answer;
   std::map<std::string,std::string> args;
   args["on"] = "";
-  DebugRequest::getInstance().executeDebugCommand("SimSparkController:beam",args,answer);
+  //DebugRequest::getInstance().executeDebugCommand("SimSparkController:beam",args,answer);
 
-  // TODO get up if necessary
   fallenCount = 0;
   killCurrent = false;
-
-  if (state == GETUP && theBodyState.fall_down_state == BodyState::upright) {
-      // Done standing up
-      state = NONE;
-  }
-  if (theBodyState.fall_down_state != BodyState::upright) {
-      if (theMotionRequest.id != motion::dead && state != GETUP) {
-        // Remove stiffness before standing up
-        theMotionRequest.id = motion::dead;
-      } else {
-        state = GETUP;
-        switch (theBodyState.fall_down_state) {
-          case BodyState::lying_on_front:
-            theMotionRequest.id = motion::stand_up_from_front;
-            break;
-          case BodyState::lying_on_back:
-            theMotionRequest.id = motion::stand_up_from_back;
-            break;
-          default:
-            break;
-        }
-      }
-    }
-  }
-
 
   // Reset test iterator and tests themselves
   theTest = theTests.begin();

@@ -10,12 +10,15 @@ MachineLearning::MachineLearning()
 
   ltw = new LearnToWalk(getVirtualVision(),
                         getGyrometerData(),
+                        getButtonData(),
                         getRobotPose(),
                         getCameraMatrix(),
                         getFrameInfo(),
                         getFieldInfo(),
+                        getBodyState(),
                         getMotionRequest(),
                         getHeadMotionRequest());
+
   finished = false;
   //TODO HACK
   setTests(5000);
@@ -86,6 +89,7 @@ void MachineLearning::executeDebugCommand(const std::string &command,
 
             for(std::map<std::string, LearnToWalk::Test >::iterator test=tests.begin(); test!=tests.end(); test++)
             {
+              std::cout << test->second.name << std::endl;
               if(arguments.find(test->second.name) != arguments.end()) {
                 if (!arguments.at(test->second.name).compare("on")) {
                   ltw->theTests.push_back(test->second);
@@ -117,7 +121,6 @@ void MachineLearning::executeDebugCommand(const std::string &command,
       std::cout << "Tests size = " << tests.size() << std::endl;
       for (std::map<std::string, LearnToWalk::Test >::iterator iter=tests.begin(); iter!=tests.end(); iter++)
       {
-        std::cout << iter->first << std::endl;
         outstream << iter->first << std::endl;
       }
     }

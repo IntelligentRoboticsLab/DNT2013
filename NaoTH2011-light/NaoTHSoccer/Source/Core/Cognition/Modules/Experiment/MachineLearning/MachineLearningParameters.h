@@ -19,6 +19,8 @@ public:
         unsigned int resettingTime; // = 3000;
         unsigned int standingTime; // = 2000;
         unsigned int runningTime; // = 20000;
+
+        bool manualReset;
     } evolution;
 
     struct Method2 {

@@ -5,12 +5,14 @@
 
 #include "Learners/GA.h"
 #include "LearnToWalk.h"
+#include "Representations/Perception/CameraMatrix.h"
 #include "Representations/Infrastructure/VirtualVision.h"
 #include <Representations/Infrastructure/GyrometerData.h>
-#include "Representations/Modeling/RobotPose.h"
-#include "Representations/Perception/CameraMatrix.h"
 #include "Representations/Infrastructure/FieldInfo.h"
 #include "Representations/Infrastructure/FrameInfo.h"
+#include "Representations/Infrastructure/ButtonData.h"
+#include "Representations/Modeling/RobotPose.h"
+#include "Representations/Modeling/BodyState.h"
 #include "Representations/Modeling/BallModel.h"
 #include "Representations/Motion/Request/MotionRequest.h"
 #include "Representations/Motion/Request/HeadMotionRequest.h"
@@ -30,6 +32,7 @@ BEGIN_DECLARE_MODULE(MachineLearning)
   REQUIRE(BallModel)
   REQUIRE(GyrometerData)
   REQUIRE(BodyState)
+  REQUIRE(ButtonData)
 
   PROVIDE(MotionRequest)
   PROVIDE(HeadMotionRequest)

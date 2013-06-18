@@ -17,6 +17,7 @@
 #include "Representations/Motion/Request/MotionRequest.h"
 #include "Representations/Motion/Request/HeadMotionRequest.h"
 #include <Representations/Infrastructure/GyrometerData.h>
+#include "Representations/Infrastructure/ButtonData.h"
 
 #include "MachineLearningParameters.h"
 #include "Learners/MachineLearningMethod.h"
@@ -26,8 +27,10 @@
 #include <DebugCommunication/DebugCommandManager.h>
 
 #include <math.h>
-#define NONE 0
-#define GETUP 1
+#define RESET 0
+#define GETTINGUP 1
+#define PREPAREFORTESTS 2
+#define RUNTESTS 3
 
 class LearnToWalk
 {
@@ -59,6 +62,7 @@ public:
 
     LearnToWalk(const naoth::VirtualVision &vv,
                 const naoth::GyrometerData &gd,
+                const naoth::ButtonData &bd,
                 const RobotPose &rp,
                 const CameraMatrix &cm,
                 const naoth::FrameInfo &fi,
@@ -83,6 +87,7 @@ private:
     int state;
     const naoth::VirtualVision& theVirtualVision;
     const naoth::GyrometerData& theGyrometerData;
+    const naoth::ButtonData& theButtonData;
     const RobotPose& theRobotPose;
     const CameraMatrix& theCameraMatrix;
     const naoth::FrameInfo& theFrameInfo;
@@ -96,16 +101,19 @@ private:
     unsigned int lastTime;
     unsigned int fallenCount;
 
+    int lastChestButtonEventCounter;
+    bool manualReset;
+
     std::vector<std::string> theIKParameterNames;
     std::map<std::string, Vector2<double> > theIKParameterBounds;
     std::map<std::string, double> theIKParameterValues;
 
+    void allTestsDone();
     void reset();
     double evaluate();
 
     Pose2D getPosition();
     std::list<Test>::iterator theTest;
-
 };
 
 #endif // LEARNTOWALK_H

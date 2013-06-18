@@ -25,6 +25,8 @@ MachineLearningParameters::MachineLearningParameters()
     PARAMETER_REGISTER(evolution.standingTime) = 2000;
     PARAMETER_REGISTER(evolution.runningTime) = 20000;
 
+    PARAMETER_REGISTER(evolution.manualReset) = false;
+
     // Dummy method parameters
     PARAMETER_REGISTER(method2.param1) = 0.212;
     PARAMETER_REGISTER(method2.param2) = true;
