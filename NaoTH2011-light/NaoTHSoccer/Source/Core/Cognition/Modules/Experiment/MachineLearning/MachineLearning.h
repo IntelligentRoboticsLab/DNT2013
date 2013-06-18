@@ -6,6 +6,7 @@
 #include "Learners/GA.h"
 #include "LearnToWalk.h"
 #include "Representations/Infrastructure/VirtualVision.h"
+#include <Representations/Infrastructure/GyrometerData.h>
 #include "Representations/Modeling/RobotPose.h"
 #include "Representations/Perception/CameraMatrix.h"
 #include "Representations/Infrastructure/FieldInfo.h"
@@ -26,6 +27,7 @@ BEGIN_DECLARE_MODULE(MachineLearning)
   REQUIRE(RobotPose)
   REQUIRE(CameraMatrix)
   REQUIRE(BallModel)
+  REQUIRE(GyrometerData)
 
   PROVIDE(MotionRequest)
 END_DECLARE_MODULE(MachineLearning)

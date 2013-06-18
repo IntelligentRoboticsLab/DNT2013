@@ -6,6 +6,7 @@
 #include "LearnToWalk.h"
 
 LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
+                         const naoth::GyrometerData &gd,
                          const RobotPose &rp,
                          const CameraMatrix &cm,
                          const naoth::FrameInfo &fi,
@@ -13,6 +14,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
                          MotionRequest &mq)
 :killCurrent(false),
   theVirtualVision(vv),
+  theGyrometerData(gd),
   theRobotPose(rp),
   theCameraMatrix(cm),
   theFrameInfo(fi),
@@ -28,7 +30,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
 
   REG_WALK_PARAMETER(bodyOffsetX, 0, 20) = 10;
 //  REG_WALK_PARAMETER(walk.doubleSupportTime, 0);
-  REG_WALK_PARAMETER(walk.singleSupportTime, 100, 400) = 300;
+  REG_WALK_PARAMETER(walk.singleSupportTime, 150, 400) = 300;
 //  REG_WALK_PARAMETER(walk.bodyRollOffset, 0);
   REG_WALK_PARAMETER(walk.bodyPitchOffset, 0, 10) = 5;
   REG_WALK_PARAMETER(walk.ZMPOffsetY, -10, 10) =  0;
@@ -96,6 +98,11 @@ void LearnToWalk::run()
     unsigned int runningTime = theParameters.evolution.runningTime * theTests.size();
 
     // TODO use staggering to see if the nao is unstable. (Stop before actually falling).
+
+    if (abs(theGyrometerData.data.y) > 20)
+    {
+      // fall down, stiffness off
+    }
 
     Pose2D mypos = getPosition();
     if ( theCameraMatrix.translation.z < NaoInfo::TibiaLength + NaoInfo::ThighLength ) {

@@ -12,6 +12,7 @@ MachineLearning::MachineLearning()
                         getCameraMatrix(),
                         getFrameInfo(),
                         getFieldInfo(),
+                        getGyrometerData(),
                         getMotionRequest());
   finished = false;
 }
@@ -102,6 +103,9 @@ void MachineLearning::executeDebugCommand(const std::string &command,
     else if (!command.compare("machinelearning:killcurrent"))
     {
       ltw->killCurrent = true;
+    } else if (!command.compare("machinelearning:testcurrent"))
+    {
+
     }
 }
 
