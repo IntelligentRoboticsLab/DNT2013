@@ -10,8 +10,9 @@ option spl_robust_goalie{
 
   state inside_penalty_area{
     decision{
-     else if(action_done && (robot_pose.x < -3000 || robot_pose.x > -2400 ||
-           robot_pose.y <   -1100 || robot_pose.y > 1100)) {
+     // TODO hardcoded values, check if positive y is left
+     else if(action_done && (robot_pose.x < field.xPosOwnGroundline || robot_pose.x > field.xPosOwnPenaltyArea ||
+           robot_pose.y < field.yPosRightGoal || robot_pose.y > field.yPosLeftGoal)) {
       
               goto localize;
       }

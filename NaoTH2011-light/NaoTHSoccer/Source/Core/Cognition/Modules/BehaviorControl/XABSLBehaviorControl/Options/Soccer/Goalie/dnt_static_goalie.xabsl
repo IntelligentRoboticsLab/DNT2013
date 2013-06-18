@@ -4,8 +4,8 @@ option dnt_static_goalie{
    decision {
      if (action_done)
       goto check_situation;
-     else if (robot_pose.planned.x > -3000    && robot_pose.planned.x < -2600 &&
-         robot_pose.planned.y <   500    && robot_pose.planned.y > -500 &&
+     else if (robot_pose.planned.x > field.xPosOwnGroundline && robot_pose.planned.x < field.xPosOwnPenaltyArea &&
+         robot_pose.planned.y < 500    && robot_pose.planned.y > -500 &&
          robot_pose.planned.rotation < 5 && robot_pose.planned.rotation > -5){
          goto check_situation;
      }else{
@@ -24,7 +24,7 @@ option dnt_static_goalie{
    if ((ball.distance < 3000 && ball.time_since_last_seen < 1000)) {  
       goto critical_ball;
     }
-    else if (robot_pose.planned.x > -3200   && robot_pose.planned.x < -2400 &&
+    else if (robot_pose.planned.x > field.xPosOwnGroundline && robot_pose.planned.x < field.xPosOwnPenaltyArea &&
            robot_pose.planned.y <   700    && robot_pose.planned.y > -700 &&
            robot_pose.planned.rotation < 5 && robot_pose.planned.rotation > -5) 
     {
