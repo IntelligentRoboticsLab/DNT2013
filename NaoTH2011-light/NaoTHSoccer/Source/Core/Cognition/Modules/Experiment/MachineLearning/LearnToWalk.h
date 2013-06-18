@@ -100,9 +100,11 @@ private:
     unsigned int lastResetTime;
     unsigned int lastTime;
     unsigned int fallenCount;
+    unsigned int uprightCount;
 
     int lastChestButtonEventCounter;
     bool manualReset;
+    unsigned int iterationsToGetUp;
 
     std::vector<std::string> theIKParameterNames;
     std::map<std::string, Vector2<double> > theIKParameterBounds;

@@ -28,6 +28,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
   theHeadMotionRequest(hmq),
   lastResetTime(0),
   fallenCount(0),
+  uprightCount(0),
   lastChestButtonEventCounter(0)
 {
   #define REG_WALK_PARAMETER(name, minv, maxv)\
@@ -81,6 +82,7 @@ void LearnToWalk::setMethod(std::string methodName)
     if(!methodName.compare("evolution")) {
         this->method = new GA(theParameters.evolution, theIKParameterValues, theIKParameterBounds);
         this->manualReset = theParameters.evolution.manualReset;
+        this->iterationsToGetUp = theParameters.evolution.iterationsToGetUp;
     } else  {
         std::cout << "Trying to use unknown method '"  << methodName << "'.";
     }
@@ -117,7 +119,6 @@ void LearnToWalk::run()
     if (abs(theGyrometerData.data.y) > 20)
     {
       theMotionRequest.id = motion::dead; // fall down
-      fallenCount = 4;
     }
     // killbutton
     if (theButtonData.eventCounter[naoth::ButtonData::Chest] > lastChestButtonEventCounter )
@@ -156,13 +157,19 @@ void LearnToWalk::run()
            switch (theBodyState.fall_down_state) {
              case BodyState::lying_on_front:
                theMotionRequest.id = motion::stand_up_from_front;
+               uprightCount = 0;
                break;
              case BodyState::lying_on_back:
                theMotionRequest.id = motion::stand_up_from_back;
+               uprightCount = 0;
                break;
              case BodyState::upright:
-               if(theMotionRequest.id != motion::stand_up_from_back && theMotionRequest.id != motion::stand_up_from_front)
+               uprightCount++;
+               if (uprightCount > iterationsToGetUp)
+               {
+                 std::cout << "Nao seen as upright." << std::endl;
                  state = PREPAREFORTESTS;
+               }
                break;
              default:
                break;
@@ -257,6 +264,7 @@ void LearnToWalk::reset()
   //DebugRequest::getInstance().executeDebugCommand("SimSparkController:beam",args,answer);
 
   fallenCount = 0;
+  uprightCount = 0;
   killCurrent = false;
 
   // Reset test iterator and tests themselves

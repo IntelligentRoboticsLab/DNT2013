@@ -21,6 +21,7 @@ public:
         unsigned int runningTime; // = 20000;
 
         bool manualReset;
+        unsigned int iterationsToGetUp;
     } evolution;
 
     struct Method2 {
