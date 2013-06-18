@@ -13,6 +13,7 @@
 #include "Representations/Infrastructure/FrameInfo.h"
 #include "Representations/Modeling/BallModel.h"
 #include "Representations/Motion/Request/MotionRequest.h"
+#include "Representations/Motion/Request/HeadMotionRequest.h"
 
 #include <DebugCommunication/DebugCommandManager.h>
 
@@ -30,6 +31,7 @@ BEGIN_DECLARE_MODULE(MachineLearning)
   REQUIRE(GyrometerData)
 
   PROVIDE(MotionRequest)
+  PROVIDE(HeadMotionRequest)
 END_DECLARE_MODULE(MachineLearning)
 
 class MachineLearning : public MachineLearningBase, public DebugCommandExecutor

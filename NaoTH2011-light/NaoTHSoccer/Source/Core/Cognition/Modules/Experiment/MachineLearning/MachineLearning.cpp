@@ -13,7 +13,8 @@ MachineLearning::MachineLearning()
                         getFrameInfo(),
                         getFieldInfo(),
                         getGyrometerData(),
-                        getMotionRequest());
+                        getMotionRequest(),
+                        getHeadMotionRequest());
   finished = false;
 }
 

@@ -15,6 +15,7 @@
 #include "Representations/Infrastructure/FieldInfo.h"
 #include "Representations/Infrastructure/FrameInfo.h"
 #include "Representations/Motion/Request/MotionRequest.h"
+#include "Representations/Motion/Request/HeadMotionRequest.h"
 #include <Representations/Infrastructure/GyrometerData.h>
 
 #include "MachineLearningParameters.h"
@@ -60,7 +61,8 @@ public:
                 const naoth::FrameInfo& fi,
                 const FieldInfo& field,
                 const naoth::GyrometerData& gd,
-                MotionRequest& mq);
+                MotionRequest &mq,
+                HeadMotionRequest &hmq);
 
     virtual ~LearnToWalk() {}
     virtual void run();
@@ -82,6 +84,7 @@ private:
     const naoth::FrameInfo& theFrameInfo;
     const FieldInfo& theFieldInfo;
     MotionRequest& theMotionRequest;
+    HeadMotionRequest& theHeadMotionRequest;
 
     unsigned int lastResetTime;
     unsigned int lastTime;

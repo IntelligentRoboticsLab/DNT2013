@@ -11,7 +11,8 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
                          const CameraMatrix &cm,
                          const naoth::FrameInfo &fi,
                          const FieldInfo &field,
-                         MotionRequest &mq)
+                         MotionRequest &mq,
+                         HeadMotionRequest &hmq)
 :killCurrent(false),
   theVirtualVision(vv),
   theGyrometerData(gd),
@@ -20,6 +21,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
   theFrameInfo(fi),
   theFieldInfo(field),
   theMotionRequest(mq),
+  theHeadMotionRequest(hmq),
   lastResetTime(0),
   fallenCount(0)
 {
@@ -92,6 +94,11 @@ std::string LearnToWalk::getInfo()
 
 void LearnToWalk::run()
 {
+    // Some localization head movements
+    theHeadMotionRequest.id = HeadMotionRequest::search;
+    theHeadMotionRequest.searchCenter = Vector3<double>(2000, 0, 0);
+    theHeadMotionRequest.searchSize = Vector3<double>(1500, 2000, 0);
+
     // TODO change
     unsigned int resettingTime = theParameters.evolution.resettingTime;
     unsigned int standingTime = theParameters.evolution.standingTime;
