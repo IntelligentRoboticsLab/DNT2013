@@ -9,14 +9,16 @@ MachineLearning::MachineLearning()
   // TODO instantiate correct classes for used methods
 
   ltw = new LearnToWalk(getVirtualVision(),
+                        getGyrometerData(),
                         getRobotPose(),
                         getCameraMatrix(),
                         getFrameInfo(),
                         getFieldInfo(),
-                        getGyrometerData(),
                         getMotionRequest(),
                         getHeadMotionRequest());
   finished = false;
+  //TODO HACK
+  setTests(5000);
 }
 
 void MachineLearning::setTests(unsigned int runningtime)
@@ -79,14 +81,15 @@ void MachineLearning::executeDebugCommand(const std::string &command,
             // TODO create better structure (instead of sending strings around, more private vars etc)
             // TODO assign testing weights (emphasis on walking forward/backward etc) through runningtime
             //unsigned int runningTime = ltw->theParameters.evolution.runningTime;
-            setTests(ltw->theParameters.evolution.runningTime);
             ltw->setMethod("evolution");
             ltw->theTests.clear();
 
             for(std::map<std::string, LearnToWalk::Test >::iterator test=tests.begin(); test!=tests.end(); test++)
             {
-              if (!(arguments.find(test->name).compare("on"))) {
-                ltw->theTests.push_back(test->second);
+              if(arguments.find(test->second.name) != arguments.end()) {
+                if (!arguments.at(test->second.name).compare("on")) {
+                  ltw->theTests.push_back(test->second);
+                }
               }
             }
             finished = false;
@@ -111,8 +114,10 @@ void MachineLearning::executeDebugCommand(const std::string &command,
 
     } else if(!command.compare("machinelearning:getTaskList"))
     {
+      std::cout << "Tests size = " << tests.size() << std::endl;
       for (std::map<std::string, LearnToWalk::Test >::iterator iter=tests.begin(); iter!=tests.end(); iter++)
       {
+        std::cout << iter->first << std::endl;
         outstream << iter->first << std::endl;
       }
     }

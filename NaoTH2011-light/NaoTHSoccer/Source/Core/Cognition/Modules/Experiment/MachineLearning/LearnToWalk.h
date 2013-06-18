@@ -55,12 +55,12 @@ public:
       Pose2D theStopPos;
     };
 
-    LearnToWalk(const naoth::VirtualVision& vv,
-                const RobotPose& rp,
-                const CameraMatrix& cm,
-                const naoth::FrameInfo& fi,
-                const FieldInfo& field,
-                const naoth::GyrometerData& gd,
+    LearnToWalk(const naoth::VirtualVision &vv,
+                const naoth::GyrometerData &gd,
+                const RobotPose &rp,
+                const CameraMatrix &cm,
+                const naoth::FrameInfo &fi,
+                const FieldInfo &field,
                 MotionRequest &mq,
                 HeadMotionRequest &hmq);
 
