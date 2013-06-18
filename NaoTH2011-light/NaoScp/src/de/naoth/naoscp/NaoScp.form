@@ -369,7 +369,7 @@
                         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[10, 31]"/>
                         </Property>
-                        <Property name="name" type="java.lang.String" value="naoByte1" noResource="true"/>
+                        <Property name="name" type="java.lang.String" value="naoByte2" noResource="true"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="naoByte2ActionPerformed"/>
@@ -384,7 +384,7 @@
                         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[10, 31]"/>
                         </Property>
-                        <Property name="name" type="java.lang.String" value="naoByte1" noResource="true"/>
+                        <Property name="name" type="java.lang.String" value="naoByte3" noResource="true"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="naoByte3ActionPerformed"/>
@@ -399,7 +399,7 @@
                         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[10, 31]"/>
                         </Property>
-                        <Property name="name" type="java.lang.String" value="naoByte1" noResource="true"/>
+                        <Property name="name" type="java.lang.String" value="naoByte4" noResource="true"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="naoByte4ActionPerformed"/>
@@ -662,7 +662,7 @@
                               <Component id="jButtonSetRobotNetwork" max="32767" attributes="0"/>
                               <Component id="jButtonInitRobotSystem" alignment="1" max="32767" attributes="1"/>
                               <Component id="jButtonSaveNetworkConfig" max="32767" attributes="0"/>
-                              <Component id="jButtonRemoteKernelVideoReload" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jButtonRemoteKernelVideoReload" alignment="0" pref="186" max="32767" attributes="0"/>
                               <Component id="jScrollPane3" alignment="1" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -1030,7 +1030,7 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jLabel26" min="-2" max="-2" attributes="1"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jTeamCommPort" pref="36" max="32767" attributes="3"/>
+                                      <Component id="jTeamCommPort" pref="49" max="32767" attributes="3"/>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
                                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
