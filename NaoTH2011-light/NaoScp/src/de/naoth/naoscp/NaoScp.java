@@ -1901,6 +1901,7 @@ public class NaoScp extends NaoScpMainFrame
     
     public String askForPlayerNumber()
     {
+      System.out.println(iNaoBytes.size());
       String sPlayerNo = null;
       int iPlayerNo = 0;
       while(iPlayerNo >= iNaoBytes.size() || iPlayerNo < 1)
@@ -2283,7 +2284,7 @@ public class NaoScp extends NaoScpMainFrame
         naoByte2.setBackground(new java.awt.Color(230, 255, 230));
         naoByte2.setText("-1");
         naoByte2.setMaximumSize(new java.awt.Dimension(10, 31));
-        naoByte2.setName("naoByte1"); // NOI18N
+        naoByte2.setName("naoByte2"); // NOI18N
         naoByte2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 naoByte2ActionPerformed(evt);
@@ -2293,7 +2294,7 @@ public class NaoScp extends NaoScpMainFrame
         naoByte3.setBackground(new java.awt.Color(230, 255, 230));
         naoByte3.setText("-1");
         naoByte3.setMaximumSize(new java.awt.Dimension(10, 31));
-        naoByte3.setName("naoByte1"); // NOI18N
+        naoByte3.setName("naoByte3"); // NOI18N
         naoByte3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 naoByte3ActionPerformed(evt);
@@ -2303,7 +2304,7 @@ public class NaoScp extends NaoScpMainFrame
         naoByte4.setBackground(new java.awt.Color(230, 255, 230));
         naoByte4.setText("-1");
         naoByte4.setMaximumSize(new java.awt.Dimension(10, 31));
-        naoByte4.setName("naoByte1"); // NOI18N
+        naoByte4.setName("naoByte4"); // NOI18N
         naoByte4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 naoByte4ActionPerformed(evt);
@@ -2941,7 +2942,7 @@ public class NaoScp extends NaoScpMainFrame
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jLabel26)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jTeamCommPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
+                        .add(jTeamCommPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE))
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, jSettingsPanel2Layout.createSequentialGroup()
                         .add(jSettingsPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
                             .add(org.jdesktop.layout.GroupLayout.LEADING, jSettingsPanel2Layout.createSequentialGroup()
@@ -3045,7 +3046,7 @@ public class NaoScp extends NaoScpMainFrame
                     .add(jButtonSetRobotNetwork, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, jButtonInitRobotSystem, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(jButtonSaveNetworkConfig, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(jButtonRemoteKernelVideoReload, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(jButtonRemoteKernelVideoReload, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
