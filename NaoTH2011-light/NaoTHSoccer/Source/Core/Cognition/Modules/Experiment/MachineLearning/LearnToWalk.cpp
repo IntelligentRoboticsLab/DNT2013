@@ -11,6 +11,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
                          const CameraMatrix &cm,
                          const naoth::FrameInfo &fi,
                          const FieldInfo &field,
+                         const BodyState &bs,
                          MotionRequest &mq,
                          HeadMotionRequest &hmq)
 :killCurrent(false),
@@ -20,6 +21,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
   theCameraMatrix(cm),
   theFrameInfo(fi),
   theFieldInfo(field),
+  theBodyState(bs),
   theMotionRequest(mq),
   theHeadMotionRequest(hmq),
   lastResetTime(0),
@@ -144,6 +146,7 @@ void LearnToWalk::run()
         theMotionRequest.id = motion::stand;
         theMotionRequest.forced = true;
     // else if during standing time
+    std::cout << theBodyState << std::endl;
     } else if (lastResetTime + resettingTime + standingTime > theFrameInfo.getTime()) // Reset done
     {
       // stop trying to beam
@@ -215,6 +218,31 @@ void LearnToWalk::reset()
   // TODO get up if necessary
   fallenCount = 0;
   killCurrent = false;
+
+  if (state == GETUP && theBodyState.fall_down_state == BodyState::upright) {
+      // Done standing up
+      state = NONE;
+  }
+  if (theBodyState.fall_down_state != BodyState::upright) {
+      if (theMotionRequest.id != motion::dead && state != GETUP) {
+        // Remove stiffness before standing up
+        theMotionRequest.id = motion::dead;
+      } else {
+        state = GETUP;
+        switch (theBodyState.fall_down_state) {
+          case BodyState::lying_on_front:
+            theMotionRequest.id = motion::stand_up_from_front;
+            break;
+          case BodyState::lying_on_back:
+            theMotionRequest.id = motion::stand_up_from_back;
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
 
   // Reset test iterator and tests themselves
   theTest = theTests.begin();

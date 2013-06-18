@@ -26,6 +26,8 @@
 #include <DebugCommunication/DebugCommandManager.h>
 
 #include <math.h>
+#define NONE 0
+#define GETUP 1
 
 class LearnToWalk
 {
@@ -61,6 +63,7 @@ public:
                 const CameraMatrix &cm,
                 const naoth::FrameInfo &fi,
                 const FieldInfo &field,
+                const BodyState& bs,
                 MotionRequest &mq,
                 HeadMotionRequest &hmq);
 
@@ -77,12 +80,15 @@ public:
     bool killCurrent;
 
 private:
+    int state;
     const naoth::VirtualVision& theVirtualVision;
     const naoth::GyrometerData& theGyrometerData;
     const RobotPose& theRobotPose;
     const CameraMatrix& theCameraMatrix;
     const naoth::FrameInfo& theFrameInfo;
     const FieldInfo& theFieldInfo;
+    const BodyState& theBodyState;
+
     MotionRequest& theMotionRequest;
     HeadMotionRequest& theHeadMotionRequest;
 

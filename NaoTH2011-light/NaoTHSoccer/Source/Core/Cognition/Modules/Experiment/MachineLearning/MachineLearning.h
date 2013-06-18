@@ -29,6 +29,7 @@ BEGIN_DECLARE_MODULE(MachineLearning)
   REQUIRE(CameraMatrix)
   REQUIRE(BallModel)
   REQUIRE(GyrometerData)
+  REQUIRE(BodyState)
 
   PROVIDE(MotionRequest)
   PROVIDE(HeadMotionRequest)

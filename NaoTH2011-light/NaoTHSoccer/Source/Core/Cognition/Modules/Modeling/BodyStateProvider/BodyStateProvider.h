@@ -10,6 +10,8 @@
 
 #include <ModuleFramework/Module.h>
 
+#include "Cognition/Modules/Experiment/MachineLearning/MachineLearning.h"
+
 // Representations
 #include "Representations/Infrastructure/InertialSensorData.h"
 #include "Representations/Infrastructure/FSRData.h"
