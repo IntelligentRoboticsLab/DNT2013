@@ -5,6 +5,7 @@ MachineLearning::MachineLearning()
   REGISTER_DEBUG_COMMAND("machinelearning:evolution", "start/stop evolutionary method with current parameter settings", this);
   REGISTER_DEBUG_COMMAND("machinelearning:getinfo", "get info about a currently running machine learning method",  this);
   REGISTER_DEBUG_COMMAND("machinelearning:killcurrent", "kill current evaluation", this);
+  REGISTER_DEBUG_COMMAND("machinelearning:getTaskList", "get all evaluation tasks", this);
   // TODO instantiate correct classes for used methods
 
   ltw = new LearnToWalk(getVirtualVision(),
@@ -32,7 +33,7 @@ void MachineLearning::setTests(unsigned int runningtime)
   tests["backwardright"] = LearnToWalk::Test("backwardright", runningtime, Pose2D(0, -10000, -10000), false);
 
   // GoToTarget tests, absolute=true
-  for(int angle=-150; angle != 150; angle+=30) {
+  for(int angle=-150; angle != 150; angle+=50) {
     std::stringstream methodname;
     double rads = Math::fromDegrees(angle);
     double x = cos(rads);
@@ -84,9 +85,10 @@ void MachineLearning::executeDebugCommand(const std::string &command,
 
             for(std::map<std::string, LearnToWalk::Test >::iterator test=tests.begin(); test!=tests.end(); test++)
             {
-              ltw->theTests.push_back(test->second);
+              if (!(arguments.find(test->name).compare("on"))) {
+                ltw->theTests.push_back(test->second);
+              }
             }
-
             finished = false;
 
         } else if (arguments.find("off")!=arguments.end()) {
@@ -107,6 +109,12 @@ void MachineLearning::executeDebugCommand(const std::string &command,
     } else if (!command.compare("machinelearning:testcurrent"))
     {
 
+    } else if(!command.compare("machinelearning:getTaskList"))
+    {
+      for (std::map<std::string, LearnToWalk::Test >::iterator iter=tests.begin(); iter!=tests.end(); iter++)
+      {
+        outstream << iter->first << std::endl;
+      }
     }
 }
 
