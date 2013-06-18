@@ -743,6 +743,7 @@ public class NaoScp extends NaoScpMainFrame
     naoByte2.setEnabled(enable);
     naoByte3.setEnabled(enable);
     naoByte4.setEnabled(enable);
+    naoByte5.setEnabled(enable);
 
     sshUser.setEnabled(enable);
     sshRootUser.setEnabled(enable);
