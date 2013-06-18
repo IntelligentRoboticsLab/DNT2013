@@ -12,9 +12,11 @@ import de.naoth.rc.server.CommandSender;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
@@ -32,7 +34,10 @@ public class ParameterLearner extends AbstractDialog implements CommandSender {
   private final String strIKParameters = "ParameterList:IKParameters";
   private final String strMLParameters = "ParameterList:MachineLearningParameters";
   private final String strGetInfoML = "machinelearning:getinfo";
-          
+  private final String strGetTaskList = "machinelearning:getTaskList";
+  
+  private List <JCheckBox> taskList = null;
+  private JCheckBox  [] taskArray = new JCheckBox [15];        
   @InjectPlugin
   public RobotControl parent;
 
@@ -42,6 +47,12 @@ public class ParameterLearner extends AbstractDialog implements CommandSender {
      public ParameterLearner() {
         initComponents();
         // LOL HACKS
+        JCheckBox [] taskArray = {task1, task2, task3, task4, task5, task6, task7, task8, task9, task10, task11, task12, task13, task14, task15};
+        taskList = Arrays.asList(taskArray);
+        for (int i = 0; i < taskList.size(); i++)
+        {
+            taskList.get(i).setVisible(false);
+        }
         cbLearningMethod.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "" }));
         
         jTextAreaLearningParams.addKeyListener(new KeyAdapter() {
@@ -189,6 +200,17 @@ private void sendCommand(Command command)
         task2 = new javax.swing.JCheckBox();
         task3 = new javax.swing.JCheckBox();
         task4 = new javax.swing.JCheckBox();
+        task5 = new javax.swing.JCheckBox();
+        task6 = new javax.swing.JCheckBox();
+        task7 = new javax.swing.JCheckBox();
+        task8 = new javax.swing.JCheckBox();
+        task9 = new javax.swing.JCheckBox();
+        task10 = new javax.swing.JCheckBox();
+        task11 = new javax.swing.JCheckBox();
+        task12 = new javax.swing.JCheckBox();
+        task13 = new javax.swing.JCheckBox();
+        task14 = new javax.swing.JCheckBox();
+        task15 = new javax.swing.JCheckBox();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -270,12 +292,39 @@ private void sendCommand(Command command)
         jLabel1.setText("Evaluation tasks");
 
         task1.setText("Task1");
+        task1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                task1ActionPerformed(evt);
+            }
+        });
 
         task2.setText("Task2");
 
         task3.setText("Task3");
 
         task4.setText("Task4");
+
+        task5.setText("Task4");
+
+        task6.setText("Task4");
+
+        task7.setText("Task4");
+
+        task8.setText("Task4");
+
+        task9.setText("Task4");
+
+        task10.setText("Task4");
+
+        task11.setText("Task4");
+
+        task12.setText("Task4");
+
+        task13.setText("Task4");
+
+        task14.setText("Task4");
+
+        task15.setText("Task4");
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
@@ -293,16 +342,31 @@ private void sendCommand(Command command)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 250, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jToolBar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 250, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                            .add(jToolBar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 250, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(task11)
+                            .add(task15)
+                            .add(task14)
+                            .add(task12)
+                            .add(task13))))
                 .add(0, 0, Short.MAX_VALUE))
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jLabel1)
-                    .add(task1)
-                    .add(task2)
-                    .add(task3)
-                    .add(task4))
+                    .add(layout.createSequentialGroup()
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(task1)
+                            .add(task2)
+                            .add(task4)
+                            .add(task3)
+                            .add(task5))
+                        .add(70, 70, 70)
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(task8)
+                            .add(task9)
+                            .add(task6)
+                            .add(task7)
+                            .add(task10))))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -313,20 +377,37 @@ private void sendCommand(Command command)
                     .add(jToolBar2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                    .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
                     .add(jScrollPane1))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(filler1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jLabel1)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(task1)
+                .add(jLabel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 21, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(task2)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(task1)
+                    .add(task6)
+                    .add(task11))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(task3)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(task2)
+                    .add(task7)
+                    .add(task13))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(task4)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(task3)
+                    .add(task8)
+                    .add(task12))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(task4)
+                    .add(task9)
+                    .add(task14))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(task5)
+                    .add(task10)
+                    .add(task15))
                 .add(30, 30, 30))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -358,9 +439,10 @@ private void sendCommand(Command command)
     }//GEN-LAST:event_cbLearningMethodActionPerformed
 
     private void jToggleButtonListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonListActionPerformed
-        if (jToggleButtonLearn.isSelected()) 
+        if (jToggleButtonList.isSelected()) 
         {
             getLearningParameterList();
+            getTaskList();
         }
     }//GEN-LAST:event_jToggleButtonListActionPerformed
 
@@ -373,6 +455,10 @@ private void sendCommand(Command command)
         Command cmd = new Command("machinelearning:killcurrent");
         sendCommand(cmd);
     }//GEN-LAST:event_jToggleButtonKillActionPerformed
+
+    private void task1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_task1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_task1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -427,9 +513,20 @@ private void sendCommand(Command command)
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JCheckBox task1;
+    private javax.swing.JCheckBox task10;
+    private javax.swing.JCheckBox task11;
+    private javax.swing.JCheckBox task12;
+    private javax.swing.JCheckBox task13;
+    private javax.swing.JCheckBox task14;
+    private javax.swing.JCheckBox task15;
     private javax.swing.JCheckBox task2;
     private javax.swing.JCheckBox task3;
     private javax.swing.JCheckBox task4;
+    private javax.swing.JCheckBox task5;
+    private javax.swing.JCheckBox task6;
+    private javax.swing.JCheckBox task7;
+    private javax.swing.JCheckBox task8;
+    private javax.swing.JCheckBox task9;
     // End of variables declaration//GEN-END:variables
 
   @Override
@@ -509,10 +606,16 @@ private void sendCommand(Command command)
             jToggleButtonGetInfo.setSelected(false);
         } else if (strCommand.compareTo("machinelearning:killcurrent") == 0) {
             jToggleButtonKill.setSelected(false);
+        } else if (strCommand.compareTo(strGetTaskList) == 0){
+            String [] tasks = strResult.split("\n");
+            for (int i = 0 ; i < tasks.length; i++){
+                taskList.get(i).setText(tasks[i]);
+                taskList.get(i).setVisible(true);
+                      }
         }
     }
   }//end handleResponse
-
+    
   @Override
   public void handleError(int code)
   {
@@ -567,15 +670,21 @@ private void sendCommand(Command command)
   }
   public Map <String, String> getSelectedTests(){
       Map res = new HashMap <String, String>();
-      if(task1.isSelected()) res.put(task1.getText(), "on");
-      else res.put(task1.getText(), "off");
-      if(task2.isSelected()) res.put(task2.getText(), "on");
-      else res.put(task2.getText(), "off");
-      if(task3.isSelected()) res.put(task3.getText(), "on");
-      else res.put(task3.getText(), "off");
-      if(task4.isSelected()) res.put(task4.getText(), "on");
-      else res.put(task4.getText(), "off");
+      
+      for (JCheckBox task : taskList){
+            if(task.isSelected()) res.put(task.getText(), "on");
+            else res.put(task.getText(), "off");
+      }
+     
       return res;
+  }
+  
+  public void getTaskList(){
+     if (parent.checkConnected()) {
+      Command cmd = new Command (strGetTaskList);
+      sendCommand(cmd);
+     }
+      
   }
    
 }

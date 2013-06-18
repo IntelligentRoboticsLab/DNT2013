@@ -54,6 +54,11 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jScrollPane1" min="-2" pref="250" max="-2" attributes="0"/>
                           <Component id="jToolBar1" min="-2" pref="250" max="-2" attributes="0"/>
+                          <Component id="task11" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="task15" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="task14" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="task12" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="task13" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -63,10 +68,23 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="task1" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="task2" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="task3" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="task4" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="task1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="task2" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="task4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="task3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="task5" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="task8" min="-2" max="-2" attributes="0"/>
+                          <Component id="task9" min="-2" max="-2" attributes="0"/>
+                          <Component id="task6" min="-2" max="-2" attributes="0"/>
+                          <Component id="task7" min="-2" max="-2" attributes="0"/>
+                          <Component id="task10" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -81,21 +99,43 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane2" pref="188" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" pref="161" max="32767" attributes="0"/>
                   <Component id="jScrollPane1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="filler1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="task1" min="-2" max="-2" attributes="0"/>
+              <Component id="jLabel1" min="-2" pref="21" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="task2" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="task1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="task6" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="task11" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="task3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="task2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="task7" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="task13" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="task4" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="task3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="task8" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="task12" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="task4" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="task9" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="task14" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="task5" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="task10" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="task15" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -220,6 +260,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Task1"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="task1ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="task2">
       <Properties>
@@ -232,6 +275,61 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JCheckBox" name="task4">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task4"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task5">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task4"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task6">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task4"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task7">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task4"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task8">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task4"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task9">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task4"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task10">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task4"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task11">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task4"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task12">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task4"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task13">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task4"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task14">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Task4"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="task15">
       <Properties>
         <Property name="text" type="java.lang.String" value="Task4"/>
       </Properties>
