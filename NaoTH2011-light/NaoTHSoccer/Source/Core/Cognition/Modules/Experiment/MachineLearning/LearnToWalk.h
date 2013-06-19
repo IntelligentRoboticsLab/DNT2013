@@ -16,7 +16,7 @@
 #include "Representations/Infrastructure/FrameInfo.h"
 #include "Representations/Motion/Request/MotionRequest.h"
 #include "Representations/Motion/Request/HeadMotionRequest.h"
-#include <Representations/Infrastructure/GyrometerData.h>
+#include <Representations/Infrastructure/InertialSensorData.h>
 #include "Representations/Infrastructure/ButtonData.h"
 
 #include "MachineLearningParameters.h"
@@ -61,7 +61,7 @@ public:
     };
 
     LearnToWalk(const naoth::VirtualVision &vv,
-                const naoth::GyrometerData &gd,
+                const naoth::InertialSensorData &isd,
                 const naoth::ButtonData &bd,
                 const RobotPose &rp,
                 const CameraMatrix &cm,
@@ -86,7 +86,7 @@ public:
 private:
     int state;
     const naoth::VirtualVision& theVirtualVision;
-    const naoth::GyrometerData& theGyrometerData;
+    const naoth::InertialSensorData& theInertialSensorData;
     const naoth::ButtonData& theButtonData;
     const RobotPose& theRobotPose;
     const CameraMatrix& theCameraMatrix;
@@ -97,7 +97,7 @@ private:
     MotionRequest& theMotionRequest;
     HeadMotionRequest& theHeadMotionRequest;
 
-    unsigned int lastResetTime;
+    unsigned int stateTime;
     unsigned int lastTime;
     unsigned int fallenCount;
     unsigned int uprightCount;

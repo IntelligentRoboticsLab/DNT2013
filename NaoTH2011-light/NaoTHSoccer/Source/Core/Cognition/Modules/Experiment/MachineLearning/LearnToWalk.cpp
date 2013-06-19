@@ -6,7 +6,7 @@
 #include "LearnToWalk.h"
 
 LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
-                         const naoth::GyrometerData &gd,
+                         const naoth::InertialSensorData &isd,
                          const naoth::ButtonData &bd,
                          const RobotPose &rp,
                          const CameraMatrix &cm,
@@ -17,7 +17,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
                          HeadMotionRequest &hmq)
 :killCurrent(false),
   theVirtualVision(vv),
-  theGyrometerData(gd),
+  theInertialSensorData(isd),
   theButtonData(bd),
   theRobotPose(rp),
   theCameraMatrix(cm),
@@ -26,7 +26,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
   theBodyState(bs),
   theMotionRequest(mq),
   theHeadMotionRequest(hmq),
-  lastResetTime(0),
+  stateTime(0),
   fallenCount(0),
   uprightCount(0),
   lastChestButtonEventCounter(0)
@@ -74,7 +74,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
 
     lastTime = theFrameInfo.getTime();
     theTest = theTests.end();
-    state = RUNTESTS;
+    state = RESET;
 }
 
 void LearnToWalk::setMethod(std::string methodName)
@@ -114,12 +114,21 @@ void LearnToWalk::run()
     unsigned int runningTime = theParameters.evolution.runningTime * theTests.size();
 
     // TODO use staggering to see if the nao is unstable. (Stop before actually falling).
+    Pose2D mypos = getPosition();
+    if ( theCameraMatrix.translation.z < NaoInfo::TibiaLength + NaoInfo::ThighLength ) {
+      fallenCount++;
+    } else {
+      fallenCount = 0;
+    }
 
     // fallprotection
-    if (abs(theGyrometerData.data.y) > 20)
+    if (abs(theInertialSensorData.data.y) > 0.4 && fallenCount < 30)
     {
       theMotionRequest.id = motion::dead; // fall down
+      theMotionRequest.forced = true;
+      return;
     }
+
     // killbutton
     if (theButtonData.eventCounter[naoth::ButtonData::Chest] > lastChestButtonEventCounter )
     {
@@ -127,30 +136,25 @@ void LearnToWalk::run()
       killCurrent = true;
     }
 
-    Pose2D mypos = getPosition();
-    if ( theCameraMatrix.translation.z < NaoInfo::TibiaLength + NaoInfo::ThighLength ) {
-      fallenCount++;
-    } else {
-      fallenCount = 0;
-    }
-    bool isFallenDown = (fallenCount > 3 && lastResetTime + resettingTime < theFrameInfo.getTime());
-
     // If stopping condition for evaluation is met
-    if(state == RUNTESTS && (lastResetTime + runningTime < theFrameInfo.getTime() ||
-                              isFallenDown || theTest == theTests.end() || killCurrent)) {
+    if(state == RUNTESTS && (stateTime + runningTime < theFrameInfo.getTime() ||
+                              fallenCount > 10 || theTest == theTests.end() || killCurrent)) {
+      stateTime = theFrameInfo.getTime();
       state = RESET;
     }
 
     switch(state) {
       case RESET:
         allTestsDone();    // Reset all, evaluate
+        stateTime = theFrameInfo.getTime();
         state = GETTINGUP;
         break;
       case GETTINGUP:
         if (manualReset) {
           theMotionRequest.id = motion::stand;
           theMotionRequest.forced = true;
-          if (lastResetTime + resettingTime < theFrameInfo.getTime()) {
+          if (stateTime + resettingTime < theFrameInfo.getTime()) {
+            stateTime = theFrameInfo.getTime();
             state = PREPAREFORTESTS;
           }
         } else {
@@ -168,6 +172,7 @@ void LearnToWalk::run()
                if (uprightCount > iterationsToGetUp)
                {
                  std::cout << "Nao seen as upright." << std::endl;
+                 stateTime = theFrameInfo.getTime();
                  state = PREPAREFORTESTS;
                }
                break;
@@ -184,7 +189,9 @@ void LearnToWalk::run()
           DebugRequest::getInstance().executeDebugCommand("SimSparkController:beam", args, answer);
           theMotionRequest.id = motion::stand;
           theMotionRequest.forced = false;
-          if (lastResetTime + resettingTime + standingTime < theFrameInfo.getTime()) {
+          if (stateTime + standingTime < theFrameInfo.getTime()) {
+            stateTime = theFrameInfo.getTime();
+            lastTime = stateTime;
             state = RUNTESTS;
           }
           break;
@@ -231,7 +238,6 @@ Pose2D LearnToWalk::getPosition()
   if (theVirtualVision.data.find("mypos") != theVirtualVision.data.end())
   {
     // use debug infomation from simulation server
-    std::cout << theVirtualVision.data.at("mypos") << std::endl;
     mypos = Pose2D(0,0,0); // theVirtualVision.data.find("mypos")->second );
   } else
   {
@@ -269,7 +275,6 @@ void LearnToWalk::reset()
 
   // Reset test iterator and tests themselves
   theTest = theTests.begin();
-  lastResetTime = theFrameInfo.getTime();
   lastTime = theFrameInfo.getTime();
 }
 

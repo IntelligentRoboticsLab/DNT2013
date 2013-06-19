@@ -7,7 +7,7 @@
 #include "LearnToWalk.h"
 #include "Representations/Perception/CameraMatrix.h"
 #include "Representations/Infrastructure/VirtualVision.h"
-#include <Representations/Infrastructure/GyrometerData.h>
+#include <Representations/Infrastructure/InertialSensorData.h>
 #include "Representations/Infrastructure/FieldInfo.h"
 #include "Representations/Infrastructure/FrameInfo.h"
 #include "Representations/Infrastructure/ButtonData.h"
@@ -30,7 +30,7 @@ BEGIN_DECLARE_MODULE(MachineLearning)
   REQUIRE(RobotPose)
   REQUIRE(CameraMatrix)
   REQUIRE(BallModel)
-  REQUIRE(GyrometerData)
+  REQUIRE(InertialSensorData)
   REQUIRE(BodyState)
   REQUIRE(ButtonData)
 

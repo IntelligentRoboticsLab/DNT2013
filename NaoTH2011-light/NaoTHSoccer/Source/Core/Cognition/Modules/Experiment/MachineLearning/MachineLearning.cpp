@@ -9,7 +9,7 @@ MachineLearning::MachineLearning()
   // TODO instantiate correct classes for used methods
 
   ltw = new LearnToWalk(getVirtualVision(),
-                        getGyrometerData(),
+                        getInertialSensorData(),
                         getButtonData(),
                         getRobotPose(),
                         getCameraMatrix(),
@@ -89,7 +89,6 @@ void MachineLearning::executeDebugCommand(const std::string &command,
 
             for(std::map<std::string, LearnToWalk::Test >::iterator test=tests.begin(); test!=tests.end(); test++)
             {
-              std::cout << test->second.name << std::endl;
               if(arguments.find(test->second.name) != arguments.end()) {
                 if (!arguments.at(test->second.name).compare("on")) {
                   ltw->theTests.push_back(test->second);
