@@ -167,58 +167,41 @@ void GeneticAlgorithms::saveGeneration(const std::vector<Individual>& gen, const
   }
 }
 
-int GeneticAlgorithms::loadGeneration(){
+void GeneticAlgorithms::loadGeneration(){
+  vector<string> files = vector<string>();
+  getdir(dataDir,files);
 
+  int max = 0;
+  int x = 0;
 
-       vector<string> files = vector<string>();
+  for (unsigned int i = 0;i < files.size();i++) {
+     string fileName = files [i];
+     size_t position = fileName.find(".");
+     string extractName = (string::npos == position)? fileName : fileName.substr(0, position);
 
-       getdir(dataDir,files);
+     stringstream(extractName) >> x;
+     if (x > max) max = x;
 
-        int max = 0;
-        int x = 0;
+  }
 
-       for (unsigned int i = 0;i < files.size();i++) {
-           string fileName = files [i];
-           size_t position = fileName.find(".");
-           string extractName = (string::npos == position)? fileName : fileName.substr(0, position);
+  std::cout<< x << std::endl;
 
-           stringstream(extractName) >> x;
-           if (x > max) max = x;
+  string line;
+  stringstream sstm;
+  sstm << dataDir << "/" << x << ".txt";
 
-       }
+  ifstream myfile(sstm.str().c_str());
 
-       std::cout<< x << std::endl;
-
-       string line;
-
-       stringstream sstm;
-       sstm << dataDir << "/" << x << ".txt";
-
-       std::cout<< sstm.str().c_str() << std::endl;
-
-       ifstream myfile(sstm.str().c_str());
-
-        if (myfile.is_open())
-         {
-           while ( myfile.good() )
-           {
-             getline (myfile,line);
-             std::cout << line << endl;
-
-           }
-           myfile.close();
-         }
-
-
-       /*for (unsigned int i = 0;i < files.size();i++) {
-           string str = files[i];
-           std::cout<<str<<std::endl;
-       }*/
-
-
-       return 0;
+  if (myfile.is_open())
+  {
+    while ( myfile.good() )
+    {
+      getline (myfile,line);
+      std::cout << line << endl;
+    }
+    myfile.close();
+  }
 }
-
 
 std::ostream& operator <<(std::ostream& ost, const GeneticAlgorithms::Individual& v)
 {

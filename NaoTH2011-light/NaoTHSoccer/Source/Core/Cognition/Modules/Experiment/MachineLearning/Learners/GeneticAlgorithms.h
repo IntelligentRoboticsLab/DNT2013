@@ -63,7 +63,7 @@ public:
 
   virtual ~GeneticAlgorithms(){}
 
-  int loadGeneration();
+  void loadGeneration();
 
   void init(const std::vector<Individual>& initial);
 

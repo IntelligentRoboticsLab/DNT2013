@@ -79,15 +79,10 @@ void MachineLearning::executeDebugCommand(const std::string &command,
     if(!command.compare("machinelearning:evolution"))
     {
         // enable/disable method
-        if (arguments.find("on")!=arguments.end()) {
-
-            // TODO define tests based on arguments method
-            // TODO create better structure (instead of sending strings around, more private vars etc)
-            // TODO assign testing weights (emphasis on walking forward/backward etc) through runningtime
-            //unsigned int runningTime = ltw->theParameters.evolution.runningTime;
+        if (arguments.begin()->first == "on") {
             ltw->setMethod("evolution");
-            ltw->theTests.clear();
 
+            ltw->theTests.clear();
             for(std::map<std::string, LearnToWalk::Test >::iterator test=tests.begin(); test!=tests.end(); test++)
             {
               if(arguments.find(test->second.name) != arguments.end()) {
@@ -98,7 +93,7 @@ void MachineLearning::executeDebugCommand(const std::string &command,
             }
             finished = false;
 
-        } else if (arguments.find("off")!=arguments.end()) {
+        } else if (arguments.begin()->first == "off") {
             finished = true;
         }
     }
@@ -115,13 +110,11 @@ void MachineLearning::executeDebugCommand(const std::string &command,
       ltw->killCurrent = true;
     } else if (!command.compare("machinelearning:loadlastgen"))
     {
-
        GeneticAlgorithms* ga = dynamic_cast<GeneticAlgorithms*>(ltw->method);
        ga->loadGeneration();
 
     } else if(!command.compare("machinelearning:getTaskList"))
     {
-      std::cout << "TestssADAW size = " << tests.size() << std::endl;
       for (std::map<std::string, LearnToWalk::Test >::iterator iter=tests.begin(); iter!=tests.end(); iter++)
       {
         outstream << iter->first << std::endl;
