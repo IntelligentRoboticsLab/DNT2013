@@ -37,3 +37,9 @@ robot.
 Documentation is important, feel free to add whatever you think that is
 interesting-helpful for other people to know about.
 Issues are also used by our team members to keep track of problems, improvements, etc.
+
+4. THE MOST IMPORTANT
+=========================================
+DO NOT push your code when it doesn't compile.
+Especially to the master branch. The master branch contains the
+complete bug-free code, which we are going to put in the robots.
