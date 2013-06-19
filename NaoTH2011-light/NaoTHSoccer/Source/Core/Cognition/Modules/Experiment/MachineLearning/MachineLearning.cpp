@@ -6,6 +6,7 @@ MachineLearning::MachineLearning()
   REGISTER_DEBUG_COMMAND("machinelearning:getinfo", "get info about a currently running machine learning method",  this);
   REGISTER_DEBUG_COMMAND("machinelearning:killcurrent", "kill current evaluation", this);
   REGISTER_DEBUG_COMMAND("machinelearning:getTaskList", "get all evaluation tasks", this);
+  REGISTER_DEBUG_COMMAND("machinelearning:loadlastgen", "load last generation", this);
   // TODO instantiate correct classes for used methods
 
   ltw = new LearnToWalk(getVirtualVision(),
@@ -112,12 +113,15 @@ void MachineLearning::executeDebugCommand(const std::string &command,
     else if (!command.compare("machinelearning:killcurrent"))
     {
       ltw->killCurrent = true;
-    } else if (!command.compare("machinelearning:testcurrent"))
+    } else if (!command.compare("machinelearning:loadlastgen"))
     {
+
+       GeneticAlgorithms* ga = dynamic_cast<GeneticAlgorithms*>(ltw->method);
+       ga->loadGeneration();
 
     } else if(!command.compare("machinelearning:getTaskList"))
     {
-      std::cout << "Tests size = " << tests.size() << std::endl;
+      std::cout << "TestssADAW size = " << tests.size() << std::endl;
       for (std::map<std::string, LearnToWalk::Test >::iterator iter=tests.begin(); iter!=tests.end(); iter++)
       {
         outstream << iter->first << std::endl;

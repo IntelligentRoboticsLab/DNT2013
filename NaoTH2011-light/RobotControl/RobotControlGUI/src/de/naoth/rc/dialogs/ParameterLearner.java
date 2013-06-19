@@ -35,9 +35,9 @@ public class ParameterLearner extends AbstractDialog implements CommandSender {
   private final String strMLParameters = "ParameterList:MachineLearningParameters";
   private final String strGetInfoML = "machinelearning:getinfo";
   private final String strGetTaskList = "machinelearning:getTaskList";
+  private final String strLoadGen = "machinelearning:loadlastgen";
   
   private List <JCheckBox> taskList = null;
-  private JCheckBox  [] taskArray = new JCheckBox [15];        
   @InjectPlugin
   public RobotControl parent;
 
@@ -191,6 +191,7 @@ private void sendCommand(Command command)
         jToolBar1 = new javax.swing.JToolBar();
         jToggleButtonGetInfo = new javax.swing.JToggleButton();
         jToggleButtonKill = new javax.swing.JToggleButton();
+        jToggleLoadGen = new javax.swing.JToggleButton();
         jToolBar2 = new javax.swing.JToolBar();
         jToggleButtonLearn = new javax.swing.JToggleButton();
         jToggleButtonList = new javax.swing.JToggleButton();
@@ -257,6 +258,17 @@ private void sendCommand(Command command)
         });
         jToolBar1.add(jToggleButtonKill);
 
+        jToggleLoadGen.setText("LoadLastGen");
+        jToggleLoadGen.setFocusable(false);
+        jToggleLoadGen.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleLoadGen.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToggleLoadGen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleLoadGenActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jToggleLoadGen);
+
         jToolBar2.setRollover(true);
 
         jToggleButtonLearn.setText("Learn");
@@ -292,11 +304,6 @@ private void sendCommand(Command command)
         jLabel1.setText("Evaluation tasks");
 
         task1.setText("Task1");
-        task1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                task1ActionPerformed(evt);
-            }
-        });
 
         task2.setText("Task2");
 
@@ -456,9 +463,12 @@ private void sendCommand(Command command)
         sendCommand(cmd);
     }//GEN-LAST:event_jToggleButtonKillActionPerformed
 
-    private void task1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_task1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_task1ActionPerformed
+    private void jToggleLoadGenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleLoadGenActionPerformed
+         if (parent.checkConnected()) {
+      Command cmd = new Command (strLoadGen);
+      sendCommand(cmd);
+     }
+    }//GEN-LAST:event_jToggleLoadGenActionPerformed
 
     /**
      * @param args the command line arguments
@@ -510,6 +520,7 @@ private void sendCommand(Command command)
     private javax.swing.JToggleButton jToggleButtonKill;
     private javax.swing.JToggleButton jToggleButtonLearn;
     private javax.swing.JToggleButton jToggleButtonList;
+    private javax.swing.JToggleButton jToggleLoadGen;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JCheckBox task1;
@@ -545,15 +556,19 @@ private void sendCommand(Command command)
     {
         String strCommand = originalCommand.getName();
         if(strCommand.compareTo(strIKParameters + ":get") == 0)
-        {
+        {    
             int k = jTextAreaInfo.getCaretPosition();
             jTextAreaInfo.setText(strResult);
             try {
                 jTextAreaInfo.setCaretPosition(k);
             } catch(IllegalArgumentException ex) { /* do nothing */ }
         } 
+        else if(strCommand.compareTo(strLoadGen) == 0){
+            
+        }
         else if(strCommand.compareTo(strMLParameters + ":get") == 0)
-        {
+        {   
+            
             int k = jTextAreaLearningParams.getCaretPosition();
             
             String selectedMethod = null;

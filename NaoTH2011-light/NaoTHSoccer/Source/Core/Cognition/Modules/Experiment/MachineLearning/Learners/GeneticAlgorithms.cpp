@@ -10,6 +10,11 @@
 #include "Tools/Math/Common.h"
 #include "Tools/Debug/NaoTHAssert.h"
 #include <glib/gstdio.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <errno.h>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -71,9 +76,11 @@ GeneticAlgorithms::GeneticAlgorithms(int parentsNum,
   mutationRate(mutationRate)
 {
     // TODO specify folder ourselves?
-  GDateTime* dateTime = g_date_time_new_now_local();
-  dataDir = "ga"+string( g_date_time_format(dateTime, "%Y-%m-%d-%H-%M-%S") );
-  g_date_time_unref(dateTime);
+ /* GDateTime* dateTime = g_date_time_new_now_local();
+  dataDir = "ga"+//string( g_date_time_format(dateTime, "%Y-%m-%d-%H-%M-%S") );
+  g_date_time_unref(dateTime); */
+
+    dataDir = "ga";
 
 #ifdef WIN32
   g_mkdir(dataDir.c_str(), 0); // mode arguments are ignored in windows
@@ -160,6 +167,59 @@ void GeneticAlgorithms::saveGeneration(const std::vector<Individual>& gen, const
   }
 }
 
+int GeneticAlgorithms::loadGeneration(){
+
+
+       vector<string> files = vector<string>();
+
+       getdir(dataDir,files);
+
+        int max = 0;
+        int x = 0;
+
+       for (unsigned int i = 0;i < files.size();i++) {
+           string fileName = files [i];
+           size_t position = fileName.find(".");
+           string extractName = (string::npos == position)? fileName : fileName.substr(0, position);
+
+           stringstream(extractName) >> x;
+           if (x > max) max = x;
+
+       }
+
+       std::cout<< x << std::endl;
+
+       string line;
+
+       stringstream sstm;
+       sstm << dataDir << "/" << x << ".txt";
+
+       std::cout<< sstm.str().c_str() << std::endl;
+
+       ifstream myfile(sstm.str().c_str());
+
+        if (myfile.is_open())
+         {
+           while ( myfile.good() )
+           {
+             getline (myfile,line);
+             std::cout << line << endl;
+
+           }
+           myfile.close();
+         }
+
+
+       /*for (unsigned int i = 0;i < files.size();i++) {
+           string str = files[i];
+           std::cout<<str<<std::endl;
+       }*/
+
+
+       return 0;
+}
+
+
 std::ostream& operator <<(std::ostream& ost, const GeneticAlgorithms::Individual& v)
 {
   ost<<v.fitness<<"------------------------------------\n";
@@ -169,4 +229,20 @@ std::ostream& operator <<(std::ostream& ost, const GeneticAlgorithms::Individual
   }
   ost<<endl;
   return ost;
+}
+
+int GeneticAlgorithms::getdir (string dir, vector<string> &files)
+{
+    DIR *dp;
+    struct dirent *dirp;
+    if((dp  = opendir(dir.c_str())) == NULL) {
+        std::cout << "Error(" << errno << ") opening " << dir << endl;
+        return errno;
+    }
+
+    while ((dirp = readdir(dp)) != NULL) {
+        files.push_back(string(dirp->d_name));
+    }
+    closedir(dp);
+    return 0;
 }

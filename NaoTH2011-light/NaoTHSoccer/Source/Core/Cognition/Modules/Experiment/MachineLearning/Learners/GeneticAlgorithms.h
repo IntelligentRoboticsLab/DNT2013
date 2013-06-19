@@ -14,6 +14,12 @@
 #include <vector>
 #include "Tools/Math/Common.h"
 #include "Tools/Math/Vector2.h"
+#include <sys/types.h>
+#include <dirent.h>
+#include <errno.h>
+#include <vector>
+
+
 
 class GeneticAlgorithms
 {
@@ -44,6 +50,9 @@ public:
     std::map<std::string, double> gene;
   };
 
+
+  int getdir (std::string dir, std::vector<std::string> &files);
+
   GeneticAlgorithms(int parentsNum,
                     int populationSize,
                     int surviveNum,
@@ -53,6 +62,8 @@ public:
                     double mutationRate);
 
   virtual ~GeneticAlgorithms(){}
+
+  int loadGeneration();
 
   void init(const std::vector<Individual>& initial);
 
