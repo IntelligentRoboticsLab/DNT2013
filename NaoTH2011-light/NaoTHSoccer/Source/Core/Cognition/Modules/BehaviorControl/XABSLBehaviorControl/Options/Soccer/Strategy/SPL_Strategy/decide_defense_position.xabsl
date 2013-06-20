@@ -11,6 +11,8 @@ option decide_defense_position
           goto goto_defense_position_supporter;
         else if(game.player_number == 4)
           goto goto_defense_position_defender;
+        else if (game.player_number == 5)
+          goto goto_something;
         else
           stay;
     }

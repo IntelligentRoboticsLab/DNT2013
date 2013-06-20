@@ -79,7 +79,7 @@ void MachineLearning::executeDebugCommand(const std::string &command,
     if(!command.compare("machinelearning:evolution"))
     {
         // enable/disable method
-        if (arguments.begin()->first == "on") {
+      if (arguments.find("on")!=arguments.end()) {
             ltw->setMethod("evolution");
 
             ltw->theTests.clear();
@@ -93,7 +93,7 @@ void MachineLearning::executeDebugCommand(const std::string &command,
             }
             finished = false;
 
-        } else if (arguments.begin()->first == "off") {
+        } else if (arguments.find("off")!=arguments.end()) {
             finished = true;
         }
     }
