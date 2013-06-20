@@ -168,6 +168,10 @@ void GeneticAlgorithms::saveGeneration(const std::vector<Individual>& gen, const
 }
 
 void GeneticAlgorithms::loadGeneration(){
+  this->generations.clear();
+
+    std::vector<Individual>* lastGen = new std::vector<Individual>();
+
   vector<string> files = vector<string>();
   getdir(dataDir,files);
 
@@ -191,14 +195,52 @@ void GeneticAlgorithms::loadGeneration(){
   sstm << dataDir << "/" << x << ".txt";
 
   ifstream myfile(sstm.str().c_str());
-
+  int i = -1;
+  string extractValue= "";
+  string extractName="";
+  Individual* ind = new Individual();
   if (myfile.is_open())
   {
     while ( myfile.good() )
     {
+
       getline (myfile,line);
-      std::cout << line << endl;
+
+      if(strcmp(line.c_str(),"") == 0) continue;
+
+      size_t position = line.find("=");
+      if (string::npos == position){
+          position = line.find("-");
+          if (string::npos != position){
+              i++;
+              if(i!=0) lastGen->push_back(*ind);
+              ind = new Individual();
+
+              extractValue = (string::npos == position)? line : line.substr(0, position);
+
+
+
+              ind->fitness = atof(extractValue.c_str());
+              std::cout << extractValue << endl;
+              std::cout<< ind->fitness << endl;
+              continue;
+          }
+      }
+
+      extractName = (string::npos == position)? line : line.substr(0, position - 1);
+      extractValue = (string::npos == position)? line : line.substr(position + 2, line.size());
+      position = extractValue.find(";");
+      extractValue = (string::npos == position)? extractValue : extractValue.substr(0, position);
+      ind->gene[extractName]= atof(extractValue.c_str());
+      std::cout << extractName << ":" << extractValue << endl;
+
+    i++;
+
+
     }
+
+    lastGen->push_back(*ind);
+
     myfile.close();
   }
 }
