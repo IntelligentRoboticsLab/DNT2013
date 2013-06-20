@@ -82,7 +82,7 @@ include "Options/Soccer/Striker/approach_ball_obstacle_clear_kick.xabsl";*/
 // supporter
 include "Options/Soccer/Supporter/spl_simple_supporter.xabsl";
 include "Options/Soccer/Supporter/spl_playing_supporter.xabsl";
-
+include "Options/Soccer/Supporter/spl_playing_supporter_aggressive.xabsl";
 
 // defender
 include "Options/Soccer/Defender/spl_playing_defender.xabsl";
@@ -123,7 +123,7 @@ include "Options/NonSoccer/Test/dribble_stand_test.xabsl";
 include "Options/NonSoccer/Test/dribble_stand_test2.xabsl";
 
 //NonSoccer - Search Ball
-include"Options/NonSoccer/Test/search_ball_agent.xabsl";
+include "Options/NonSoccer/Test/search_ball_agent.xabsl";
 include "Options/NonSoccer/Test/search_ball_test/search_ball_test.xabsl";
 include "Options/NonSoccer/Test/search_ball_test/search_for_ball_test.xabsl";
 include "Options/NonSoccer/Test/kicker_agent_root.xabsl";
