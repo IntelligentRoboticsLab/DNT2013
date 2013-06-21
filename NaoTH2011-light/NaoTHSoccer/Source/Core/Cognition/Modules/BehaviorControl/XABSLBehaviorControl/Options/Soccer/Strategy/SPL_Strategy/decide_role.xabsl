@@ -5,13 +5,14 @@ option decide_role
   common decision 
   {
     /** Goalie */
-    if(game.player_number == 1) //&& team.members_alive_count >= 0) //become field player, when all others are "dead"
+    if(game.player_number == 1 && team.members_alive_count >= 0) //become field player, when all others are "dead"
     {
       goto goalie;
     }
     /* fallback if everything else is broken */
     else if( (team.members_alive_count <= 1) ||
-             (team.calc_if_is_striker && fall_down_state == upright))
+             (team.get_position == team.position.striker && 
+              fall_down_state == upright))
     {
       if(state_time < 20000 &&
          game.own_kickoff && !ball_was_outside_circle)
@@ -19,13 +20,17 @@ option decide_role
       else
         goto striker;
     }
-    else if(team.calc_if_is_the_last)
+    else if(team.get_position == team.position.defender)
     {
       goto defender;
     }
-    else if(true)
+    else if(team.get_position == team.position.supporter)
     {
       goto supporter;
+    }
+    else if (team.get_position == team.position.supporter_aggressive)
+    {
+      goto supporter_aggressive;
     }
   }
 
@@ -42,7 +47,6 @@ option decide_role
 
   initial state striker
   {
-    
     action
     {
       team.is_playing_as_striker = true;
@@ -71,6 +75,17 @@ option decide_role
       spl_playing_supporter();
     }
   }
+
+  state supporter_aggressive
+  {
+    action
+    {
+      team.is_playing_as_striker = false;
+      ball_was_outside_circle = true;
+      spl_playing_supporter_aggressive();
+    }
+  }
+
 
   state initial_striker
   {

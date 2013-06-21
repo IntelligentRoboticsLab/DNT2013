@@ -1,76 +1,17 @@
 /** Playing as supporter */
-option spl_playing_supporter {
+option spl_playing_supporter { 
 
-  state avoid_obstacle
-  {
-    decision
-    {
-      if(random < 0.5)
-      {
-        goto move_left_when_obstacle;
-      }
+  state avoid_obstacle {
+    decision {
+      if(action_done)
+        goto support_if_needed;
       else
-      {
-        goto move_right_when_obstacle;
-      }
-    }
-    action
-    {
-      motion.type = walk;
-      motion.walk.style = fast;
-      motion.walk_speed.x = 0;
-      motion.walk_speed.y = 0;
-      motion.walk_speed.rot = 0;
-      check_collision();
-    }
-  }
-
-  state move_left_when_obstacle
-  {
-    decision
-    { 
-      if(state_time > 1000)
-      {
-        goto ball_not_seen;
-      }
-      else
-      {
         stay;
-      }
     }
-    action
+    action 
     {
-      motion.type = walk;
-      motion.walk.style = fast;
-      motion.walk_speed.x = 0;
-      motion.walk_speed.y = 100;
-      motion.walk_speed.rot = 0;
-      check_collision();
-    }
-  }
-
-  state move_right_when_obstacle
-  {
-    decision
-    { 
-      if(state_time > 1000)
-      {
-        goto ball_not_seen;
-      }
-      else
-      {
-        stay;
-      }
-    }
-    action
-    {
-      motion.type = walk;
-      motion.walk.style = fast;
-      motion.walk_speed.x = 0;
-      motion.walk_speed.y = -100;
-      motion.walk_speed.rot = 0;
-      check_collision();
-    }
+      avoid_obstacle();
+    }  
   }
 
   initial state ball_not_seen {
@@ -96,13 +37,14 @@ option spl_playing_supporter {
       {
         goto avoid_obstacle;
       }
-     else if( action_done && ball.time_since_last_seen > 5000 )
+     else if( action_done && ball.time_since_last_seen > 5000 && 
+                             ball.team.time_since_last_update > 5000)
         goto ball_not_seen;
-      else
+     else
         stay;
     }
       action {
-        spl_simple_supporter();
+        spl_supporter();
         check_collision();
       }
   }
