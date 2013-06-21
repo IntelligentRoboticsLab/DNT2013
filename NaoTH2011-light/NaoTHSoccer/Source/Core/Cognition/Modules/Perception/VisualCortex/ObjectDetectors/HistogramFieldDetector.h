@@ -38,6 +38,7 @@
 
 BEGIN_DECLARE_MODULE(HistogramFieldDetector)
   REQUIRE(Image)
+//  REQUIRE(ColorTable64)
   REQUIRE(ColorClassificationModel)
   REQUIRE(CameraMatrix)
   REQUIRE(ArtificialHorizon)

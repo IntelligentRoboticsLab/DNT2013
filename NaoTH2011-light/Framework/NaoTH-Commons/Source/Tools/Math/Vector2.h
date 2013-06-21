@@ -105,14 +105,6 @@ template <class V> class Vector2{
   Vector2<V> operator-(const Vector2<V>& other) const
     {return Vector2<V>(*this) -= other;}
 
-  /**
-  */
-  double dis(const Vector2<V>& other) const
-  {
-    double dx = (double) other.x - (double) x;
-    double dy = (double) other.y - (double) y;
-    return sqrt(dx*dx + dy*dy);
-  }
   /** Negation of this vector.
   *\return A new object that contains the result of the calculation.
   */

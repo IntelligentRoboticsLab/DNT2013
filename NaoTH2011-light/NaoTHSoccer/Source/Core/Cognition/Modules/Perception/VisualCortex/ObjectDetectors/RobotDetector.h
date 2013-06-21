@@ -44,6 +44,7 @@
 
 BEGIN_DECLARE_MODULE(RobotDetector)
   REQUIRE(Image)
+//  REQUIRE(ColorTable64)
   REQUIRE(ColorClassificationModel)
   REQUIRE(CameraMatrix)
   REQUIRE(FieldPercept) 
