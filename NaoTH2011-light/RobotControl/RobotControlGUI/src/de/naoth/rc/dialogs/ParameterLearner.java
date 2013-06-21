@@ -435,7 +435,7 @@ private void sendCommand(Command command)
             } else {
                 cbLearningMethod.setFocusable(true);
                 jTextAreaLearningParams.setFocusable(true);
-                sendCommand("machinelearning:"+method, false);
+                sendCommand("machinelearning:end", false);
             }
         } else {
             jToggleButtonLearn.setSelected(false);

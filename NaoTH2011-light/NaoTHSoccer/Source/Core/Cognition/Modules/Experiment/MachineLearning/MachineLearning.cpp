@@ -3,11 +3,11 @@
 MachineLearning::MachineLearning()
 {
   REGISTER_DEBUG_COMMAND("machinelearning:evolution", "start/stop evolutionary method with current parameter settings", this);
+  REGISTER_DEBUG_COMMAND("machinelearning:end", "end current learning task", this);
   REGISTER_DEBUG_COMMAND("machinelearning:getinfo", "get info about a currently running machine learning method",  this);
   REGISTER_DEBUG_COMMAND("machinelearning:killcurrent", "kill current evaluation", this);
   REGISTER_DEBUG_COMMAND("machinelearning:getTaskList", "get all evaluation tasks", this);
   REGISTER_DEBUG_COMMAND("machinelearning:loadlastgen", "load last generation", this);
-  // TODO instantiate correct classes for used methods
 
   ltw = new LearnToWalk(getVirtualVision(),
                         getInertialSensorData(),
@@ -87,11 +87,12 @@ void MachineLearning::executeDebugCommand(const std::string &command,
         finished = false;
 
         ltw->setMethod("evolution");
-      } else if (arguments.find("off")!=arguments.end()) {
-          if(ltw->method!=NULL)
-            std::cout<<"MachineLearning method " << ltw->method->name << " finished!"<<std::endl;
-          finished = true;
-      }
+    }
+    else if (!command.compare("machinelearning:end"))
+    {
+      if(ltw->method!=NULL)
+       std::cout<<"MachineLearning method " << ltw->method->name << " finished!"<<std::endl;
+      finished = true;
     }
     else if (!command.compare("machinelearning:getinfo"))
     {
