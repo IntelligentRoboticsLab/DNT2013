@@ -88,34 +88,36 @@ void MachineLearning::executeDebugCommand(const std::string &command,
 
         ltw->setMethod("evolution");
     }
-    else if (!command.compare("machinelearning:end"))
-    {
-      if(ltw->method!=NULL)
-       std::cout<<"MachineLearning method " << ltw->method->name << " finished!"<<std::endl;
-      finished = true;
+  }
+  else if (!command.compare("machinelearning:end"))
+  {
+    if(ltw->method!=NULL) {
+      std::cout<<"MachineLearning method " << ltw->method->name << " finished!"<<std::endl;
     }
-    else if (!command.compare("machinelearning:getinfo"))
-    {
-      if (ltw->method != NULL) {
-          outstream << ltw->getInfo() << std::endl;
-      } else {
-          outstream << "No machine learning method selected." << std::endl;
-      }
+    finished = true;
+  }
+  else if (!command.compare("machinelearning:getinfo"))
+  {
+    if (ltw->method != NULL) {
+        outstream << ltw->getInfo() << std::endl;
+    } else {
+        outstream << "No machine learning method selected." << std::endl;
     }
-    else if (!command.compare("machinelearning:killcurrent"))
-    {
-      ltw->killCurrent = true;
-    } else if (!command.compare("machinelearning:loadlastgen"))
-    {
-       GeneticAlgorithms* ga = dynamic_cast<GeneticAlgorithms*>(ltw->method);
-       ga->loadGeneration();
+  }
+  else if (!command.compare("machinelearning:killcurrent"))
+  {
+    ltw->killCurrent = true;
+  } else if (!command.compare("machinelearning:loadlastgen"))
+  {
+    GeneticAlgorithms* ga = dynamic_cast<GeneticAlgorithms*>(ltw->method);
+    ga->loadGeneration();
 
-    } else if(!command.compare("machinelearning:getTaskList"))
+  } else if(!command.compare("machinelearning:getTaskList"))
+  {
+    for (std::map<std::string, LearnToWalk::Test >::iterator iter=tests.begin(); iter!=tests.end(); iter++)
     {
-      for (std::map<std::string, LearnToWalk::Test >::iterator iter=tests.begin(); iter!=tests.end(); iter++)
-      {
-        outstream << iter->first << std::endl;
-      }
+      outstream << iter->first << std::endl;
     }
+  }
 }
 

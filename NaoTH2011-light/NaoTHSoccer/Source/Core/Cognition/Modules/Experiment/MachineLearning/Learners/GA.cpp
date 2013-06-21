@@ -66,9 +66,8 @@ std::string GA::getInfo()
    //  outputstream << "Generation " << generationNum << ":" << std::max_element(generation)->fitness << std::endl;
    //}
    std::vector<GeneticAlgorithms::Individual> lastGen = generations.back();
-     Individual last = lastGen.back();
-
-     outputstream << last << std::endl;
+   Individual last = lastGen.front();
+   outputstream << last << std::endl;
 
    return outputstream.str();
 }
