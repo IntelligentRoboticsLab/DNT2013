@@ -72,6 +72,8 @@ private:
   PlayerInfo& playerInfo;
 
   static TeamSymbols* theInstance;
+  static void setPosition(int value);
+  static int getPosition();
   static double getTeamMembersAliveCount();
   static bool calculateIfStriker();
   static bool calculateIfStrikerByTimeToBall();
@@ -81,6 +83,7 @@ private:
   static bool calculateIfTheLast();
 
   const int maximumFreshTime;
+  int position;
 };
 
 #endif  /* _TEAMSYMBOLS_H */
