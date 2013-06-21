@@ -1,0 +1,74 @@
+/** Playing as supporter */
+option spl_playing_supporter_aggressive {
+
+  common decision {
+    if(obstacle.ultrasound.distance < 350 && motion.walk_speed.x > 0 && motion.type == walk )
+        goto avoid_obstacle;
+  }
+
+  initial state support_if_needed {
+   decision{
+     if ( ball.team.striker.time_since_last_update > 2000 )
+       goto go_to_default_position;
+     else
+       goto support_aggressive;
+   }
+    action {
+      check_collision();
+    }
+  }
+
+  state ball_not_seen {
+   decision{
+     if(action_done)
+       goto support_if_needed;
+     else
+       stay;
+   }
+    action {
+      ball_not_seen_situation();
+      check_collision();
+    }
+  }
+
+  state go_to_default_position {
+    decision {
+      if ( ball.team.time_since_last_update < 2000 )
+        goto support_aggressive;
+      else if ( action_done || state_time > 30000)
+        goto ball_not_seen;
+      else
+        stay;
+    }
+    action {
+       decide_strategy_position();
+       head.control_mode = smart_search;
+       check_collision();
+    }
+  }
+
+  state support_aggressive {
+    decision{
+      if ( ball.team.striker.time_since_last_update > 2000 )
+        goto ball_not_seen;
+      else
+        stay;
+    }
+      action {
+        spl_aggressive_supporter();
+        check_collision();
+      }
+  }
+
+  state avoid_obstacle {
+    decision {
+      if(action_done)
+        goto support_if_needed;
+      else
+        stay;
+    }
+    action 
+    {
+      avoid_obstacle();
+    }  
+}

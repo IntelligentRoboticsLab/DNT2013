@@ -1,0 +1,78 @@
+option avoid_obstacle
+{
+  initial state avoid_obstacle
+  {
+    decision
+    {
+      if(random < 0.5) // TODO something smart
+      {
+        goto move_left_when_obstacle;
+      }
+      else
+      {
+        goto move_right_when_obstacle;
+      }
+    }
+    action
+    {
+      motion.type = walk;
+      motion.walk.style = fast;
+      motion.walk_speed.x = 0;
+      motion.walk_speed.y = 0;
+      motion.walk_speed.rot = 0;
+      check_collision();
+    }
+  }
+
+  state move_left_when_obstacle {
+    decision
+    { 
+      if(obstacle.ultrasound.distance > 350) // || state_time > 1000)
+      {
+        goto avoided;
+      }
+      else
+      {
+        stay;
+      }
+    }
+    action
+    {
+      motion.type = walk;
+      motion.walk.style = fast;
+      motion.walk_speed.x = 0;
+      motion.walk_speed.y = 100;
+      motion.walk_speed.rot = 0;
+      check_collision();
+    }
+  }
+
+  state move_right_when_obstacle
+  {
+    decision
+    { 
+      if(obstacle.ultrasound.distance > 350) // || state_time > 1000)
+      {
+        goto avoided;
+      }     
+      else
+      {
+        stay;
+      }
+    }
+    action
+    {
+      motion.type = walk;
+      motion.walk.style = fast;
+      motion.walk_speed.x = 0;
+      motion.walk_speed.y = -100;
+      motion.walk_speed.rot = 0;
+      check_collision();
+    }
+  }
+
+  target state avoided 
+  {
+    action {}
+  }
+}
