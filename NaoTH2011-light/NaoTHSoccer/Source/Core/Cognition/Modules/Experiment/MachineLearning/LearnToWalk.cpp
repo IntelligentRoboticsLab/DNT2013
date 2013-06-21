@@ -138,15 +138,14 @@ void LearnToWalk::run()
 
   switch(state) {
     case RESET:
-      allTestsDone();    // Reset all, evaluate
-      stateTime = theFrameInfo.getTime();
-
-      if (abs(theInertialSensorData.data.y) > 0.4 && stateTime + 1000 < theFrameInfo.getTime())
+      if (abs(theInertialSensorData.data.y) > 0.4 && stateTime + 1000 > theFrameInfo.getTime())
       {
         theMotionRequest.id = motion::dead; // fall down
         theMotionRequest.forced = true;
       } else {
+        allTestsDone();    // Reset all, evaluate
         state = GETTINGUP;
+        stateTime = theFrameInfo.getTime();
       }
 
       break;
@@ -218,7 +217,9 @@ void LearnToWalk::run()
         if (abs(theInertialSensorData.data.y) > 0.4)
         {
           state = RESET;
+          stateTime = theFrameInfo.getTime();
         }
+
 
         break;
       }
