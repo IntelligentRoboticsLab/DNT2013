@@ -59,13 +59,16 @@ public:
                     int maxGeneration,
                     double transmitRate,
                     double crossoverRate,
-                    double mutationRate);
+                    double mutationRate,
+                    std::string dirName);
 
   virtual ~GeneticAlgorithms(){}
 
   void loadGeneration();
 
   void init(const std::vector<Individual>& initial);
+
+  int dirCount();
 
   Individual& getIndividual();
 
@@ -89,6 +92,8 @@ protected:
   double transmitRate, crossoverRate, mutationRate;
 
   std::vector<std::vector<Individual> > generations;
+  std::string dirName;
+  int lastGenIndex;
 };
 
 std::ostream& operator <<(std::ostream& ost, const GeneticAlgorithms::Individual& v);

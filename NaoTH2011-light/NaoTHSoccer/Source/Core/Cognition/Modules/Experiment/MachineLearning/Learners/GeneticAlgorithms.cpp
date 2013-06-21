@@ -66,21 +66,25 @@ GeneticAlgorithms::GeneticAlgorithms(int parentsNum,
                                      int maxGeneration,
                                      double transmitRate,
                                      double crossoverRate,
-                                     double mutationRate)
+                                     double mutationRate,
+                                     string dirName)
 :parentsNum(parentsNum),
   populationSize(populationSize),
   surviveNum(surviveNum),
   maxGeneration(maxGeneration),
   transmitRate(transmitRate),
   crossoverRate(crossoverRate),
-  mutationRate(mutationRate)
+  mutationRate(mutationRate),
+  dirName(dirName)
 {
     // TODO specify folder ourselves?
  /* GDateTime* dateTime = g_date_time_new_now_local();
   dataDir = "ga"+//string( g_date_time_format(dateTime, "%Y-%m-%d-%H-%M-%S") );
   g_date_time_unref(dateTime); */
 
-    dataDir = "ga";
+  dataDir = "ga/"+dirName;
+
+  lastGenIndex = dirCount();
 
 #ifdef WIN32
   g_mkdir(dataDir.c_str(), 0); // mode arguments are ignored in windows
@@ -148,7 +152,9 @@ GeneticAlgorithms::Individual& GeneticAlgorithms::getIndividual()
   {
     sort(lastGeneration.begin(), lastGeneration.end());
     stringstream filename;
-    filename << dataDir << "/" << generations.size() <<".txt";
+
+    filename << dataDir << "/" << lastGenIndex + generations.size() <<".txt";
+    cout << "filename: " << filename.str();
     saveGeneration( lastGeneration, filename.str() );
     generations.push_back( newGeneration(lastGeneration) );
     return generations.back().front();
@@ -175,11 +181,12 @@ void GeneticAlgorithms::loadGeneration(){
   vector<string> files = vector<string>();
   getdir(dataDir,files);
 
-  int max = 0;
+  /*int max = 0;
   int x = 0;
 
   for (unsigned int i = 0;i < files.size();i++) {
      string fileName = files [i];
+     std :: cout<< files[i] << endl;
      size_t position = fileName.find(".");
      string extractName = (string::npos == position)? fileName : fileName.substr(0, position);
 
@@ -188,12 +195,17 @@ void GeneticAlgorithms::loadGeneration(){
 
   }
 
-  std::cout<< x << std::endl;
+  std::cout<< x << std::endl;*/
+
+  int x;
+
+  if (files.size()==2) x = 1;
+  else x = files.size() - 2;
 
   string line;
   stringstream sstm;
   sstm << dataDir << "/" << x << ".txt";
-
+   cout << sstm.str() << endl;
   ifstream myfile(sstm.str().c_str());
   int i = -1;
   string extractValue= "";
@@ -270,4 +282,11 @@ int GeneticAlgorithms::getdir (string dir, vector<string> &files)
     }
     closedir(dp);
     return 0;
+}
+
+int GeneticAlgorithms::dirCount(){
+    vector<string> files = vector<string>();
+    getdir(dataDir,files);
+    if (files.size() == 2) return 1;
+    return files.size() - 2 ;
 }

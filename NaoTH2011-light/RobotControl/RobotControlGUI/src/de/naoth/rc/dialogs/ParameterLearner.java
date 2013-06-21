@@ -40,6 +40,7 @@ public class ParameterLearner extends AbstractDialog implements CommandSender {
   private List <JCheckBox> taskList = null;
   @InjectPlugin
   public RobotControl parent;
+  private de.naoth.rc.dialogs.panels.ExtendedFileChooser fileChooser;
 
   Map<String, String> commandMap = new HashMap<String, String>();
 
@@ -47,6 +48,7 @@ public class ParameterLearner extends AbstractDialog implements CommandSender {
      public ParameterLearner() {
         initComponents();
         // LOL HACKS
+        fileChooser = new de.naoth.rc.dialogs.panels.ExtendedFileChooser();
         JCheckBox [] taskArray = {task1, task2, task3, task4, task5, task6, task7, task8, task9, task10, task11, task12, task13, task14, task15};
         taskList = Arrays.asList(taskArray);
         for (int i = 0; i < taskList.size(); i++)
@@ -465,8 +467,8 @@ private void sendCommand(Command command)
 
     private void jToggleLoadGenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleLoadGenActionPerformed
          if (parent.checkConnected()) {
-      Command cmd = new Command (strLoadGen);
-      sendCommand(cmd);
+            Command cmd = new Command (strLoadGen);
+            sendCommand(cmd);
      }
     }//GEN-LAST:event_jToggleLoadGenActionPerformed
 

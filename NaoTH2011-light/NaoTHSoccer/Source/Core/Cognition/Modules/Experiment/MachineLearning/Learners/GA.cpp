@@ -9,7 +9,9 @@ GA::GA(MachineLearningParameters::Evolution params,
                       params.maxGeneration,
                       params.transmitRate,
                       params.crossoverRate,
-                      params.mutationRate),
+                      params.mutationRate,
+                      params.dirname
+                      ),
     genes(genes)
 {
     std::vector<Individual> initialGeneration;
