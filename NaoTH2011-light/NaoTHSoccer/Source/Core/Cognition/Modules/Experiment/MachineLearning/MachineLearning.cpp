@@ -21,12 +21,15 @@ MachineLearning::MachineLearning()
                         getHeadMotionRequest());
 
   finished = false;
+  setTests(0);
 }
 
 void MachineLearning::setTests(unsigned int runningtime)
 {
   // tests[name] = Test( runningtime, Pose2D(rotation, translation_x, translation_y), absolute)
   // Simple running tests, absolute=false
+  tests.clear();
+
   tests["forward"]       = LearnToWalk::Test("forward", runningtime, Pose2D(0,  10000,  0), false);
   tests["backward"]      = LearnToWalk::Test("backward", runningtime, Pose2D(0, -10000,  0), false);
   tests["right"]         = LearnToWalk::Test("right", runningtime, Pose2D(0,  0,    -10000), false);
@@ -42,9 +45,9 @@ void MachineLearning::setTests(unsigned int runningtime)
     double rads = Math::fromDegrees(angle);
     double x = cos(rads);
     double y = sin(rads);
-    methodname << "x_" << std::setprecision(3) << x <<
-                  "_y_" << std::setprecision(3) << y <<
-                  "_angle_" << std::setprecision(3) << rads;
+    methodname << "x_" << std::setprecision(2) << x <<
+                  "_y_" << std::setprecision(2) << y <<
+                  "_angle_" << std::setprecision(2) << rads;
     tests[methodname.str()] = LearnToWalk::Test(methodname.str(), runningtime, Pose2D(rads, 10000 * x, 10000 * y), true);
   }
 }
@@ -54,8 +57,12 @@ MachineLearning::~MachineLearning() {
 }
 
 void MachineLearning::execute() {
-  if (ltw->method != NULL && !finished && !ltw->isFinished()) {
+  if (ltw->method != NULL && !finished) {
     ltw->run();
+    if (ltw->isFinished()) {
+      finished = true;
+      std::cout << "Machine learning method " << ltw->method->name << " converged." << std::endl;
+    }
   }
 }
 
@@ -63,36 +70,36 @@ void MachineLearning::executeDebugCommand(const std::string &command,
                                           const std::map<std::string, std::string> &arguments,
                                           std::ostream &outstream)
 {
-    if(!command.compare("machinelearning:evolution"))
-    {
-        // enable/disable method
-      if (arguments.find("on")!=arguments.end()) {
-            setTests(ltw->theParameters.evolution.runningTime);
-            ltw->setMethod("evolution");
-
-            ltw->theTests.clear();
-            for(std::map<std::string, LearnToWalk::Test >::iterator test=tests.begin(); test!=tests.end(); test++)
-            {
-              if(arguments.find(test->second.name) != arguments.end()) {
-                if (!arguments.at(test->second.name).compare("on")) {
-                  ltw->theTests.push_back(test->second);
-                }
-              }
+  if(!command.compare("machinelearning:evolution"))
+  {
+    // enable/disable method
+    if (arguments.find("on")!=arguments.end()) {
+        setTests( ltw->theParameters.evolution.runningTime );
+        ltw->setMethod("evolution");
+        ltw->theTests.clear();
+        for(std::map<std::string, LearnToWalk::Test >::iterator test=tests.begin(); test!=tests.end(); test++)
+        {
+          if(arguments.find(test->second.name) != arguments.end()) {
+            if (!arguments.at(test->second.name).compare("on")) {
+              ltw->theTests.push_back(test->second);
             }
-            finished = false;
-
-        } else if (arguments.find("off")!=arguments.end()) {
-            std::cout<<"MachineLearning method " << ltw->method->name << " finished!"<<std::endl;
-            finished = true;
+          }
         }
+        finished = false;
+
+      } else if (arguments.find("off")!=arguments.end()) {
+          if(ltw->method!=NULL)
+            std::cout<<"MachineLearning method " << ltw->method->name << " finished!"<<std::endl;
+          finished = true;
+      }
     }
     else if (!command.compare("machinelearning:getinfo"))
     {
-        if (ltw->method != NULL) {
-            outstream << ltw->getInfo() << std::endl;
-        } else {
-            outstream << "No machine learning method selected." << std::endl;
-        }
+      if (ltw->method != NULL) {
+          outstream << ltw->getInfo() << std::endl;
+      } else {
+          outstream << "No machine learning method selected." << std::endl;
+      }
     }
     else if (!command.compare("machinelearning:killcurrent"))
     {

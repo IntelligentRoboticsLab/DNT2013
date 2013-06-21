@@ -84,7 +84,12 @@ void LearnToWalk::setMethod(std::string methodName)
     this->method = new GA(theParameters.evolution, theIKParameterValues, theIKParameterBounds);
     this->manualReset = theParameters.evolution.manualReset;
     this->iterationsToGetUp = theParameters.evolution.iterationsToGetUp;
-  } else  {
+
+    this->resettingTime = theParameters.evolution.resettingTime;
+    this->standingTime = theParameters.evolution.standingTime;
+    this->runningTime = theParameters.evolution.runningTime * theTests.size();
+
+  } else {
     std::cout << "Trying to use unknown method '"  << methodName << "'.";
   }
 }
@@ -108,11 +113,6 @@ void LearnToWalk::run()
   theHeadMotionRequest.id = HeadMotionRequest::search;
   theHeadMotionRequest.searchCenter = Vector3<double>(2000, 0, 0);
   theHeadMotionRequest.searchSize = Vector3<double>(1500, 2000, 0);
-
-  // TODO change
-  unsigned int resettingTime = theParameters.evolution.resettingTime;
-  unsigned int standingTime = theParameters.evolution.standingTime;
-  unsigned int runningTime = theParameters.evolution.runningTime * theTests.size();
 
   // TODO use staggering to see if the nao is unstable. (Stop before actually falling).
   Pose2D mypos = getPosition();
@@ -152,6 +152,11 @@ void LearnToWalk::run()
       break;
     case GETTINGUP:
       if (manualReset) {
+        std::stringstream answer;
+        std::map<std::string,std::string> args;
+        args["on"] = "";
+        DebugRequest::getInstance().executeDebugCommand("SimSparkController:beam",args,answer);
+
         theMotionRequest.id = motion::stand;
         theMotionRequest.forced = true;
         if (stateTime + resettingTime < theFrameInfo.getTime()) {
@@ -264,12 +269,6 @@ double LearnToWalk::evaluate()
 
 void LearnToWalk::reset()
 {
-  // Reset position in simspark if needded
-  std::stringstream answer;
-  std::map<std::string,std::string> args;
-  args["on"] = "";
-  //DebugRequest::getInstance().executeDebugCommand("SimSparkController:beam",args,answer);
-
   fallenCount = 0;
   uprightCount = 0;
   killCurrent = false;

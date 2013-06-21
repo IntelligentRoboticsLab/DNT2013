@@ -6,41 +6,37 @@
 class MachineLearningParameters : public ParameterList
 {
 public:
-    struct Evolution {
-        double transmitRate;
-        double crossoverRate;
-        double mutationRate;
+  struct Evolution {
+    double transmitRate;
+    double crossoverRate;
+    double mutationRate;
 
-        int parentsNum;
-        int populationSize;
-        int surviveNum;
-        int maxGeneration;
+    int parentsNum;
+    int populationSize;
+    int surviveNum;
+    int maxGeneration;
 
-        unsigned int resettingTime;
-        unsigned int standingTime;
-        unsigned int runningTime;
+    unsigned int resettingTime;
+    unsigned int standingTime;
+    unsigned int runningTime;
 
-        bool manualReset;
-        unsigned int iterationsToGetUp;
+    bool manualReset;
+    unsigned int iterationsToGetUp;
+    std::string savedirname;
+  } evolution;
 
+  struct Method2 {
+    bool manualReset;
+    unsigned int iterationsToGetUp;
 
+    unsigned int resettingTime;
+    unsigned int standingTime;
+    unsigned int runningTime;
+    std::string savedirname;
+  } method2;
 
-        std::string dirname;
-    } evolution;
-
-    struct Method2 {
-      bool manualReset;
-      unsigned int iterationsToGetUp;
-
-      unsigned int resettingTime;
-      unsigned int standingTime;
-      unsigned int runningTime;
-      std::string dirname;
-
-    } method2;
-
-    MachineLearningParameters();
-    virtual ~MachineLearningParameters();
+  MachineLearningParameters();
+  virtual ~MachineLearningParameters();
 };
 
 #endif // IKOPTIMIZATIONPARAMETERS_H

@@ -49,6 +49,8 @@ public:
 
       std::string name;
       double fitness;
+      int getMaxTime() {return theMaxTime;}
+
     private:
       bool started;
       int theMaxTime;
@@ -106,6 +108,11 @@ private:
     int lastChestButtonEventCounter;
     bool manualReset;
     unsigned int iterationsToGetUp;
+
+    unsigned int standingTime;
+    unsigned int resettingTime;
+    unsigned int runningTime;
+
 
     std::vector<std::string> theIKParameterNames;
     std::map<std::string, Vector2<double> > theIKParameterBounds;

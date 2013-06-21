@@ -67,7 +67,7 @@ GeneticAlgorithms::GeneticAlgorithms(int parentsNum,
                                      double transmitRate,
                                      double crossoverRate,
                                      double mutationRate,
-                                     string dirName)
+                                     string savedirName)
 :parentsNum(parentsNum),
   populationSize(populationSize),
   surviveNum(surviveNum),
@@ -75,14 +75,14 @@ GeneticAlgorithms::GeneticAlgorithms(int parentsNum,
   transmitRate(transmitRate),
   crossoverRate(crossoverRate),
   mutationRate(mutationRate),
-  dirName(dirName)
+  dirName(savedirName)
 {
     // TODO specify folder ourselves?
  /* GDateTime* dateTime = g_date_time_new_now_local();
   dataDir = "ga"+//string( g_date_time_format(dateTime, "%Y-%m-%d-%H-%M-%S") );
   g_date_time_unref(dateTime); */
 
-  dataDir = "ga/"+dirName;
+  dataDir = "ga/"+savedirName;
 
   lastGenIndex = dirCount();
 
@@ -154,7 +154,6 @@ GeneticAlgorithms::Individual& GeneticAlgorithms::getIndividual()
     stringstream filename;
 
     filename << dataDir << "/" << generations.size() <<".txt";
-    cout << "filename: " << filename.str();
     saveGeneration( lastGeneration, filename.str() );
     generations.push_back( newGeneration(lastGeneration) );
     return generations.back().front();

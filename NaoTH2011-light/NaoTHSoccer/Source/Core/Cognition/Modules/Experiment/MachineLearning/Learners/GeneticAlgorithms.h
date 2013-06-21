@@ -60,7 +60,7 @@ public:
                     double transmitRate,
                     double crossoverRate,
                     double mutationRate,
-                    std::string dirName);
+                    std::string savedirName);
 
   virtual ~GeneticAlgorithms(){}
 

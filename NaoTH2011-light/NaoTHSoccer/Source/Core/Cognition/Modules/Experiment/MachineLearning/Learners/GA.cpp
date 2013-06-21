@@ -10,8 +10,7 @@ GA::GA(MachineLearningParameters::Evolution params,
                       params.transmitRate,
                       params.crossoverRate,
                       params.mutationRate,
-                      params.dirname
-                      ),
+                      params.savedirname),
     genes(genes)
 {
     std::vector<Individual> initialGeneration;
@@ -27,7 +26,7 @@ GA::GA(MachineLearningParameters::Evolution params,
 }
 
 void GA::update(double fitness) {
-    std::cout << "GA: fitness = " << fitness << std::endl;
+    std::cout << "Fitness = " << fitness << std::endl;
 
     GeneticAlgorithms::Individual& i = getIndividual();
     i.fitness = std::max(0.0, fitness);

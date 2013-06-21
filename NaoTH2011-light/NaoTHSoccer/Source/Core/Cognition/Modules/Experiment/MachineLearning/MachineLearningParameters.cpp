@@ -23,21 +23,20 @@ MachineLearningParameters::MachineLearningParameters()
 
     PARAMETER_REGISTER(evolution.resettingTime) = 3000;
     PARAMETER_REGISTER(evolution.standingTime) = 2000;
-    PARAMETER_REGISTER(evolution.runningTime) = 20000;
+    PARAMETER_REGISTER(evolution.runningTime) = 10000;
 
     PARAMETER_REGISTER(evolution.manualReset) = false;
     PARAMETER_REGISTER(evolution.iterationsToGetUp) = 60;
-    PARAMETER_REGISTER(evolution.dirname) = "ga";
+    PARAMETER_REGISTER(evolution.savedirname) = "Evolution";
 
     // Dummy method parameters
-    PARAMETER_REGISTER(method2.resettingTime) = 3000;
-    PARAMETER_REGISTER(method2.standingTime) = 2000;
+    PARAMETER_REGISTER(method2.resettingTime) = 1000;
+    PARAMETER_REGISTER(method2.standingTime) = 1000;
     PARAMETER_REGISTER(method2.runningTime) = 20000;
 
     PARAMETER_REGISTER(method2.manualReset) = false;
     PARAMETER_REGISTER(method2.iterationsToGetUp) = 60;
-    PARAMETER_REGISTER(method2.dirname) = "ga";
-
+    PARAMETER_REGISTER(method2.savedirname) = "Method2";
 
     syncWithConfig();
     DebugParameterList::getInstance().add(this);

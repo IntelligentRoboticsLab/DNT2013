@@ -625,10 +625,15 @@ private void sendCommand(Command command)
             jToggleButtonKill.setSelected(false);
         } else if (strCommand.compareTo(strGetTaskList) == 0){
             String [] tasks = strResult.split("\n");
-            for (int i = 0 ; i < tasks.length; i++){
-                taskList.get(i).setText(tasks[i]);
-                taskList.get(i).setVisible(true);
-                      }
+            for (int i = 0 ; i < taskList.size(); i++){
+                if(i < tasks.length)
+                {
+                    taskList.get(i).setText(tasks[i]);
+                    taskList.get(i).setVisible(true);
+                } else {
+                    taskList.get(i).setVisible(false);
+                }
+            }
         }
     }
   }//end handleResponse
