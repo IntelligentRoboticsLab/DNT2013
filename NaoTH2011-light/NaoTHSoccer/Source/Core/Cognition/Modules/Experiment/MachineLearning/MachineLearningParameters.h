@@ -22,6 +22,8 @@ public:
 
         bool manualReset;
         unsigned int iterationsToGetUp;
+
+        std::string dirname;
     } evolution;
 
     struct Method2 {

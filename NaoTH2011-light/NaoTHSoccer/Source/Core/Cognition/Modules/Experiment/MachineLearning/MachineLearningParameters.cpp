@@ -27,6 +27,7 @@ MachineLearningParameters::MachineLearningParameters()
 
     PARAMETER_REGISTER(evolution.manualReset) = false;
     PARAMETER_REGISTER(evolution.iterationsToGetUp) = 60;
+    PARAMETER_REGISTER(evolution.dirname) = "ga";
 
     // Dummy method parameters
     PARAMETER_REGISTER(method2.param1) = 0.212;
