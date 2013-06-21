@@ -153,7 +153,7 @@ GeneticAlgorithms::Individual& GeneticAlgorithms::getIndividual()
     sort(lastGeneration.begin(), lastGeneration.end());
     stringstream filename;
 
-    filename << dataDir << "/" << lastGenIndex + generations.size() <<".txt";
+    filename << dataDir << "/" << generations.size() <<".txt";
     cout << "filename: " << filename.str();
     saveGeneration( lastGeneration, filename.str() );
     generations.push_back( newGeneration(lastGeneration) );
@@ -272,7 +272,7 @@ int GeneticAlgorithms::getdir (string dir, vector<string> &files)
     struct dirent *dirp;
     if((dp  = opendir(dir.c_str())) == NULL) {
         std::cout << "Error(" << errno << ") opening " << dir << endl;
-        return errno;
+        return -1;
     }
 
     while ((dirp = readdir(dp)) != NULL) {
@@ -284,7 +284,7 @@ int GeneticAlgorithms::getdir (string dir, vector<string> &files)
 
 int GeneticAlgorithms::dirCount(){
     vector<string> files = vector<string>();
-    getdir(dataDir,files);
+    if ((getdir(dataDir,files)) < 0) return 0;
     if (files.size() == 2) return 1;
     return files.size() - 2 ;
 }
