@@ -122,14 +122,6 @@ void LearnToWalk::run()
     fallenCount = 0;
   }
 
-  // fallprotection
-  if (abs(theInertialSensorData.data.y) > 0.4 && fallenCount < 30)
-  {
-    theMotionRequest.id = motion::dead; // fall down
-    theMotionRequest.forced = true;
-    return;
-  }
-
   // killbutton
   if (theButtonData.eventCounter[naoth::ButtonData::Chest] > lastChestButtonEventCounter )
   {
@@ -148,7 +140,15 @@ void LearnToWalk::run()
     case RESET:
       allTestsDone();    // Reset all, evaluate
       stateTime = theFrameInfo.getTime();
-      state = GETTINGUP;
+
+      if (abs(theInertialSensorData.data.y) > 0.4 && stateTime + 1000 < theFrameInfo.getTime())
+      {
+        theMotionRequest.id = motion::dead; // fall down
+        theMotionRequest.forced = true;
+      } else {
+        state = GETTINGUP;
+      }
+
       break;
     case GETTINGUP:
       if (manualReset) {
@@ -159,6 +159,7 @@ void LearnToWalk::run()
 
         theMotionRequest.id = motion::stand;
         theMotionRequest.forced = true;
+
         if (stateTime + resettingTime < theFrameInfo.getTime()) {
           stateTime = theFrameInfo.getTime();
           state = PREPAREFORTESTS;
@@ -213,6 +214,11 @@ void LearnToWalk::run()
 
         theMotionRequest.id = motion::walk;
         theMotionRequest.walkRequest.target = walkReq;
+
+        if (abs(theInertialSensorData.data.y) > 0.4)
+        {
+          state = RESET;
+        }
 
         break;
       }
