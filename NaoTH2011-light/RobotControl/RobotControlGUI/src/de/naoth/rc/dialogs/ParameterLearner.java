@@ -48,7 +48,6 @@ public class ParameterLearner extends AbstractDialog implements CommandSender {
      public ParameterLearner() {
         initComponents();
         // LOL HACKS
-        fileChooser = new de.naoth.rc.dialogs.panels.ExtendedFileChooser();
         JCheckBox [] taskArray = {task1, task2, task3, task4, task5, task6, task7, task8, task9, task10, task11, task12, task13, task14, task15};
         taskList = Arrays.asList(taskArray);
         for (int i = 0; i < taskList.size(); i++)
@@ -440,6 +439,8 @@ private void sendCommand(Command command)
             }
         } else {
             jToggleButtonLearn.setSelected(false);
+            cbLearningMethod.setFocusable(true);
+            jTextAreaLearningParams.setFocusable(true);
         }
     }//GEN-LAST:event_jToggleButtonLearnActionPerformed
 

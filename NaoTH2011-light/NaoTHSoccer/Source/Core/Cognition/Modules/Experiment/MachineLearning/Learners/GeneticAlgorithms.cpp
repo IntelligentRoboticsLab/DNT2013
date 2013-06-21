@@ -270,7 +270,7 @@ int GeneticAlgorithms::getdir (string dir, vector<string> &files)
     DIR *dp;
     struct dirent *dirp;
     if((dp  = opendir(dir.c_str())) == NULL) {
-        std::cout << "Error(" << errno << ") opening " << dir << endl;
+        std::cout << "Error(" << errno << ") opening " << dir << "." << endl;
         return -1;
     }
 

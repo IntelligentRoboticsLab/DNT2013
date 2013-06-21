@@ -75,7 +75,6 @@ void MachineLearning::executeDebugCommand(const std::string &command,
     // enable/disable method
     if (arguments.find("on")!=arguments.end()) {
         setTests( ltw->theParameters.evolution.runningTime );
-        ltw->setMethod("evolution");
         ltw->theTests.clear();
         for(std::map<std::string, LearnToWalk::Test >::iterator test=tests.begin(); test!=tests.end(); test++)
         {
@@ -87,6 +86,7 @@ void MachineLearning::executeDebugCommand(const std::string &command,
         }
         finished = false;
 
+        ltw->setMethod("evolution");
       } else if (arguments.find("off")!=arguments.end()) {
           if(ltw->method!=NULL)
             std::cout<<"MachineLearning method " << ltw->method->name << " finished!"<<std::endl;
