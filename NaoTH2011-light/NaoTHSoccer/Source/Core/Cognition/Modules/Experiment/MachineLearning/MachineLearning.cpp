@@ -21,8 +21,6 @@ MachineLearning::MachineLearning()
                         getHeadMotionRequest());
 
   finished = false;
-  //TODO HACK
-  setTests(5000);
 }
 
 void MachineLearning::setTests(unsigned int runningtime)
@@ -56,20 +54,9 @@ MachineLearning::~MachineLearning() {
 }
 
 void MachineLearning::execute() {
-  if (ltw->method != NULL) {
-    if(!finished) {
-      // Until convergence, run the correct method
-      if (!ltw->isFinished()) {
-        ltw->run();
-      }
-    } else {
-       // TODO save values
-       std::cout<<"MachineLearning method " << ltw->method->name << " finished!"<<std::endl;
-       finished = true;
-       // exit(0);
-    }
+  if (ltw->method != NULL && !finished && !ltw->isFinished()) {
+    ltw->run();
   }
-
 }
 
 void MachineLearning::executeDebugCommand(const std::string &command,
@@ -80,6 +67,7 @@ void MachineLearning::executeDebugCommand(const std::string &command,
     {
         // enable/disable method
       if (arguments.find("on")!=arguments.end()) {
+            setTests(ltw->theParameters.evolution.runningTime);
             ltw->setMethod("evolution");
 
             ltw->theTests.clear();
@@ -94,6 +82,7 @@ void MachineLearning::executeDebugCommand(const std::string &command,
             finished = false;
 
         } else if (arguments.find("off")!=arguments.end()) {
+            std::cout<<"MachineLearning method " << ltw->method->name << " finished!"<<std::endl;
             finished = true;
         }
     }

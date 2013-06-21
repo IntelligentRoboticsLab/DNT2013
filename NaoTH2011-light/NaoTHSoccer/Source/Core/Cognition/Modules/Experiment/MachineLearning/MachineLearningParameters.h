@@ -11,14 +11,14 @@ public:
         double crossoverRate;
         double mutationRate;
 
-        int parentsNum; //(10),
-        int populationSize; //(100),
-        int surviveNum; //(10),
-        int maxGeneration; //(50),
+        int parentsNum;
+        int populationSize;
+        int surviveNum;
+        int maxGeneration;
 
-        unsigned int resettingTime; // = 3000;
-        unsigned int standingTime; // = 2000;
-        unsigned int runningTime; // = 20000;
+        unsigned int resettingTime;
+        unsigned int standingTime;
+        unsigned int runningTime;
 
         bool manualReset;
         unsigned int iterationsToGetUp;
@@ -29,8 +29,14 @@ public:
     } evolution;
 
     struct Method2 {
-        double param1;
-        bool param2;
+      bool manualReset;
+      unsigned int iterationsToGetUp;
+
+      unsigned int resettingTime;
+      unsigned int standingTime;
+      unsigned int runningTime;
+      std::string dirname;
+
     } method2;
 
     MachineLearningParameters();

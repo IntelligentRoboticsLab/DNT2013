@@ -78,9 +78,10 @@ public:
     bool isFinished() const;
     std::string getInfo();
 
-    MachineLearningMethod* method;
     MachineLearningParameters theParameters;
     std::list<Test> theTests;
+
+    MachineLearningMethod* method;
     bool killCurrent;
 
 private:

@@ -230,8 +230,6 @@ void GeneticAlgorithms::loadGeneration(){
 
               extractValue = (string::npos == position)? line : line.substr(0, position);
 
-
-
               ind->fitness = atof(extractValue.c_str());
               std::cout << extractValue << endl;
               std::cout<< ind->fitness << endl;
