@@ -70,13 +70,13 @@ SimpleMotionBehaviorControl::SimpleMotionBehaviorControl()
 
 void SimpleMotionBehaviorControl::execute() 
 {
-  // reset some stuff by default
-  getMotionRequest().forced = false;
-  getMotionRequest().standHeight = -1; // sit in a stable position
+    // reset some stuff by default
+    getMotionRequest().forced = false;
+    getMotionRequest().standHeight = -1; // sit in a stable position
 
-  testHead();
+    testHead();
 
-  testMotion();
+    testMotion();
 
 
   getSoundPlayData().soundFile = "";

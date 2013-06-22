@@ -13,6 +13,7 @@
 // others
 #include <ModuleFramework/Module.h>
 #include <vector>
+#include <fstream>
 
 // tools
 #include "Tools/Math/Line.h"
@@ -84,21 +85,21 @@ class VisualCompass: private VisualCompassBase
 public:
     VisualCompass();
     ~VisualCompass();
-    vector<Pixel> pixelVector;
-    vector<cv::Mat> mappingImages;
     void execute();
-    const ColorClassificationModel& getColorTable64() const
-    {
-        return getColorClassificationModel();
-    }
 private:
-    bool startInitializing;
-    bool endInitializing;
+    vector<Pixel> pixelVector;
+    vector<naoth::Image> imageVector;
+    void head();
+    void motion();
+
+    /*
+     * checks if there is already a model
+     */
+    bool hasModel();
     /*
      * clears any previous files stored from the compass
      */
-    bool clearCompass();
-
+    void clearCompass();
     /*
      *returns true if the visual compass has an output to give
      */

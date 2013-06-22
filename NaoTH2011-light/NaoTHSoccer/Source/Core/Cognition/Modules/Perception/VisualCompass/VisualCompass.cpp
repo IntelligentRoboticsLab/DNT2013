@@ -4,47 +4,46 @@ using namespace cv;
 
 VisualCompass::VisualCompass()
 {
-    VisualCompass::startInitializing = false;
-    VisualCompass::endInitializing = false;
-    DEBUG_REQUEST_REGISTER("VisualCompass:scan_horizon_step_1", "look above the horizon and stand up", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:scan_horizon_step_2", "turn and record the full horizon", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:mark_area", "mark the possibles' features area", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:scan_lines", "", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:draw_orientation_loc","from localization", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:draw_orientation_vc","from visual compass", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:draw_visual_grid_map"," dsgew", false);
+
+    // motions
+    DEBUG_REQUEST_REGISTER("VisualCompass:motion:standard_stand", "stand as standard or not", true);
+    DEBUG_REQUEST_REGISTER("VisualCompass:motion:stand", "The default motion, otherwise do nothing", true);
+
+    // walk
+    DEBUG_REQUEST_REGISTER("VisualCompass:motion:turn_right", "Set the motion request to 'turn_right'.", false);
 }
 
 VisualCompass::~VisualCompass()
 {
 }
 
-bool VisualCompass::clearCompass()
+void VisualCompass::clearCompass()
 {
+    // check if there is a model file and delete it
+    if(hasModel()){
+        //delete the model
+    }else{
+        // do nothing
+    }
+}
+
+bool VisualCompass::hasModel()
+{
+    if(/*file exists*/ 1)
+    {
+        return true;
+    }
     return false;
 }
 
 bool VisualCompass::isValid()
 {
     return false;
-}
-
-void VisualCompass::scanner()
-{
-    // reset some stuff by default
-    getMotionRequest().forced = false;
-    getMotionRequest().standHeight = -1; // sit in a stable position
-    getMotionRequest().walkRequest.target = Pose2D();
-
-    DEBUG_REQUEST("VisualCompass:scan_horizon_step_1",
-                      getHeadMotionRequest().id = HeadMotionRequest::look_straight_ahead;
-                      getMotionRequest().id = motion::stand;
-                  );
-
-    DEBUG_REQUEST("VisualCompass:scan_horizon_step_2",
-                  getMotionRequest().id = motion::walk;
-                  getMotionRequest().walkRequest.target.rotation = Math::fromDegrees(-360);
-              );
 }
 
 void VisualCompass::execute()
@@ -107,6 +106,52 @@ void VisualCompass::execute()
     }
 
 }
+
+void VisualCompass::scanner()
+{
+    // reset some stuff by default
+    getMotionRequest().forced = false;
+    getMotionRequest().standHeight = -1; // sit in a stable position
+    head();
+    motion();
+}
+
+void VisualCompass::head()
+{
+    getHeadMotionRequest().id = HeadMotionRequest::look_straight_ahead;
+}
+
+void VisualCompass::motion()
+{
+  getMotionRequest().walkRequest.target = Pose2D();
+
+  DEBUG_REQUEST("VisualCompass:motion:stand",
+    getMotionRequest().id = motion::stand;
+  );
+
+  getMotionRequest().standardStand = false;
+  DEBUG_REQUEST("VisualCompass:motion:standard_stand",
+    getMotionRequest().standardStand = true;
+      getMotionRequest().standHeight = -1; // minus means the same value as walk
+  );
+
+  DEBUG_REQUEST("VisualCompass:motion:turn_right",
+    getMotionRequest().id = motion::walk;
+    getMotionRequest().walkRequest.target.rotation = Math::fromDegrees(-30);
+  );
+
+  getMotionRequest().walkRequest.character = 0.5;
+  getMotionRequest().walkRequest.coordinate = WalkRequest::Hip;
+
+  double offsetR = 0;
+  MODIFY("walk.offset.r", offsetR);
+  getMotionRequest().walkRequest.offset.rotation = Math::fromDegrees(offsetR);
+  MODIFY("walk.offset.x", getMotionRequest().walkRequest.offset.translation.x);
+  MODIFY("walk.offset.y", getMotionRequest().walkRequest.offset.translation.y);
+  MODIFY("walk.character", getMotionRequest().walkRequest.character);
+
+}//end testMotion
+
 
 bool VisualCompass::isValid(Vector2<double> a, Vector2<double> b)
 {
