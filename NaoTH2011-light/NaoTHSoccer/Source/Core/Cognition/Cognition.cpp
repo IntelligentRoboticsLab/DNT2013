@@ -49,6 +49,7 @@
 #include "Modules/Perception/OpenCV/FieldSideDetector.h"
 #include "Modules/Perception/OpenCV/OpenCVDebug.h"
 #include "Modules/Perception/ArtificialHorizonCalculator/ArtificialHorizonCalculator.h"
+#include "Modules/Perception/VisualCompass/VisualCompass.h"
 
 // Modeling
 #include "Modules/Modeling/BodyStateProvider/BodyStateProvider.h"
@@ -140,6 +141,7 @@ void Cognition::init(naoth::ProcessInterface& platformInterface, const naoth::Pl
   REGISTER_MODULE(VirtualVisionProcessor);
   REGISTER_MODULE(FieldSideDetector);
   REGISTER_MODULE(OpenCVDebug);
+  REGISTER_MODULE(VisualCompass);
 
   // scene analysers
   // (analyze the visual information seen in the image)
