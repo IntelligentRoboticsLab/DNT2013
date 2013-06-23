@@ -93,6 +93,14 @@ private:
     void motion();
 
     /*
+     *
+     */
+    bool readModel(vector<naoth::Image> model);
+    /*
+     *
+     */
+    bool saveModel();
+    /*
      * checks if there is already a model
      */
     bool hasModel();

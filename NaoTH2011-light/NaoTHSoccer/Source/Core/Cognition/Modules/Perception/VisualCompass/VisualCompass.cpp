@@ -2,6 +2,13 @@
 using namespace std;
 using namespace cv;
 
+struct Vertex
+{
+    float x, y, z;
+};
+
+typedef vector<Vertex> VertexList;
+
 VisualCompass::VisualCompass()
 {
     DEBUG_REQUEST_REGISTER("VisualCompass:mark_area", "mark the possibles' features area", false);
@@ -20,6 +27,25 @@ VisualCompass::VisualCompass()
 
 VisualCompass::~VisualCompass()
 {
+}
+
+bool VisualCompass::saveModel()
+{
+    // Create a list for testing
+    VertexList list;
+    Vertex v1 = {1.0f, 2.0f,   3.0f}; list.push_back(v1);
+    Vertex v2 = {2.0f, 100.0f, 3.0f}; list.push_back(v2);
+    Vertex v3 = {3.0f, 200.0f, 3.0f}; list.push_back(v3);
+    Vertex v4 = {4.0f, 300.0f, 3.0f}; list.push_back(v4);
+
+    // Write out a list to a disk file
+    ofstream os ("data.dat", ios::binary);
+
+    int size1 = list.size();
+    os.write((const char*)&size1, 4);
+    os.write((const char*)&list[0], size1 * sizeof(Vertex));
+    os.close();
+    return true;
 }
 
 void VisualCompass::clearCompass()
@@ -48,6 +74,8 @@ bool VisualCompass::isValid()
 
 void VisualCompass::execute()
 {
+    saveModel();
+    std::cout << getRobotPose().rotation << std::endl;
     scanner();
     DEBUG_REQUEST("VisualCompass:draw_orientation_loc",
                   FIELD_DRAWING_CONTEXT;
