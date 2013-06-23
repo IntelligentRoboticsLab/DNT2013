@@ -19,15 +19,15 @@
 // ...
 
 // ColorDiscretizer
-// ...
+#define NUM_OF_COLORS 10
 
 // VisualGridMapProvider
-#define GridxLength 5
-#define GridyLength 3
-#define AngleBins 360
-#define angle_size 2*M_PI/AngleBins;
+#define GRID_X_LENGTH 5
+#define GRID_Y_LENGTH 3
+#define NUM_ANGLE_BINS 360
+#define ANGLE_SIZE 2*M_PI/NUM_ANGLE_BINS;
 
 // WeightedExperts
-#define SmoothingFactor 0.1 //TODO test this value later
+#define SMOOTHING_FACTOR 0.1 //TODO test this value later
 
 #endif // VISUALCOMPASSPARAMETERS_H

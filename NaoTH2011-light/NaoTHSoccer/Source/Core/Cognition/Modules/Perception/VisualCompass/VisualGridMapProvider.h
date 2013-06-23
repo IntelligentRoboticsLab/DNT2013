@@ -18,7 +18,7 @@ class VisualGridMapProvider
 {
 
 public:
-    VisualCompassFeature gridmap  [GridxLength][GridyLength][AngleBins];
+    VisualCompassFeature gridmap  [GRID_X_LENGTH][GRID_X_LENGTH][NUM_ANGLE_BINS];
 
     // takes a vector with features and store them in the grid
     void storeFeature(VisualCompassFeature vcf)
@@ -26,7 +26,7 @@ public:
         Vector2<int> grid_pos;
         fieldPosToGridPos(vcf.source_position, grid_pos);
 		//TODO compare reliability of old and new feature, change if needed
-		int angle_bin = (int) vcf.orientation/angle_size;
+		int angle_bin = (int) vcf.orientation/ANGLE_SIZE;
 		VisualCompassFeature model_vcf = gridmap[grid_pos.x][grid_pos.y][angle_bin];
 		if (!model_vcf.valid){
 			gridmap[grid_pos.x][grid_pos.y][angle_bin] = vcf;
@@ -50,8 +50,8 @@ public:
      */
     static void fieldPosToGridPos(Vector2<double> fieldPos, Vector2<int> &gridPos)
     {
-        gridPos.x = floor(( fieldPos.x + FieldInfo().xLength * 0.5 ) / GridxLength);
-        gridPos.y = floor(( fieldPos.y + FieldInfo().yLength * 0.5 ) / GridyLength);
+        gridPos.x = floor(( fieldPos.x + FieldInfo().xLength * 0.5 ) / GRID_X_LENGTH);
+        gridPos.y = floor(( fieldPos.y + FieldInfo().yLength * 0.5 ) / GRID_X_LENGTH);
     }
 
 

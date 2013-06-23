@@ -42,6 +42,7 @@ public:
     /*
      *attributes for these feature type elements
      */
+    unsigned int table[NUM_OF_COLORS][NUM_OF_COLORS];
     int length;
     double orientation;
     time_t time;
@@ -58,7 +59,7 @@ public:
      *gets a the pixels for a line in the image and creates a
      *feature
      */
-    void createFeatureFromScanLine(vector<Pixel> scanLine, VisualCompassFeature &produced_feature);
+    void createFeatureFromScanLine(vector<Pixel> scanLine);
 
 	void getCertainty(time_t current_time, double &certainty);
 private:

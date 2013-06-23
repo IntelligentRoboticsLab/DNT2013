@@ -9,8 +9,16 @@ VisualCompassFeature::~VisualCompassFeature()
     //nothing here.
 }
 
-void VisualCompassFeature::createFeatureFromScanLine(vector<Pixel> scanLine, VisualCompassFeature &produced_feature)
+void VisualCompassFeature::createFeatureFromScanLine(vector<Pixel> scanLine)
 {
+    if(scanLine.size() == 0) return;
+    for(unsigned int i = 1; i < scanLine.size(); i++)
+    {
+        // here the knn will decide the class of each pixel
+        int class_0 = 1; //class of the previous pixel
+        int class_1 = 2; //class of the current pixel
+        this->table[class_0][class_1]++;
+    }
 }
 
 void VisualCompassFeature::getCertainty(time_t current_time, double &certainty)

@@ -100,13 +100,13 @@ void VisualCompass::execute()
 
     DEBUG_REQUEST("VisualCompass:draw_visual_grid_map",
                   FIELD_DRAWING_CONTEXT;
-            double dx = getFieldInfo().xLength / GridxLength;
-    for(int i = 1; i < GridxLength; i++)
+            double dx = getFieldInfo().xLength / GRID_X_LENGTH;
+    for(int i = 1; i < GRID_X_LENGTH; i++)
     {
         LINE(- getFieldInfo().xLength / 2 + dx * i, getFieldInfo().yLength / 2, - getFieldInfo().xLength / 2 + dx * i, - getFieldInfo().yLength / 2);
     }
-    double dy = getFieldInfo().yLength / GridyLength;
-    for(int i = 1; i < GridyLength; i++)
+    double dy = getFieldInfo().yLength / GRID_Y_LENGTH;
+    for(int i = 1; i < GRID_Y_LENGTH; i++)
     {
         LINE(getFieldInfo().xLength / 2, - getFieldInfo().yLength / 2 + dy * i, - getFieldInfo().xLength / 2, - getFieldInfo().yLength / 2 + dy * i);
     }

@@ -16,14 +16,14 @@ void WeightedExperts::best_match (VisualGridMapProvider &grid, vector<VisualComp
 	//search in the grid for a good enough/best match
 	//VisualCompassFeature[] features = map[input_loc.x][input_loc.y];
 	double best_similarity = 0.0;
-	for (int i = 0; i < AngleBins; i++)
+	for (int i = 0; i < NUM_ANGLE_BINS; i++)
     {
 		double tot_similarity = 0.0;
 		//change input.size() to some parameter from parameter file
 		for (unsigned int j = 0; j < input.size(); j++)
 		{
-            int part = (int) input[j].orientation/angle_size;
-            double sim = SmoothingFactor;
+            int part = (int) input[j].orientation/ANGLE_SIZE;
+            double sim = SMOOTHING_FACTOR;
             if (grid.gridmap[input_loc.x][input_loc.y][part].valid)
             {
                 input.at(j).compare(grid.gridmap[input_loc.x][input_loc.y][part], tot_similarity);
@@ -32,7 +32,7 @@ void WeightedExperts::best_match (VisualGridMapProvider &grid, vector<VisualComp
 		}
 		if (tot_similarity > best_similarity)
         {
-            double angle = ( i + input.size() / 2 ) *angle_size;
+            double angle = ( i + input.size() / 2 ) *ANGLE_SIZE;
             double w_angle = 2 * M_PI;
             out = fmod(angle, w_angle);
             best_similarity = tot_similarity;
