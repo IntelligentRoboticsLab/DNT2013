@@ -199,7 +199,7 @@ void VisualCompass::colorExtraction()
 {
     for(unsigned int i = 0; i < getImage().width(); i++)
     {
-        for (int j = 0; j < getImage().height(); j++)
+        for (unsigned int j = 0; j < getImage().height(); j++)
         {
             VisualCompass::pixelVector.push_back(getImage().get(i, j));
         }
