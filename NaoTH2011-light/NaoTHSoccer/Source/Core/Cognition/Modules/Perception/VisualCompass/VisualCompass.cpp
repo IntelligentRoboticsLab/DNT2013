@@ -39,7 +39,7 @@ bool VisualCompass::saveModel()
     Vertex v4 = {4.0f, 300.0f, 3.0f}; list.push_back(v4);
 
     // Write out a list to a disk file
-    ofstream os ("data.dat", ios::binary);
+    ofstream os (COMPASS_DATA_FILE, ios::binary);
 
     int size1 = list.size();
     os.write((const char*)&size1, 4);
@@ -52,19 +52,21 @@ void VisualCompass::clearCompass()
 {
     // check if there is a model file and delete it
     if(hasModel()){
-        //delete the model
-    }else{
-        // do nothing
+        remove(COMPASS_DATA_FILE);
     }
 }
 
 bool VisualCompass::hasModel()
 {
-    if(/*file exists*/ 1)
+    std::ifstream ifs (COMPASS_DATA_FILE);
+    if (ifs.is_open())
     {
         return true;
     }
-    return false;
+    else
+    {
+        return false;
+    }
 }
 
 bool VisualCompass::isValid()
@@ -75,7 +77,6 @@ bool VisualCompass::isValid()
 void VisualCompass::execute()
 {
     saveModel();
-    std::cout << getRobotPose().rotation << std::endl;
     scanner();
     DEBUG_REQUEST("VisualCompass:draw_orientation_loc",
                   FIELD_DRAWING_CONTEXT;
@@ -129,8 +130,7 @@ void VisualCompass::execute()
     if(isValid(a, b))
     {
         colorExtraction();
-        vector< vector<Pixel> >  scanner;
-        verticalScanner(scanner);
+        verticalScanner();
     }
 
 }
@@ -151,32 +151,32 @@ void VisualCompass::head()
 
 void VisualCompass::motion()
 {
-  getMotionRequest().walkRequest.target = Pose2D();
+    getMotionRequest().walkRequest.target = Pose2D();
 
-  DEBUG_REQUEST("VisualCompass:motion:stand",
-    getMotionRequest().id = motion::stand;
-  );
+    DEBUG_REQUEST("VisualCompass:motion:stand",
+                  getMotionRequest().id = motion::stand;
+            );
 
-  getMotionRequest().standardStand = false;
-  DEBUG_REQUEST("VisualCompass:motion:standard_stand",
-    getMotionRequest().standardStand = true;
-      getMotionRequest().standHeight = -1; // minus means the same value as walk
-  );
+    getMotionRequest().standardStand = false;
+    DEBUG_REQUEST("VisualCompass:motion:standard_stand",
+                  getMotionRequest().standardStand = true;
+            getMotionRequest().standHeight = -1; // minus means the same value as walk
+    );
 
-  DEBUG_REQUEST("VisualCompass:motion:turn_right",
-    getMotionRequest().id = motion::walk;
-    getMotionRequest().walkRequest.target.rotation = Math::fromDegrees(-30);
-  );
+    DEBUG_REQUEST("VisualCompass:motion:turn_right",
+                  getMotionRequest().id = motion::walk;
+            getMotionRequest().walkRequest.target.rotation = Math::fromDegrees(-30);
+    );
 
-  getMotionRequest().walkRequest.character = 0.5;
-  getMotionRequest().walkRequest.coordinate = WalkRequest::Hip;
+    getMotionRequest().walkRequest.character = 0.5;
+    getMotionRequest().walkRequest.coordinate = WalkRequest::Hip;
 
-  double offsetR = 0;
-  MODIFY("walk.offset.r", offsetR);
-  getMotionRequest().walkRequest.offset.rotation = Math::fromDegrees(offsetR);
-  MODIFY("walk.offset.x", getMotionRequest().walkRequest.offset.translation.x);
-  MODIFY("walk.offset.y", getMotionRequest().walkRequest.offset.translation.y);
-  MODIFY("walk.character", getMotionRequest().walkRequest.character);
+    double offsetR = 0;
+    MODIFY("walk.offset.r", offsetR);
+    getMotionRequest().walkRequest.offset.rotation = Math::fromDegrees(offsetR);
+    MODIFY("walk.offset.x", getMotionRequest().walkRequest.offset.translation.x);
+    MODIFY("walk.offset.y", getMotionRequest().walkRequest.offset.translation.y);
+    MODIFY("walk.character", getMotionRequest().walkRequest.character);
 
 }//end testMotion
 
@@ -199,43 +199,35 @@ void VisualCompass::colorExtraction()
 {
     for(unsigned int i = 0; i < getImage().width(); i++)
     {
-        double p = getArtificialHorizon().intersection(Math::LineSegment(Vector2<double>(i, 0), Vector2<double>(i, getImage().height())));
-        Vector2<double> h = getArtificialHorizon().point(p);
-        int stop_y = (int) max((double) h.y, (double) getImage().height());
-        for (int j = 0; j < stop_y; j++)
+        for (int j = 0; j < getImage().height(); j++)
         {
             VisualCompass::pixelVector.push_back(getImage().get(i, j));
         }
     }
 }
 
-void VisualCompass::verticalScanner(vector< vector<Pixel> > &scanner)
+vector< vector<Pixel> > VisualCompass::verticalScanner()
 {
+    vector< vector<Pixel> > scanner;
     vector<Math::LineSegment> img_boundaries;
-    img_boundaries.push_back(Math::LineSegment(Vector2<double>(0, 0), Vector2<double>(getImage().width(), 0)));
-    img_boundaries.push_back(Math::LineSegment(Vector2<double>(0, 0), Vector2<double>(0, getImage().height())));
-    img_boundaries.push_back(Math::LineSegment(Vector2<double>(getImage().width(), 0), Vector2<double>(getImage().width(), getImage().height())));
-            for(double p = 5.00; p < (double) getImage().width(); p += COMPASS_FEATURE_STEP)
+    img_boundaries.push_back(Math::LineSegment(Vector2<double>(0, 0), Vector2<double>(getImage().width()-1, 0)));
+    img_boundaries.push_back(Math::LineSegment(Vector2<double>(0, 0), Vector2<double>(0, getImage().height()-1)));
+    img_boundaries.push_back(Math::LineSegment(Vector2<double>(getImage().width()-1, 0), Vector2<double>(getImage().width()-1, getImage().height()-1)));
+    for(double p = 5.00; p < (double) getImage().width(); p += COMPASS_FEATURE_STEP)
     {
+        vector<Pixel> line;
         Vector2<double> start = getArtificialHorizon().point(p);
-        Vector2<double> direction = getArtificialHorizon().getDirection();
-        double intersection_;
-        for(unsigned int i = 0; i < img_boundaries.size(); i++)
+        Vector2<int> point((int) start.x, (int) start.y);
+        double angle = getArtificialHorizon().getDirection().rotateRight().angle();
+        double distance = 0.0;
+        while(getImage().isInside(point.x, point.y))
         {
-            Math::Line vertical_line(start, direction.rotate(Math::fromDegrees(90.0)));
-            if (img_boundaries[i].intersect(vertical_line)){
-                intersection_ = img_boundaries[i].intersection(vertical_line);
-                Vector2<double> inter = img_boundaries[i].point(intersection_);
-                BresenhamLineScan scanLine(start, inter);
-                Vector2<int> linePoint = Vector2<int>((int)start.x, (int)start.y);
-                for(int j = 0; j < scanLine.numberOfPixels; j++)
-                {
-                    scanLine.getNext(linePoint);
-                    if(!getImage().isInside(linePoint.x, linePoint.y)) break;
-                    DEBUG_REQUEST("VisualCompass:scan_lines", POINT_PX(ColorClasses::blue, linePoint.x, linePoint.y););
-
-                }
-            }
+            DEBUG_REQUEST("VisualCompass:scan_lines", POINT_PX(ColorClasses::blue, point.x, point.y););
+            point.x = (int) (start.x + distance * cos(angle));
+            point.y = (int) (start.y + distance * sin(angle));
+            distance++;
         }
+        scanner.push_back(line);
     }
+    return scanner;
 }

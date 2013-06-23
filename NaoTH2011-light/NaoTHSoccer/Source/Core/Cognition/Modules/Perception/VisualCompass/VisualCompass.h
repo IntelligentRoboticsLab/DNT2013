@@ -14,6 +14,7 @@
 #include <ModuleFramework/Module.h>
 #include <vector>
 #include <fstream>
+#include <stdio.h>
 
 // tools
 #include "Tools/Math/Line.h"
@@ -128,7 +129,7 @@ private:
      *gets the image and the horizon and scans every 10 pixels
      *a vertical line storing the pixel values into a vector
      */
-    void verticalScanner(vector< vector<Pixel> > &scanner);
+    vector< vector<Pixel> > verticalScanner();
 
     /*
      *does the robot to turn 360 degrees, to map the environment
