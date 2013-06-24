@@ -1,85 +1,17 @@
 /** Playing as defender/supporter */
 option spl_playing_defender {
 
-  state avoid_obstacle
-  {
-    decision
-    {
-      // if the point we want to go to is left, avoid obstacle going left
-      if(motion.type == walk)
-      {
-        if(motion.walk_speed.y > 0)
-          goto move_left_when_obstacle;
-        else
-          goto move_right_when_obstacle;
-      }
-      // just in case...
-      else if(random < 0.5)
-      {
-        goto move_left_when_obstacle;
-      }
-      else
-      {
-        goto move_right_when_obstacle;
-      }
-    }
-    action
-    {
-      motion.type = walk;
-      motion.walk.style = fast;
-      motion.walk_speed.x = 0;
-      motion.walk_speed.y = 0;
-      motion.walk_speed.rot = 0;
-      check_collision();
-    }
-  }
-
-  state move_left_when_obstacle
-  {
-    decision
-    { 
-      if(state_time > 1000)
-      {
+  state avoid_obstacle {
+    decision {
+      if(action_done)
         goto ball_not_seen;
-      }
       else
-      {
         stay;
-      }
     }
-    action
+    action 
     {
-      motion.type = walk;
-      motion.walk.style = fast;
-      motion.walk_speed.x = 0;
-      motion.walk_speed.y = 100;
-      motion.walk_speed.rot = 0;
-      check_collision();
-    }
-  }
-
-  state move_right_when_obstacle
-  {
-    decision
-    { 
-      if(state_time > 1000)
-      {
-        goto ball_not_seen;
-      }
-      else
-      {
-        stay;
-      }
-    }
-    action
-    {
-      motion.type = walk;
-      motion.walk.style = fast;
-      motion.walk_speed.x = 0;
-      motion.walk_speed.y = -100;
-      motion.walk_speed.rot = 0;
-      check_collision();
-    }
+      avoid_obstacle();
+    }  
   }
 
   initial state ball_not_seen {

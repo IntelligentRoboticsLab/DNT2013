@@ -3,7 +3,7 @@ option spl_simple_defender {
 
  initial target state go_to_position {
     decision {
-      if (state_time > 5000 &&
+      if (state_time > 5000 && 
           goal.opp.time_since_seen > 9000 &&
           goal.own.time_since_seen > 9000 )
         goto search_goal;

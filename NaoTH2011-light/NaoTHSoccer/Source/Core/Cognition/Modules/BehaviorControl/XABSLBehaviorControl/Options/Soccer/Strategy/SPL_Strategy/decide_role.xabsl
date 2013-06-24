@@ -20,12 +20,12 @@ option decide_role
       else
         goto striker;
     }
-    else if(team.calc_if_is_the_last)
-      goto defender;
-    else if(team.relative_position_to_ball == 3)
-      goto supporter;
     else if(team.relative_position_to_ball == 2)
       goto supporter_aggressive;
+    else if(team.relative_position_to_ball == 3)
+      goto supporter;
+    else if(team.relative_position_to_ball == 4)
+      goto defender;
   }
 
   state goalie
@@ -80,7 +80,6 @@ option decide_role
     }
   }
 
-
   state initial_striker
   {
     action
@@ -88,5 +87,4 @@ option decide_role
       initial_kick_off();
     }
   }
-  
 }

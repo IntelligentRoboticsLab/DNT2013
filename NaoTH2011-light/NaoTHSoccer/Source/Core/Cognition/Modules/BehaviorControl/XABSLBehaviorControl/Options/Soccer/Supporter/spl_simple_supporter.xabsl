@@ -10,9 +10,11 @@ option spl_simple_supporter {
         stay;
     }
     action {
-      go_to_point(x=clip(value=(ball.position.field.x-1000), min=field.xPosOwnPenaltyArea, max=field.xPosOppPenaltyArea),
-      y=clip(value=ball.position.field.y*0.8, min=field.yPosRightPenaltyArea, max=field.yPosLeftPenaltyArea),
-      rot=atan2(y=ball.position.field.y, x=ball.position.field.x-field.xPosOwnGroundline));
+      go_to_point(
+        x=clip(value=(ball.position.field.x-1000), min=field.xPosOwnPenaltyArea, max=field.xPosOppPenaltyArea),
+        y=clip(value=ball.position.field.y*0.8, min=field.yPosRightPenaltyArea, max=field.yPosLeftPenaltyArea),
+        rot=atan2(y=ball.position.field.y, x=ball.position.field.x-field.xPosOwnGroundline));
+      head.control_mode = smart_search;
       head.control_mode = smart_search;
     }
   }
