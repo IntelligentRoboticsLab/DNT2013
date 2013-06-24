@@ -32,7 +32,40 @@ double TeamSymbols::getRelativePositionToGoal()
 
 double TeamSymbols::getRelativePositionToBall()
 {
-  return (double)1;
+    double relativePosition = 1.00;
+    double my_dis_ball = theInstance->getBallModel().position.abs();
+    TeamMessage const& tm = theInstance->teamMessage;
+
+    for(std::map<unsigned int, TeamMessage::Data>::const_iterator i=tm.data.begin(); i != tm.data.end(); ++i)
+    {
+      const TeamMessage::Data& messageData = i->second;
+      const unsigned int number = i->first;
+
+      if(number == 1) return 5.00; // goalie is not considered, so it's always 5
+      if(getWasStriker()) return 1.00; // striker is always the closest to the ball
+
+      if(
+          theInstance->frameInfo.getTimeSince(i->second.frameInfo.getTime()) < theInstance->maximumFreshTime // its fresh
+          && !messageData.message.isfallendown()
+          && (messageData.message.timesinceballwasseen() < 1000 )// the guy sees the ball
+        )
+      {
+        Vector2<double> ballPos;
+        DataConversion::fromMessage(messageData.message.ballposition(), ballPos);
+        double ballDistance = ballPos.abs();
+
+        // remember the closest guy
+        if(my_dis_ball < ballDistance)
+        {
+            relativePosition = std::max(2.00, (relativePosition - 1.00) );
+        }
+        else
+        {
+            relativePosition++;
+        }
+      }//end if
+    }//end for
+  return relativePosition;
 }
 
 double TeamSymbols::getTeamMembersAliveCount()
