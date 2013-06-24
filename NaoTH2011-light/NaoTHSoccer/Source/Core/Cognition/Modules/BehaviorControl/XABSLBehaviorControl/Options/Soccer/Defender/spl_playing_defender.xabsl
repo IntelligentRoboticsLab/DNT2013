@@ -94,7 +94,6 @@ option spl_playing_defender {
         stay;
     }
     action {
-      /* HIER NOCH WAS SINNVOLLES MACHEN */
       ball_not_seen_situation(); // only for attacker!
       check_collision();
     }

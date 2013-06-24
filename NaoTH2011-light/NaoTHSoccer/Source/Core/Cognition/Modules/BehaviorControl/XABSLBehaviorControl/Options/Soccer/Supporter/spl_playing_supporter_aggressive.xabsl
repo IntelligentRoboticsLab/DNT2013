@@ -8,7 +8,7 @@ option spl_playing_supporter_aggressive {
 
   initial state support_if_needed {
    decision{
-     if ( ball.team.striker.time_since_last_update > 2000 )
+     else if ( ball.team.striker.time_since_last_update > 2000 )
        goto go_to_default_position;
      else
        goto support_aggressive;
@@ -20,7 +20,7 @@ option spl_playing_supporter_aggressive {
 
   state ball_not_seen {
    decision{
-     if(action_done)
+     else if(action_done)
        goto support_if_needed;
      else
        stay;
@@ -33,7 +33,7 @@ option spl_playing_supporter_aggressive {
 
   state go_to_default_position {
     decision {
-      if ( ball.team.time_since_last_update < 2000 )
+      else if ( ball.team.time_since_last_update < 2000 )
         goto support_aggressive;
       else if ( action_done || state_time > 30000)
         goto ball_not_seen;
@@ -49,20 +49,20 @@ option spl_playing_supporter_aggressive {
 
   state support_aggressive {
     decision{
-      if ( ball.team.striker.time_since_last_update > 2000 )
+      else if ( ball.team.striker.time_since_last_update > 2000 )
         goto ball_not_seen;
       else
         stay;
     }
       action {
-        spl_aggressive_supporter();
+        // TODO spl_aggressive_supporter();
         check_collision();
       }
   }
 
   state avoid_obstacle {
     decision {
-      if(action_done)
+      else if(action_done)
         goto support_if_needed;
       else
         stay;
@@ -71,4 +71,5 @@ option spl_playing_supporter_aggressive {
     {
       avoid_obstacle();
     }  
+  }
 }

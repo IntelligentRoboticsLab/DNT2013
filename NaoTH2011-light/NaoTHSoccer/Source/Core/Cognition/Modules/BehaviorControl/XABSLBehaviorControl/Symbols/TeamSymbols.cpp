@@ -9,21 +9,13 @@
 
 void TeamSymbols::registerSymbols(xabsl::Engine& engine)
 {
+  engine.registerDecimalInputSymbol("team.relative_position_to_goal", &getRelativePositionToGoal);
+  engine.registerDecimalInputSymbol("team.relative_position_to_ball", &getRelativePositionToBall);
   engine.registerDecimalInputSymbol("team.members_alive_count", &getTeamMembersAliveCount);
   engine.registerBooleanInputSymbol("team.calc_if_is_striker", &calculateIfStriker);
   engine.registerBooleanInputSymbol("team.calc_if_is_striker_by_time_to_ball", &calculateIfStrikerByTimeToBall);
   engine.registerBooleanOutputSymbol("team.is_playing_as_striker",&setWasStriker, &getWasStriker);
   engine.registerBooleanInputSymbol("team.calc_if_is_the_last", &calculateIfTheLast);
-
-  engine.registerEnumElement("position", "position.striker", 0);
-  engine.registerEnumElement("position", "position.goalie", 1);
-  engine.registerEnumElement("position", "position.defender", 2);
-  engine.registerEnumElement("position", "position.supporter", 3);
-  engine.registerEnumElement("position", "position.supporter_aggressive", 4);
-  engine.registerEnumElement("position", "position.supporter_defensive", 5);
-
-  engine.registerEnumeratedOutputSymbol("set_position", "position", &setPosition, &getPosition);
-
 }//end registerSymbols
 
 
@@ -31,6 +23,16 @@ TeamSymbols* TeamSymbols::theInstance = NULL;
 
 void TeamSymbols::execute()
 {
+}
+
+double TeamSymbols::getRelativePositionToGoal()
+{
+  return (double)1;
+}
+
+double TeamSymbols::getRelativePositionToBall()
+{
+  return (double)1;
 }
 
 double TeamSymbols::getTeamMembersAliveCount()

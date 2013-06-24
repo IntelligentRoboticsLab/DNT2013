@@ -1,18 +1,11 @@
 /** Symbols for accessing all team relevant information */
 namespace team("Team Symbols") {
 
-  enum position 
-  {
-    goalie,
-    striker,
-    defender,
-    supporter,
-    supporter_aggressive,
-    supporter_defensive
-  };
+  /** Relative position to own goal, closest=1, furthest=amount of team members*/
+  float input team.relative_position_to_goal [number];
 
-  /** Get the current position based on order: 1st is goalie, 2nd defender, etc. */
-  enum position input team.get_position;
+  /** Relative position to ball, closest=striker*/
+  float input team.relative_position_to_ball [number];
   
   /** Count of team members who are alive (which means they sent a team-message) */
   float input team.members_alive_count [number];

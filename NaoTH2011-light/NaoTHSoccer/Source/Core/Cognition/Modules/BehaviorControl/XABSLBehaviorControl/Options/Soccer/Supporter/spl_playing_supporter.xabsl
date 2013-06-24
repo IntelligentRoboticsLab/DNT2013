@@ -4,7 +4,7 @@ option spl_playing_supporter {
   state avoid_obstacle {
     decision {
       if(action_done)
-        goto support_if_needed;
+        goto ball_not_seen;
       else
         stay;
     }
@@ -44,7 +44,7 @@ option spl_playing_supporter {
         stay;
     }
       action {
-        spl_supporter();
+        // TODO spl_supporter();
         check_collision();
       }
   }

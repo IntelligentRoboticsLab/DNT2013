@@ -1,9 +1,3 @@
-/*** 
-  Title: NaoTH Soccer
-  Platform: Aldebaran Nao V3 (RoboCup edition).
-  Software-Environment: NaoTH2012
-*/
-
 // Symbols
 include "Symbols/goal_symbols.xabsl";
 include "Symbols/ball_symbols.xabsl";
@@ -57,6 +51,7 @@ include "Options/Skills/falling_down_standing_up.xabsl";
 include "Options/Skills/perform_omnidirectional_kick.xabsl";
 include "Options/Skills/sidekick.xabsl";
 include "Options/Skills/check_collision.xabsl";
+include "Options/Skills/avoid_obstacle.xabsl";
 
 // Debug 
 include "Options/Debug/battery.xabsl";
@@ -74,11 +69,6 @@ include "Options/Soccer/Striker/spl_playing_striker.xabsl";
 include "Options/Soccer/Striker/dribble_attack_direction.xabsl";
 include "Options/Soccer/Striker/strafe_obstacle.xabsl";
 
-/* Not tested yet!
-include "Options/Soccer/Striker/attack_ball_with_obstacle_close_situation.xabsl";
-include "Options/Soccer/Striker/obstacle_clear_kick.xabsl";
-include "Options/Soccer/Striker/approach_ball_obstacle_clear_kick.xabsl";*/
-
 // supporter
 include "Options/Soccer/Supporter/spl_simple_supporter.xabsl";
 include "Options/Soccer/Supporter/spl_playing_supporter.xabsl";
@@ -95,7 +85,6 @@ include "Options/Soccer/Goalie/spl_robust_goalie.xabsl";
 include "Options/Soccer/Goalie/spl_robust_inside_goalie.xabsl";
 include "Options/Soccer/Goalie/spl_robust_outside_goalie.xabsl";
 include "Options/Soccer/Goalie/dnt_static_goalie.xabsl";
-
 
 // SPL strategy
 include "Options/Soccer/Strategy/SPL_Strategy/decide_role.xabsl";
@@ -115,7 +104,6 @@ include "Options/Soccer/Penalty/playing_penalty_goalie_with_dive.xabsl";
 include "Options/Soccer/Penalty/play_penalty.xabsl";
 include "Options/Soccer/Penalty/decide_penalty_role.xabsl";
 include "Options/Soccer/Penalty/penalty_set_penalized_play.xabsl";
-
 
 // NonSoccer
 include "Options/NonSoccer/Test/dribble_agent.xabsl";
@@ -144,6 +132,5 @@ agent obstacles("Obstacles", obstacle_avoidance);
 /** dribble test */
 agent dribble_agent("DribbleAgent", dribble_agent);
 agent search_ball_agent("SearchBallAgent", search_ball_agent);
-
 agent kicker_agent("KickTestAgent", kicker_agent_root);
 //agent go_behind_ball("GoBehindBallAgent", go_to_pos_behind_ball);

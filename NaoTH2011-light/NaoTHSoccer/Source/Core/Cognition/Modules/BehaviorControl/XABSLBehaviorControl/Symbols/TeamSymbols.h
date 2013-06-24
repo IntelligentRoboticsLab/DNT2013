@@ -72,6 +72,8 @@ private:
   PlayerInfo& playerInfo;
 
   static TeamSymbols* theInstance;
+  static double getRelativePositionToGoal();
+  static double getRelativePositionToBall();
   static double getTeamMembersAliveCount();
   static bool calculateIfStriker();
   static bool calculateIfStrikerByTimeToBall();

@@ -11,7 +11,7 @@ option decide_role
     }
     /* fallback if everything else is broken */
     else if( (team.members_alive_count <= 1) ||
-             (team.get_position == team.position.striker && 
+             (team.calc_if_is_striker && 
               fall_down_state == upright))
     {
       if(state_time < 20000 &&
@@ -20,18 +20,12 @@ option decide_role
       else
         goto striker;
     }
-    else if(team.get_position == team.position.defender)
-    {
+    else if(team.calc_if_is_the_last)
       goto defender;
-    }
-    else if(team.get_position == team.position.supporter)
-    {
+    else if(team.relative_position_to_ball == 3)
       goto supporter;
-    }
-    else if (team.get_position == team.position.supporter_aggressive)
-    {
+    else if(team.relative_position_to_ball == 2)
       goto supporter_aggressive;
-    }
   }
 
   state goalie
