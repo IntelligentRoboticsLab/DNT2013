@@ -70,9 +70,10 @@ include "Options/Soccer/Striker/dribble_attack_direction.xabsl";
 include "Options/Soccer/Striker/strafe_obstacle.xabsl";
 
 // supporter
-include "Options/Soccer/Supporter/spl_simple_supporter.xabsl";
 include "Options/Soccer/Supporter/spl_playing_supporter.xabsl";
-include "Options/Soccer/Supporter/spl_playing_supporter_aggressive.xabsl";
+include "Options/Soccer/Supporter/spl_simple_supporter.xabsl";
+include "Options/Soccer/Supporter/spl_playing_aggressive_supporter.xabsl";
+include "Options/Soccer/Supporter/spl_aggressive_supporter.xabsl";
 
 // defender
 include "Options/Soccer/Defender/spl_playing_defender.xabsl";
