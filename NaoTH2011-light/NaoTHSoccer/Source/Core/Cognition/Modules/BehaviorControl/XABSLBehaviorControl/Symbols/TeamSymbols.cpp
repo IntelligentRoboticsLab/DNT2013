@@ -65,6 +65,7 @@ double TeamSymbols::getRelativePositionToBall()
         }
       }//end if
     }//end for
+  std::cout << relativePosition << std::endl;
   return relativePosition;
 }
 
