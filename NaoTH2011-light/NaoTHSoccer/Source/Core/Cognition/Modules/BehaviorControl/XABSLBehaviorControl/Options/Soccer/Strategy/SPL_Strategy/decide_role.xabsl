@@ -80,7 +80,6 @@ option decide_role
     }
   }
 
-
   state initial_striker
   {
     action
@@ -88,5 +87,4 @@ option decide_role
       initial_kick_off();
     }
   }
-  
 }
