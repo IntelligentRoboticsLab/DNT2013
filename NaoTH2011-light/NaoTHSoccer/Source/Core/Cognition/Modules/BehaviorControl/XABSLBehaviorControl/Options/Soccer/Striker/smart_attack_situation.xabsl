@@ -26,8 +26,8 @@ option smart_attack_situation
             )
           )
     {
-      goto omnidirectional_kick;
-    } else {
+      goto omnidirectional_kick; 
+    } else if (true) {
       goto turn_around_ball;
     }
   }

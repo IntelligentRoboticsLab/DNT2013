@@ -19,7 +19,7 @@ namespace led_symbols("Led Symbols") {
   enum eyeLED output set_first_half_left_eye;  
   enum eyeLED output set_second_half_left_eye;
   enum eyeLED output set_left_eye;  
-  
+
   enum eyeLED output set_first_half_right_eye;
   enum eyeLED output set_second_half_right_eye;
   enum eyeLED output set_right_eye;
