@@ -1,0 +1,35 @@
+/** goto the position between ball and own goal, use offset of 50% between default defender */
+
+option spl_simple_defender {
+
+ initial target state go_to_position {
+    decision {
+      if (state_time > 5000 && 
+          goal.opp.time_since_seen > 9000 &&
+          goal.own.time_since_seen > 9000 )
+        goto search_goal;
+      else 
+        stay;
+    }
+    action { //CLIP (penalty box and their penalty box for X ?) will go between the main defender and the ball.
+      go_to_relative_point(rotation=defense.simplePose.rotation, (x=defense.simplePose.translation.x - (defense.simplePose.translation.x/2)), (y=defense.simplePose.translation.y - ( defense.simplePose.translation.y/2)), errorX=30, errorY=30, errorR=15);
+      head.control_mode = smart_search;
+    }
+  }
+
+  state search_goal {
+    decision {
+      if ( state_time > 5000 &&
+          ( goal.opp.time_since_seen == 0 || goal.own.time_since_seen == 0)
+         )
+        goto go_to_position;
+      else
+        stay;
+     }
+     action {
+       //search_goal(own=false);
+       find_goal();
+     }
+   }
+      
+}
