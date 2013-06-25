@@ -217,7 +217,6 @@ option perform_omnidirectional_kick
     }
   }
 
-
   state walk_against_ball
   {
     decision {

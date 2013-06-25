@@ -22,8 +22,13 @@ void LedSymbols::registerSymbols(xabsl::Engine& engine)
   engine.registerDecimalOutputSymbol("set_right_ear", &setRightEar, &getRightEar);
   engine.registerDecimalOutputSymbol("set_left_ear", &setLeftEar, &getLeftEar);
 
-  engine.registerEnumeratedOutputSymbol("set_right_eye", "eyeLED", &setRightEye, &getRightEye);
+  engine.registerEnumeratedOutputSymbol("set_first_half_left_eye", "eyeLED", &setFirstHalfLeftEye, &getFirstHalfLeftEye);
+  engine.registerEnumeratedOutputSymbol("set_second_half_left_eye", "eyeLED", &setSecondHalfLeftEye, &getSecondHalfLeftEye);
   engine.registerEnumeratedOutputSymbol("set_left_eye", "eyeLED", &setLeftEye, &getLeftEye);
+
+  engine.registerEnumeratedOutputSymbol("set_first_half_right_eye", "eyeLED", &setFirstHalfRightEye, &getFirstHalfRightEye);
+  engine.registerEnumeratedOutputSymbol("set_second_half_right_eye", "eyeLED", &setSecondHalfRightEye, &getSecondHalfRightEye);
+  engine.registerEnumeratedOutputSymbol("set_right_eye", "eyeLED", &setRightEye, &getRightEye);
 
 }//end registerSymbols
 
@@ -136,29 +141,66 @@ void LedSymbols::setEye(LEDData::MultiLEDID from, LEDData::MultiLEDID to, int va
   }
 }
 
+// LEFT EYE
 void LedSymbols::setLeftEye(int value)
 {
-  theInstance->lastREye = value;
-
+  theInstance->lastFirstHalfLEye = value;
+  theInstance->lastSecondHalfLEye = value;
   theInstance->setEye(LEDData::FaceLeft0, LEDData::FaceLeft315, value);
-    
-}//end setRightEye
-
-int LedSymbols::getRightEye()
-{
-  return theInstance->lastREye;
 }
-
-void LedSymbols::setRightEye(int value)
-{
-  theInstance->lastLEye = value;
-
-  theInstance->setEye(LEDData::FaceRight0, LEDData::FaceRight315, value);
-  
-}//end setRightEye
-
 int LedSymbols::getLeftEye()
 {
-  return theInstance->lastLEye;
+  return theInstance->lastFirstHalfLEye;
 }
 
+void LedSymbols::setFirstHalfLeftEye(int value)
+{
+  theInstance->lastFirstHalfLEye = value;
+  theInstance->setEye(LEDData::FaceLeft0, LEDData::FaceLeft135, value);
+}
+int LedSymbols::getFirstHalfLeftEye()
+{
+  return theInstance->lastFirstHalfLEye;
+}
+
+void LedSymbols::setSecondHalfLeftEye(int value)
+{
+  theInstance->lastSecondHalfLEye = value;
+  theInstance->setEye(LEDData::FaceLeft180, LEDData::FaceLeft315, value);
+}
+int LedSymbols::getSecondHalfLeftEye()
+{
+  return theInstance->lastSecondHalfLEye;
+}
+
+// RIGHT EYE
+void LedSymbols::setRightEye(int value)
+{
+  theInstance->lastFirstHalfREye = value;
+  theInstance->lastSecondHalfREye = value;
+  theInstance->setEye(LEDData::FaceRight0, LEDData::FaceRight315, value);
+}
+int LedSymbols::getRightEye()
+{
+  return theInstance->lastFirstHalfREye;
+}
+
+void LedSymbols::setFirstHalfRightEye(int value)
+{
+  theInstance->lastFirstHalfREye = value;
+  theInstance->setEye(LEDData::FaceRight0, LEDData::FaceRight135, value);
+}
+int LedSymbols::getFirstHalfRightEye()
+{
+  return theInstance->lastFirstHalfREye;
+}
+
+void LedSymbols::setSecondHalfRightEye(int value)
+{
+  theInstance->lastSecondHalfREye = value;
+  theInstance->setEye(LEDData::FaceRight180, LEDData::FaceRight315, value);
+}
+int LedSymbols::getSecondHalfRightEye()
+{
+  return theInstance->lastSecondHalfREye;
+}

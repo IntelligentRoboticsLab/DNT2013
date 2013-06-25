@@ -32,6 +32,8 @@ option decide_role
   {
     action
     {
+      set_first_half_right_eye = blue;
+      set_second_half_right_eye = blue;
       situationStatusOwnHalf = true;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
@@ -43,6 +45,8 @@ option decide_role
   {
     action
     {
+      set_first_half_right_eye = red;
+      set_second_half_right_eye = red;
       team.is_playing_as_striker = true;
       ball_was_outside_circle = true;
       spl_playing_striker();
@@ -54,6 +58,8 @@ option decide_role
   {
     action
     {
+      set_first_half_right_eye = off;
+      set_second_half_right_eye = green;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
       spl_playing_defender();
@@ -64,6 +70,8 @@ option decide_role
   {
     action
     {
+      set_first_half_right_eye = blue;
+      set_second_half_right_eye = off;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
       spl_playing_supporter();
@@ -74,9 +82,23 @@ option decide_role
   {
     action
     {
+      set_first_half_right_eye = blue;
+      set_second_half_right_eye = red;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
       spl_playing_supporter_aggressive();
+    }
+  }
+
+  state supporter_defensive
+  {
+   action
+    {
+      set_first_half_right_eye = blue;
+      set_second_half_right_eye = green;
+      team.is_playing_as_striker = false;
+      ball_was_outside_circle = true;
+      spl_playing_supporter_defensive();
     }
   }
 

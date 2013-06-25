@@ -8,22 +8,26 @@ option smart_attack_situation
   common decision
   {
     //Change angle here (and in walk_against_ball) to influence walk against ball decision 
-    if(goal.opp.time_since_seen > 30000 || !robot_pose.is_valid)
+    if(goal.opp.time_since_seen > 30000 || !robot_pose.is_valid) {
       goto validate_field_position;
-    else if( ((abs(value = attack.direction) < 30 && goal.opp.distance > 1500) ||
-         (abs(value = attack.direction) < 5))
-        && (ball.preview.x > 50 && ball.preview.x < 250 && abs(value=ball.preview.y) < 40)
-        && common_decision.allowed && ball.time_since_last_seen < 200)
+    } else if(ball.preview.x > 50 && 
+            ball.preview.x < 250 && 
+            abs(value=ball.preview.y) < 40 &&
+            ball.time_since_last_seen < 200 &&
+            (
+              ball.right_foot.preview.x < 200 && 
+              ball.right_foot.preview.x > 0 && 
+              body.temperature.leg.right < 53
+            ) || 
+            (
+              ball.left_foot.preview.x < 200 && 
+              ball.left_foot.preview.x > 0 
+              && body.temperature.leg.left < 53)
+            )
     {
-      // If on own half, in correct direction, and robot still able to kick
-      if (robot_pose.x < 0 && abs(value=attack.direction) < 10              
-           && (  (ball.right_foot.preview.x < 200 && ball.right_foot.preview.x > 0 && body.temperature.leg.right < 53)
-              || (ball.left_foot.preview.x < 200 && ball.left_foot.preview.x > 0 && body.temperature.leg.left < 53))) 
-      {
-        goto omnidirectional_kick;
-      } else {
-        goto walk_against_ball;
-      }
+      goto omnidirectional_kick;
+    } else {
+      goto turn_around_ball; //walk_against_ball;
     }
   }
 

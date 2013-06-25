@@ -74,6 +74,8 @@ include "Options/Soccer/Supporter/spl_playing_supporter.xabsl";
 include "Options/Soccer/Supporter/spl_simple_supporter.xabsl";
 include "Options/Soccer/Supporter/spl_playing_aggressive_supporter.xabsl";
 include "Options/Soccer/Supporter/spl_aggressive_supporter.xabsl";
+include "Options/Soccer/Supporter/spl_playing_defensive_supporter.xabsl";
+include "Options/Soccer/Supporter/spl_defensive_supporter.xabsl";
 
 // defender
 include "Options/Soccer/Defender/spl_playing_defender.xabsl";
