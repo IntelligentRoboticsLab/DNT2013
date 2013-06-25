@@ -102,8 +102,8 @@ option play_with_check_fall_down
       head.control_mode = stay_as_forced;
       team.is_playing_as_striker = false;
       sensor.camera.reset = true;
-      set_right_eye = blue;
-      set_left_eye = blue;
+      set_right_eye = red;
+      set_left_eye = red;
     }
   }
 
@@ -122,8 +122,8 @@ option play_with_check_fall_down
       head.control_mode = stay_as_forced;
       team.is_playing_as_striker = false;
       sensor.camera.reset = false;
-      set_right_eye = blue;
-      set_left_eye = blue;
+      set_right_eye = red;
+      set_left_eye = red;
     }
   }
 

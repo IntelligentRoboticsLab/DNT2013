@@ -30,13 +30,11 @@ option initial_kick_off {
     }
     action
     {
-      set_left_eye = red_green;
-      set_right_eye = red_green;
+      set_left_eye = green;
       //dribble(direction=ball.angle);
       dribble_spl();
     }
   }
-
 
   target state outside_circle
   {
@@ -49,7 +47,5 @@ option initial_kick_off {
       ball_was_outside_circle = true;
       motion.type = stand;
     }
-    
   }
-  
 }

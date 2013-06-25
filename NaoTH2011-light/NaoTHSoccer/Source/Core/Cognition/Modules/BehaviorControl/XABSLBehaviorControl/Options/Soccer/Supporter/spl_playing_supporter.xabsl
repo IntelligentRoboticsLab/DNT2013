@@ -44,7 +44,7 @@ option spl_playing_supporter {
         stay;
     }
       action {
-        // TODO spl_supporter();
+        spl_simple_supporter();
         check_collision();
       }
   }
