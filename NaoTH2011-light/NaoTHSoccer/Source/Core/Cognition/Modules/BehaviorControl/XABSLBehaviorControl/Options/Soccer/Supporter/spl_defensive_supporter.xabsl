@@ -12,7 +12,10 @@ option spl_defensive_supporter {
         stay;
     }
     action { 
-      go_to_relative_point(rotation =defense.simplePose.rotation + (defense.simplePose.rotation - ball.angle)/2,x=(defense.simplePose.translation.x + ball.percept.x)/2,y = (defense.simplePose.translation.y + ball.percept.y)/2,errorX=30, errorY=30, errorR=15);
+      go_to_relative_point(rotation=defense.simplePose.rotation + (defense.simplePose.rotation - ball.angle)/2,
+                           x=(defense.simplePose.translation.x + ball.percept.x)/2,
+                           y = (defense.simplePose.translation.y + ball.percept.y)/2,
+                           errorX=30, errorY=30, errorR=15);
       //go_to_relative_point(rotation=defense.simplePose.rotation, (x=defense.simplePose.translation.x - (defense.simplePose.translation.x/2)), (y=defense.simplePose.translation.y - ( defense.simplePose.translation.y/2)), errorX=30, errorY=30, errorR=15);
       head.control_mode = smart_search;
     }
