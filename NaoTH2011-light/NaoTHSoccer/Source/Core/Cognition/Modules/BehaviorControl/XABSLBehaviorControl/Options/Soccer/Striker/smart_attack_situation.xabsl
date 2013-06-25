@@ -22,12 +22,13 @@ option smart_attack_situation
             (
               ball.left_foot.preview.x < 200 && 
               ball.left_foot.preview.x > 0 
-              && body.temperature.leg.left < 53)
+              && body.temperature.leg.left < 53
             )
+          )
     {
       goto omnidirectional_kick;
     } else {
-      goto turn_around_ball; //walk_against_ball;
+      goto turn_around_ball;
     }
   }
 

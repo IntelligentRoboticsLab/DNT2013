@@ -98,7 +98,7 @@ option decide_role
       set_second_half_right_eye = green;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
-      spl_playing_supporter_defensive();
+      spl_playing_defensive_supporter();
     }
   }
 
