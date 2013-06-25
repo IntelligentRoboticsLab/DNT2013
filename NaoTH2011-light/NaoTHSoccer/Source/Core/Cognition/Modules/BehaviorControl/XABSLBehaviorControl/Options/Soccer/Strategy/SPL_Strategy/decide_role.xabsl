@@ -5,10 +5,7 @@ option decide_role
   common decision 
   {
     /** Goalie */
-    if(game.player_number == 5)
-    {
-      goto supporter_defensive;
-    } else if(game.player_number == 1 && team.members_alive_count >= 0) //become field player, when all others are "dead"
+    if(game.player_number == 1 && team.members_alive_count >= 0) //become field player, when all others are "dead"
     {
       goto goalie;
     }
@@ -89,7 +86,7 @@ option decide_role
       set_second_half_right_eye = red;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
-      spl_playing_supporter_aggressive();
+      spl_playing_aggressive_supporter();
     }
   }
 
