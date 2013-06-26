@@ -47,7 +47,8 @@ double TeamSymbols::getRelativePositionToBall()
       if(
           theInstance->frameInfo.getTimeSince(i->second.frameInfo.getTime()) < theInstance->maximumFreshTime // its fresh
           && !messageData.message.isfallendown()
-          && (messageData.message.timesinceballwasseen() < 1000 )// the guy sees the ball
+          && (messageData.message.timesinceballwasseen() < 5000
+          && messageData.message.playernumber() != (int) theInstance->playerInfo.gameData.playerNumber)// the guy sees the ball
         )
       {
         Vector2<double> ballPos;
@@ -64,7 +65,7 @@ double TeamSymbols::getRelativePositionToBall()
             relativePosition++;
         }
       }//end if
-    }//end for
+    }//end forb
   std::cout << relativePosition << std::endl;
   return relativePosition;
 }
