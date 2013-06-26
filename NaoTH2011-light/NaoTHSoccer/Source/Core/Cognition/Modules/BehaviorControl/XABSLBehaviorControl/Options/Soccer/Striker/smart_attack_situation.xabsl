@@ -79,24 +79,20 @@ option smart_attack_situation
   {
     decision
     {
-      // we might be delocalized
       else if(goal.opp.time_since_seen > 50000 || !robot_pose.is_valid)
-      {
         goto validate_field_position;
-      } 
-			// omni kick
-			else if( (abs(value=attack.direction) < 15) && 
-			     ((ball.right_foot.preview.x < 250 && 
+    	else if( (abs(value=attack.direction) < 15) && 
+			      ((ball.right_foot.preview.x < 250 && 
 			       ball.right_foot.preview.x > 0 && 
-			       body.temperature.leg.right < 53)
+			       body.temperature.leg.right < 63)
 			    || (ball.left_foot.preview.x < 250 && 
 			        ball.left_foot.preview.x > 0 && 
-			        body.temperature.leg.left < 53))) 
-			{ 
+			        body.temperature.leg.left < 63))) 
 	        goto omnidirectional_kick;
-	    } else {
+	    else if( abs(value=attack.direction) < 15)
+          goto walk_against_ball;
+      else
           goto turn_around_ball;
-      }
     }
     action
     {
@@ -124,11 +120,11 @@ option smart_attack_situation
     action
     {
       common_decision.allowed = false;
-      perform_omnidirectional_kick(distance = 190, right_foot = ball.preview.y<0, errorX=30, errorY=30, errorR=20);
+      perform_omnidirectional_kick(distance = 195, right_foot = ball.preview.y<0, errorX=30, errorY=30, errorR=20);
     }
   }
 
-  /*
+
   state walk_against_ball
   {
     decision {
@@ -156,7 +152,7 @@ option smart_attack_situation
       head.point_in_world.z = ball.radius;
     }
   }
-  
+  /*
   state sidekick_right
   {
     decision

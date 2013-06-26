@@ -4,29 +4,28 @@ option decide_role
 
   common decision 
   {
-    /** Goalie */
-    if(game.player_number == 1 && team.members_alive_count >= 0) //become field player, when all others are "dead"
-    {
-      goto goalie;
-    }
-    /* fallback if everything else is broken */
-    else if( (team.members_alive_count <= 1) ||
-             (team.calc_if_is_striker && 
-              fall_down_state == upright))
-    {
-      if(state_time < 20000 &&
-         game.own_kickoff && !ball_was_outside_circle)
-        goto initial_striker;
-      else
-        goto striker;
-    }
-    else if(team.relative_position_to_ball == 2)
-      goto supporter_aggressive;
-    else if(team.relative_position_to_ball == 3)
-      goto supporter;
-    else if(team.relative_position_to_ball == 4)
-      goto defender;
-  }
+	    if(state_time > 4000 && game.player_number == 1 && team.members_alive_count >= 0) //become field player, when all others are "dead"
+	    {
+	      goto goalie;
+	    }
+	    /* fallback if everything else is broken */
+	    else if( state_time > 4000 && (team.members_alive_count <= 1) ||
+	             (team.calc_if_is_striker && 
+	              fall_down_state == upright))
+	    {
+	      if(state_time > 4000 && state_time < 20000 &&
+	         game.own_kickoff && !ball_was_outside_circle)
+	        goto initial_striker;
+	      else
+	        goto striker;
+	    }
+	    else if(state_time > 4000 && team.relative_position_to_ball == 2)
+	      goto supporter_aggressive;
+	    else if(state_time > 4000 && team.relative_position_to_ball == 3)
+	      goto supporter;
+	    else if(state_time > 4000 && team.relative_position_to_ball == 4)
+	      goto defender;
+   }
 
   state goalie
   {

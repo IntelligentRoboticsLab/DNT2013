@@ -47,6 +47,7 @@ option perform_omnidirectional_kick
         goto finished;
       else if(action_done) //HACK xxx
         goto kick_prep_right_foot;
+
       else
         stay;
     }
