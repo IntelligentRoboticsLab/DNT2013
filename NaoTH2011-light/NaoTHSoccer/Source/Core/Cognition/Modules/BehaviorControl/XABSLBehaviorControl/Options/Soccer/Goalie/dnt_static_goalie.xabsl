@@ -3,19 +3,18 @@ option dnt_static_goalie{
  initial state go_to_strategy_point{
    decision {
      if (action_done)
-      goto check_situation;
+       goto check_situation;
      else if (robot_pose.planned.x > field.xPosOwnGroundline && robot_pose.planned.x < field.xPosOwnPenaltyArea &&
-         robot_pose.planned.y < 500    && robot_pose.planned.y > -500 &&
-         robot_pose.planned.rotation < 5 && robot_pose.planned.rotation > -5){
-         goto check_situation;
-     }else{
+         robot_pose.planned.y < field.yPosLeftGoal - 200 && robot_pose.planned.y > field.yPosRightGoal + 200 &&
+         robot_pose.planned.rotation < 5 && robot_pose.planned.rotation > -5)
+       goto check_situation;
+     else
        stay;
-     }
     }
     action {
      team.is_playing_as_striker = false;
       head.control_mode = goalie_look_around;
-     go_to_absolute_point(rotation=0, x=-2800, y=0);
+     go_to_absolute_point(rotation=0, x=field.xPosOwnGroundline + 200, y=0);
     }
   }
 
@@ -25,7 +24,7 @@ option dnt_static_goalie{
       goto critical_ball;
     }
     else if (robot_pose.planned.x > field.xPosOwnGroundline && robot_pose.planned.x < field.xPosOwnPenaltyArea &&
-           robot_pose.planned.y <   700    && robot_pose.planned.y > -700 &&
+           robot_pose.planned.y < field.yPosLeftGoal  && robot_pose.planned.y > field.yPosRightGoal &&
            robot_pose.planned.rotation < 5 && robot_pose.planned.rotation > -5) 
     {
       stay;  

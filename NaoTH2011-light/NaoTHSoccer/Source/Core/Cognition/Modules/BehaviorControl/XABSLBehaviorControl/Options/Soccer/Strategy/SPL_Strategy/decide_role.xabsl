@@ -1,38 +1,36 @@
 /** Behavior that is common to all players (goalie, striker, defender, ...) */
 option decide_role
 {
-
-  common decision 
+  common decision
   {
-	    if(state_time > 4000 && game.player_number == 1 && team.members_alive_count >= 0) //become field player, when all others are "dead"
-	    {
-	      goto goalie;
-	    }
-	    /* fallback if everything else is broken */
-	    else if( state_time > 4000 && (team.members_alive_count <= 1) ||
-	             (team.calc_if_is_striker && 
-	              fall_down_state == upright))
-	    {
-	      if(state_time > 4000 && state_time < 20000 &&
-	         game.own_kickoff && !ball_was_outside_circle)
-	        goto initial_striker;
-	      else
-	        goto striker;
-	    }
-	    else if(state_time > 4000 && team.relative_position_to_ball == 2)
-	      goto supporter_aggressive;
-	    else if(state_time > 4000 && team.relative_position_to_ball == 3)
-	      goto supporter;
-	    else if(state_time > 4000 && team.relative_position_to_ball == 4)
-	      goto defender;
-   }
+    if(state_time > 4000 && game.player_number == 1 && team.members_alive_count >= 0)
+      goto goalie;
+    else if(state_time > 4000 && 
+	          (team.members_alive_count <= 1) ||
+	          (team.calc_if_is_striker && fall_down_state == upright))
+	  {
+      if(state_time < 20000 && game.own_kickoff && !ball_was_outside_circle)
+	      goto initial_striker;
+	    else
+	      goto striker;
+	  }
+	  else if(situation.opponent_at_the_ball && state_time > 4000 && team.relative_position_to_ball == 2)
+      goto supporter_aggressive;
+    else if((!situation.opponent_at_the_ball && state_time > 4000 && team.relative_position_to_ball == 3) || 
+            (situation.opponent_at_the_ball && state_time > 4000 && team.relative_position_to_goal == 4))
+      goto supporter;
+    else if((!situation.opponent_at_the_ball && state_time > 4000 && team.relative_position_to_goal == 3) ||
+            (situation.opponent_at_the_ball && state_time > 4000 && team.relative_position_to_ball == 4))
+      goto defender;
+    else if(situation.opponent_at_the_ball && state_time > 4000 && team.relative_position_to_goal == 2)
+      goto supporter_defensive;
+  } 
 
   state goalie
   {
     action
     {
       set_first_half_right_eye = blue;
-      set_second_half_right_eye = blue;
       situationStatusOwnHalf = true;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
@@ -45,7 +43,6 @@ option decide_role
     action
     {
       set_first_half_right_eye = red;
-      set_second_half_right_eye = red;
       team.is_playing_as_striker = true;
       ball_was_outside_circle = true;
       spl_playing_striker();
@@ -58,7 +55,6 @@ option decide_role
     action
     {
       set_first_half_right_eye = green;
-      set_second_half_right_eye = green;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
       spl_playing_defender();
@@ -70,7 +66,6 @@ option decide_role
     action
     {
       set_first_half_right_eye = blue;
-      set_second_half_right_eye = off;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
       spl_playing_supporter();
@@ -82,7 +77,6 @@ option decide_role
     action
     {
       set_first_half_right_eye = blue;
-      set_second_half_right_eye = red;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
       spl_playing_aggressive_supporter();
@@ -94,7 +88,6 @@ option decide_role
    action
     {
       set_first_half_right_eye = blue;
-      set_second_half_right_eye = green;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
       spl_playing_defensive_supporter();
