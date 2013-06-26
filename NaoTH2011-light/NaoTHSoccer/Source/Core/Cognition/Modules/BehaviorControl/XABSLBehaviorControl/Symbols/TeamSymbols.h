@@ -8,6 +8,8 @@
 #ifndef _TEAMSYMBOLS_H
 #define  _TEAMSYMBOLS_H
 
+#include "Tools/Math/Vector2.h"
+
 #include <ModuleFramework/Module.h>
 #include <XabslEngine/XabslEngine.h>
 
