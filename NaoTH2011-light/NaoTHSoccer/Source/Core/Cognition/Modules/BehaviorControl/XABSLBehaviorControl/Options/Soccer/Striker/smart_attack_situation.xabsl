@@ -7,28 +7,10 @@ option smart_attack_situation
 {
   common decision
   {
-    //Change angle here (and in walk_against_ball) to influence walk against ball decision 
     if(goal.opp.time_since_seen > 30000 || !robot_pose.is_valid) {
       goto validate_field_position;
-    } else if(ball.preview.x > 50 && 
-            ball.preview.x < 250 && 
-            abs(value=ball.preview.y) < 40 &&
-            ball.time_since_last_seen < 200 &&
-            (
-              ball.right_foot.preview.x < 200 && 
-              ball.right_foot.preview.x > 0 && 
-              body.temperature.leg.right < 53
-            ) || 
-            (
-              ball.left_foot.preview.x < 200 && 
-              ball.left_foot.preview.x > 0 
-              && body.temperature.leg.left < 53
-            )
-          )
-    {
-      goto omnidirectional_kick; 
-    } else if (true) {
-      goto turn_around_ball;
+    } else if(ball.time_since_last_seen > 6000) {
+      goto decide_what_to_do_next;
     }
   }
 
@@ -68,16 +50,15 @@ option smart_attack_situation
     }
   }
 
-
   // hold on for a while and go to approach_roughly
   state decide_what_to_do_next
   {
     decision
     {
-    else if(state_time < 600)
-      stay;
-    else
-      goto approach_roughly;
+      else if(state_time < 600)
+        stay;
+      else
+        goto approach_roughly;
     }
     action
     {
@@ -103,45 +84,18 @@ option smart_attack_situation
       {
         goto validate_field_position;
       } 
-      // ball is somewhat close
-      else if( ball.right_foot.preview.x < 500
-            || ball.left_foot.preview.x < 500)
-      {
-        // omni kick
-        if(   (abs(value=attack.direction) < 15)
-              && (  (ball.right_foot.preview.x < 250 && ball.right_foot.preview.x > 0 && body.temperature.leg.right < 53)
-                  || (ball.left_foot.preview.x < 250 && ball.left_foot.preview.x > 0 && body.temperature.leg.left < 53))
-              )
-	      {
+			// omni kick
+			else if( (abs(value=attack.direction) < 15) && 
+			     ((ball.right_foot.preview.x < 250 && 
+			       ball.right_foot.preview.x > 0 && 
+			       body.temperature.leg.right < 53)
+			    || (ball.left_foot.preview.x < 250 && 
+			        ball.left_foot.preview.x > 0 && 
+			        body.temperature.leg.left < 53))) 
+			{ 
 	        goto omnidirectional_kick;
-	      }
-	      // Ball lies good enough for sidekick with left foot
-	      else if (executed_motion.step_control.left_movable
-               && abs(value=(atan2(y = ball.left_foot.preview.y, x = ball.left_foot.preview.x))) < 15       
-               && ball.right_foot.preview.x <= 200
-               && ball.right_foot.preview.y >= 95 && ball.right_foot.preview.y <= 105)
-	      {
-	        goto sidekick_left;
-	      }
-	      // Ball lies good enough for sidekick with right foot
-        // Todo: Adjust parameters here
-	      else if(executed_motion.step_control.right_movable
-              && abs(value=(atan2(y = ball.right_foot.preview.y, x = ball.right_foot.preview.x))) < 15
-              && ball.left_foot.preview.x <= 200
-              && ball.left_foot.preview.y <= -95 && ball.left_foot.preview.y >= -105)
-        {
-          goto sidekick_right;
-        }
-        //else 
-        else
-        {
-          // default situation
+	    } else {
           goto turn_around_ball;
-        }
-      }
-      else
-      {
-        stay;
       }
     }
     action
@@ -174,6 +128,7 @@ option smart_attack_situation
     }
   }
 
+  /*
   state walk_against_ball
   {
     decision {
@@ -201,7 +156,7 @@ option smart_attack_situation
       head.point_in_world.z = ball.radius;
     }
   }
-
+  
   state sidekick_right
   {
     decision
@@ -232,5 +187,5 @@ option smart_attack_situation
       common_decision.allowed = true;
       sidekick(right_foot=false);
     }
-  }
+  }*/
 }
