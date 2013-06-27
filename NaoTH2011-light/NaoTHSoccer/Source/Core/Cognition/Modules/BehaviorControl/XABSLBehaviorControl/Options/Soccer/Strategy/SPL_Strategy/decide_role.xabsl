@@ -10,8 +10,8 @@ option decide_role
 	  {
       if(state_time < 20000 && game.own_kickoff && !ball_was_outside_circle)
 	      goto initial_striker;
-	    else if(game.time_since_game_state_changed < 10000 && !game.own_kickoff && abs(value = ball.x) < 100 && abs(value = ball.y) < 100 && 
-	             ball.distance < field.centerCircleRadius + 150)
+	    else if(game.time_since_game_state_changed < 10000 && !game.own_kickoff && abs(value = ball.position.field.x) < 2 * field.centerCircleRadius && abs(value = ball.position.field.y) < 2 * field.centerCircleRadius && 
+	             ball.distance < field.centerCircleRadius + 600)
         goto wait_striker;
       else
 	      goto striker;
@@ -36,7 +36,7 @@ option decide_role
       situationStatusOwnHalf = true;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
-      spl_robust_goalie();
+      dnt_static_goalie(); //spl_robust_goalie();
     }
   }
 
@@ -44,8 +44,12 @@ option decide_role
   {
     action
     {
-      head.control_mode = look_around;
-      motion.type = stand;
+      head.control_mode = search_for_ball;
+      motion.type = walk;
+      motion.walk.stop_with_stand = false;
+      motion.walk_speed.x = -5;
+      motion.walk_speed.y = 0;
+      motion.walk_speed.rot = 0;
     }
   }
 
