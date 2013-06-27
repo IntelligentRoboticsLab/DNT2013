@@ -3,26 +3,28 @@ option decide_role
 {
   common decision
   {
-    if(state_time > 4000 && game.player_number == 1 && team.members_alive_count >= 0)
+    if(game.player_number == 1 && team.members_alive_count >= 0)
       goto goalie;
-    else if(state_time > 4000 && 
-	          (team.members_alive_count <= 1) ||
+    else if((team.members_alive_count <= 1) ||
 	          (team.calc_if_is_striker && fall_down_state == upright))
 	  {
       if(state_time < 20000 && game.own_kickoff && !ball_was_outside_circle)
 	      goto initial_striker;
-	    else
+	    else if(game.time_since_game_state_changed < 10000 && !game.own_kickoff && abs(value = ball.x) < 100 && abs(value = ball.y) < 100 && 
+	             ball.distance < field.centerCircleRadius + 150)
+        goto wait_striker;
+      else
 	      goto striker;
 	  }
-	  else if(situation.opponent_at_the_ball && state_time > 4000 && team.relative_position_to_ball == 2)
+	  else if(situation.opponent_at_the_ball && team.relative_position_to_ball == 2)
       goto supporter_aggressive;
-    else if((!situation.opponent_at_the_ball && state_time > 4000 && team.relative_position_to_ball == 3) || 
-            (situation.opponent_at_the_ball && state_time > 4000 && team.relative_position_to_goal == 4))
+    else if((!situation.opponent_at_the_ball && team.relative_position_to_ball == 3) || 
+            (situation.opponent_at_the_ball && team.relative_position_to_goal == 4))
       goto supporter;
-    else if((!situation.opponent_at_the_ball && state_time > 4000 && team.relative_position_to_goal == 3) ||
-            (situation.opponent_at_the_ball && state_time > 4000 && team.relative_position_to_ball == 4))
+    else if((!situation.opponent_at_the_ball && team.relative_position_to_goal == 3) ||
+            (situation.opponent_at_the_ball && team.relative_position_to_ball == 4))
       goto defender;
-    else if(situation.opponent_at_the_ball && state_time > 4000 && team.relative_position_to_goal == 2)
+    else if(situation.opponent_at_the_ball && team.relative_position_to_goal == 2)
       goto supporter_defensive;
   } 
 
@@ -35,6 +37,15 @@ option decide_role
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
       spl_robust_goalie();
+    }
+  }
+
+  state wait_striker
+  {
+    action
+    {
+      head.control_mode = look_around;
+      motion.type = stand;
     }
   }
 
