@@ -120,7 +120,7 @@ option smart_attack_situation
     action
     {
       common_decision.allowed = false;
-      perform_omnidirectional_kick(distance = 195, right_foot = ball.preview.y<0, errorX=30, errorY=30, errorR=20);
+      perform_omnidirectional_kick(distance = 175, right_foot = ball.preview.y<0, errorX=30, errorY=30, errorR=20);
     }
   }
 
