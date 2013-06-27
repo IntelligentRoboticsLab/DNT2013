@@ -25,7 +25,6 @@ namespace game_symbols("Game Control Symbols") {
   {
     before_kick_off,
     kick_off_own,
-    game.state,
     kick_off_opp,
     play_on,
     kick_in_own,
@@ -79,6 +78,7 @@ namespace game_symbols("Game Control Symbols") {
   /** Will be set once to true if the ball was outside the center circle */
   bool internal ball_was_outside_circle;
 
+  /** msecs since last game state change */
   float input game.time_since_game_state_changed;
-
+  
 }
