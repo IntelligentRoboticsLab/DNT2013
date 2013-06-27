@@ -14,9 +14,11 @@
 // representations
 #include "Representations/Infrastructure/GameData.h"
 #include "Representations/Modeling/PlayerInfo.h"
+#include <Representations/Infrastructure/FrameInfo.h>
 
 BEGIN_DECLARE_MODULE(GameSymbols)
   REQUIRE(PlayerInfo);
+  REQUIRE(FrameInfo);
 END_DECLARE_MODULE(GameSymbols)
 
 class GameSymbols: public GameSymbolsBase
@@ -25,7 +27,8 @@ class GameSymbols: public GameSymbolsBase
 public:
   GameSymbols()
     :
-    playerInfo(getPlayerInfo())
+    playerInfo(getPlayerInfo()),
+    theFrameInfo(getFrameInfo())
   {
       theInstance = this;
     };
@@ -41,11 +44,13 @@ private:
   static bool getOwnKickOff();
   static double getPlayerNumber();
   static double getMsecsRemaining();
+  static double getTimeSinceGameStateChanged();
   static int getPlayMode();
   static int getOpponentTeamColor();
   static int getOwnTeamColor();
 
   const PlayerInfo& playerInfo;
+  const FrameInfo& theFrameInfo;
 
 };//end class GameSymbols
 

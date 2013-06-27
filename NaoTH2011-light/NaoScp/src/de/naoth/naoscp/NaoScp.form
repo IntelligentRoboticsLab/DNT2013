@@ -51,10 +51,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="jLabel12" min="-2" max="-2" attributes="1"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="1014" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
-                      <Component id="jSplitPane1" max="32767" attributes="0"/>
+                      <Component id="jSplitPane1" pref="0" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -121,38 +121,37 @@
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="cbCopyConfig" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              <Component id="cbCopyLogs" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="cbCopyBehavior" alignment="0" min="-2" max="-2" attributes="0"/>
                                           </Group>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Group type="102" attributes="0">
+                                                  <Component id="cbRestartNaoqi" min="-2" max="-2" attributes="0"/>
+                                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                  <Component id="cbNoBackup" pref="144" max="32767" attributes="0"/>
+                                              </Group>
+                                              <Group type="102" attributes="0">
                                                   <Component id="cbRestartNaoth" min="-2" max="-2" attributes="0"/>
-                                                  <EmptySpace max="-2" attributes="0"/>
+                                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                   <Component id="cbForceBackup" min="-2" max="-2" attributes="0"/>
                                               </Group>
-                                              <Group type="102" alignment="0" attributes="0">
-                                                  <Component id="cbRestartNaoqi" min="-2" max="-2" attributes="0"/>
-                                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                  <Component id="cbNoBackup" pref="0" max="32767" attributes="0"/>
-                                              </Group>
                                           </Group>
                                       </Group>
                                   </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
-                                          <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="jScrollPane2" pref="0" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="jScrollPane2" min="-2" pref="133" max="-2" attributes="0"/>
+                                              <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                                          <Component id="cbCopyLogs" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="cbCopyBehavior" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="577" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -166,38 +165,35 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="jSettingsPanel" min="-2" max="-2" attributes="1"/>
-                                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="cbCopyConfig" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="cbRestartNaoth" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="cbForceBackup" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="cbCopyLogs" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="cbRestartNaoqi" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="cbNoBackup" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                                          </Group>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="cbCopyExe" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-                                          <Component id="cbCopyLib" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                              </Group>
-                              <Group type="102" attributes="0">
                                   <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jScrollPane2" max="32767" attributes="1"/>
                               </Group>
+                              <Component id="jSettingsPanel" min="-2" max="-2" attributes="1"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="cbCopyBehavior" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="cbCopyConfig" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbRestartNaoth" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbForceBackup" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                                      <Component id="cbCopyLogs" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="cbRestartNaoqi" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNoBackup" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                                      <Component id="cbCopyBehavior" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <Component id="cbCopyExe" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                                  <Component id="cbCopyLib" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace pref="19" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -676,7 +672,7 @@
                               <Component id="jButtonSetRobotNetwork" max="32767" attributes="0"/>
                               <Component id="jButtonInitRobotSystem" alignment="1" max="32767" attributes="1"/>
                               <Component id="jButtonSaveNetworkConfig" pref="192" max="32767" attributes="0"/>
-                              <Component id="jButtonRemoteKernelVideoReload" alignment="0" pref="186" max="32767" attributes="0"/>
+                              <Component id="jButtonRemoteKernelVideoReload" alignment="0" pref="194" max="32767" attributes="0"/>
                               <Component id="jScrollPane3" alignment="1" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -787,7 +783,7 @@
                                               <Group type="103" groupAlignment="1" attributes="0">
                                                   <Component id="wlanKey" alignment="0" max="32767" attributes="3"/>
                                                   <Group type="102" alignment="1" attributes="0">
-                                                      <Component id="wlanSSID" pref="0" max="32767" attributes="1"/>
+                                                      <Component id="wlanSSID" pref="83" max="32767" attributes="1"/>
                                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                       <Component id="radioWEP" min="-2" max="-2" attributes="0"/>
                                                       <EmptySpace type="separate" max="-2" attributes="0"/>
