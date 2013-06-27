@@ -19,7 +19,8 @@ option spl_robust_goalie{
       else stay;
     }
     action{
-      dnt_static_goalie(); //spl_robust_inside_goalie();
+      //dnt_static_goalie(); 
+      spl_robust_inside_goalie();
     }
   }
 
