@@ -210,6 +210,8 @@ void FieldInfo::createLinesTable()
       |               |               |
       |---------------|---------------|
 
+
+  // HACK FOR EXTRA LINES IN EINDHOVEN 2013
   */
   //inverted penalty line own goal left (should be negative)
   fieldLinesTable.addLine(
@@ -244,6 +246,7 @@ void FieldInfo::createLinesTable()
               Vector2<double>(crossings[opponentGoalTCrossingRight].position[0]+500.0, crossings[opponentGoalTCrossingRight][1]+300.0)
               );
 
+  // END OF HACK FOR EXTRA LINES
 
   // the radius is choosen in a way the centers of line segments are exactly on the circle
   Vector2<double> x0(centerCircleRadius / cos(angleStep*0.5), 0.0);
