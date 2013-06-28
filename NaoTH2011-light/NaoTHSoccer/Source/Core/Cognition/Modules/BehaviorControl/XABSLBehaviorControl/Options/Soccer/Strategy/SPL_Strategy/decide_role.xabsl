@@ -10,22 +10,18 @@ option decide_role
 	  {
       if(state_time < 20000 && game.own_kickoff && !ball_was_outside_circle)
 	      goto initial_striker;
-	    else if(game.time_since_game_state_changed < 10000 && !game.own_kickoff && abs(value = ball.position.field.x) < 2 * field.centerCircleRadius && abs(value = ball.position.field.y) < 2 * field.centerCircleRadius && 
+	    else if(game.time_since_game_state_changed < 10000 && !game.own_kickoff && abs(value = ball.position.field.x) < field.centerCircleRadius && abs(value = ball.position.field.y) < field.centerCircleRadius && 
 	             ball.distance < field.centerCircleRadius + 600)
         goto wait_striker;
       else
 	      goto striker;
 	  }
-	  else if(situation.opponent_at_the_ball && team.relative_position_to_ball == 2)
+	  else if(team.relative_position_to_ball == 2)
       goto supporter_aggressive;
-    else if((!situation.opponent_at_the_ball && team.relative_position_to_ball == 3) || 
-            (situation.opponent_at_the_ball && team.relative_position_to_goal == 4))
+    else if(team.relative_position_to_ball == 3)
       goto supporter;
-    else if((!situation.opponent_at_the_ball && team.relative_position_to_goal == 3) ||
-            (situation.opponent_at_the_ball && team.relative_position_to_ball == 4))
+    else if(true)
       goto defender;
-    else if(situation.opponent_at_the_ball && team.relative_position_to_goal == 2)
-      goto supporter_defensive;
   } 
 
   state goalie
