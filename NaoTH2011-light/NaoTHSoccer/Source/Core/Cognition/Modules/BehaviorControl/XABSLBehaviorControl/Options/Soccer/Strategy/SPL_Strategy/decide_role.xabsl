@@ -5,6 +5,14 @@ option decide_role
   {
     if(game.player_number == 1 && team.members_alive_count >= 0)
       goto goalie;
+    else if(ball.time_since_last_seen < 1000 && 
+            game.player_number != 1 && 
+            robot_pose.x < field.xPosOwnPenaltyArea + 50 && 
+            robot_pose.y < field.yPosLeftPenaltyArea + 50 && 
+            robot_pose.y > field.yPosRightPenaltyArea - 50)
+    {
+      goto wait_striker;
+    }
     else if((team.members_alive_count <= 1) ||
 	          (team.calc_if_is_striker && fall_down_state == upright))
 	  {
@@ -49,7 +57,7 @@ option decide_role
     }
   }
 
-  initial state striker
+  state striker
   {
     action
     {
@@ -61,7 +69,7 @@ option decide_role
     }
   }
 
-  state defender
+  initial state defender
   {
     action
     {

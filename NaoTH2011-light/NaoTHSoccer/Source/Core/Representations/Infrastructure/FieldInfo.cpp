@@ -33,7 +33,7 @@ FieldInfo::FieldInfo() : ParameterList("FieldInfo")
   PARAMETER_REGISTER(goalHeight) = 800;
   PARAMETER_REGISTER(goalpostRadius) = 50;
 
-  syncWithConfig();ownGoalTCrossingRight
+  syncWithConfig();
 
   calculateValues();
 
