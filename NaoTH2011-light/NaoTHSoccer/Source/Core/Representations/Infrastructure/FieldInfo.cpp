@@ -215,35 +215,35 @@ void FieldInfo::createLinesTable()
   */
   //inverted penalty line own goal left (should be negative)
   fieldLinesTable.addLine(
-              vector2<double>(crossings[ownGoalTCrossingRight].position[0]-500.0,crossings[ownGoalTCrossingRight][1]+300.0),
-              Vector2<double>(crossings[ownGoalTCrossingLeft].position[0]-500.0, crossings[ownGoalTCrossingLeft][1]-300.0)
+              Vector2<double>(crossings[ownGoalTCrossingRight].position.x - 500.0,crossings[ownGoalTCrossingRight].position.y + 300.0),
+              Vector2<double>(crossings[ownGoalTCrossingLeft].position.x - 500.0, crossings[ownGoalTCrossingLeft].position.y - 300.0)
               );
   //from goal to inverted pl left
   fieldLinesTable.addLine(
-              vector2<double>(crossings[ownGoalTCrossingLeft].position[0],crossings[ownGoalTCrossingLeft][1]-300.0),
-              Vector2<double>(crossings[ownGoalTCrossingLeft].position[0]-500.0, crossings[ownGoalTCrossingLeft][1]-300.0)
+              Vector2<double>(crossings[ownGoalTCrossingLeft].position.x, crossings[ownGoalTCrossingLeft].position.y - 300.0),
+              Vector2<double>(crossings[ownGoalTCrossingLeft].position.x - 500.0, crossings[ownGoalTCrossingLeft].position.y - 300.0)
               );
   //from goal to inverted pl right
   fieldLinesTable.addLine(
-              vector2<double>(crossings[ownGoalTCrossingRight].position[0],crossings[ownGoalTCrossingRight][1]+300.0),
-              Vector2<double>(crossings[ownGoalTCrossingRight].position[0]-500.0, crossings[ownGoalTCrossingRight][1]+300.0)
+              Vector2<double>(crossings[ownGoalTCrossingRight].position.x, crossings[ownGoalTCrossingRight].position.y + 300.0),
+              Vector2<double>(crossings[ownGoalTCrossingRight].position.x - 500.0, crossings[ownGoalTCrossingRight].position.y + 300.0)
               );
 
   //for opponent side:
   //inverted penalty line own goal left (should be negative)
   fieldLinesTable.addLine(
-              vector2<double>(crossings[opponentGoalTCrossingRight].position[0]+500.0,crossings[opponentGoalTCrossingRight][1]+300.0),
-              Vector2<double>(crossings[opponentGoalTCrossingLeft].position[0]+500.0, crossings[opponentGoalTCrossingLeft][1]-300.0)
+              Vector2<double>(crossings[opponentGoalTCrossingRight].position.x + 500.0,crossings[opponentGoalTCrossingRight].position.y + 300.0),
+              Vector2<double>(crossings[opponentGoalTCrossingLeft].position.x + 500.0, crossings[opponentGoalTCrossingLeft].position.y - 300.0)
               );
   //from goal to inverted pl left
   fieldLinesTable.addLine(
-              vector2<double>(crossings[opponentGoalTCrossingLeft].position[0],crossings[opponentGoalTCrossingLeft][1]-300.0),
-              Vector2<double>(crossings[opponentGoalTCrossingLeft].position[0]+500.0, crossings[opponentGoalTCrossingLeft][1]-300.0)
+              Vector2<double>(crossings[opponentGoalTCrossingLeft].position.x, crossings[opponentGoalTCrossingLeft].position.y - 300.0),
+              Vector2<double>(crossings[opponentGoalTCrossingLeft].position.x + 500.0, crossings[opponentGoalTCrossingLeft].position.y - 300.0)
               );
   //from goal to inverted pl right
   fieldLinesTable.addLine(
-              vector2<double>(crossings[opponentGoalTCrossingRight].position[0],crossings[opponentGoalTCrossingRight][1]+300.0),
-              Vector2<double>(crossings[opponentGoalTCrossingRight].position[0]+500.0, crossings[opponentGoalTCrossingRight][1]+300.0)
+              Vector2<double>(crossings[opponentGoalTCrossingRight].position.x, crossings[opponentGoalTCrossingRight].position.y + 300.0),
+              Vector2<double>(crossings[opponentGoalTCrossingRight].position.x + 500.0, crossings[opponentGoalTCrossingRight].position.y + 300.0)
               );
 
   // END OF HACK FOR EXTRA LINES
