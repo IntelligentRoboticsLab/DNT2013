@@ -14,6 +14,7 @@ FieldInfo::FieldInfo() : ParameterList("FieldInfo")
   ballColor = ColorClasses::orange;
   
   // default values as of SPL rules from 2012
+  // they are overwritten by syncWithConfig();
   PARAMETER_REGISTER(ballRadius) = 32.5;
 
   PARAMETER_REGISTER(xLength) = 6000;
@@ -32,7 +33,7 @@ FieldInfo::FieldInfo() : ParameterList("FieldInfo")
   PARAMETER_REGISTER(goalHeight) = 800;
   PARAMETER_REGISTER(goalpostRadius) = 50;
 
-  syncWithConfig();
+  syncWithConfig();ownGoalTCrossingRight
 
   calculateValues();
 
@@ -195,6 +196,54 @@ void FieldInfo::createLinesTable()
   // center circle approximated by sequence of lines
   double numberOfSegments = 12;
   double angleStep = Math::pi2 / numberOfSegments;
+
+  //FOR ROBOCUP 2013 EINDHOVEN ONLY:
+  /**
+
+      |---------------|---------------|
+      |               |               |
+   |--|---|          _|_          |---|--|
+   |  |   |        /  |  \        |   |  |
+   |  |   |   +   (   |   )   +   |   |  |
+   |  |   |        \ _|_ /        |   |  |
+   |--|---|           |           |---|--|
+      |               |               |
+      |---------------|---------------|
+
+  */
+  //inverted penalty line own goal left (should be negative)
+  fieldLinesTable.addLine(
+              vector2<double>(crossings[ownGoalTCrossingRight].position[0]-500.0,crossings[ownGoalTCrossingRight][1]+300.0),
+              Vector2<double>(crossings[ownGoalTCrossingLeft].position[0]-500.0, crossings[ownGoalTCrossingLeft][1]-300.0)
+              );
+  //from goal to inverted pl left
+  fieldLinesTable.addLine(
+              vector2<double>(crossings[ownGoalTCrossingLeft].position[0],crossings[ownGoalTCrossingLeft][1]-300.0),
+              Vector2<double>(crossings[ownGoalTCrossingLeft].position[0]-500.0, crossings[ownGoalTCrossingLeft][1]-300.0)
+              );
+  //from goal to inverted pl right
+  fieldLinesTable.addLine(
+              vector2<double>(crossings[ownGoalTCrossingRight].position[0],crossings[ownGoalTCrossingRight][1]+300.0),
+              Vector2<double>(crossings[ownGoalTCrossingRight].position[0]-500.0, crossings[ownGoalTCrossingRight][1]+300.0)
+              );
+
+  //for opponent side:
+  //inverted penalty line own goal left (should be negative)
+  fieldLinesTable.addLine(
+              vector2<double>(crossings[opponentGoalTCrossingRight].position[0]+500.0,crossings[opponentGoalTCrossingRight][1]+300.0),
+              Vector2<double>(crossings[opponentGoalTCrossingLeft].position[0]+500.0, crossings[opponentGoalTCrossingLeft][1]-300.0)
+              );
+  //from goal to inverted pl left
+  fieldLinesTable.addLine(
+              vector2<double>(crossings[opponentGoalTCrossingLeft].position[0],crossings[opponentGoalTCrossingLeft][1]-300.0),
+              Vector2<double>(crossings[opponentGoalTCrossingLeft].position[0]+500.0, crossings[opponentGoalTCrossingLeft][1]-300.0)
+              );
+  //from goal to inverted pl right
+  fieldLinesTable.addLine(
+              vector2<double>(crossings[opponentGoalTCrossingRight].position[0],crossings[opponentGoalTCrossingRight][1]+300.0),
+              Vector2<double>(crossings[opponentGoalTCrossingRight].position[0]+500.0, crossings[opponentGoalTCrossingRight][1]+300.0)
+              );
+
 
   // the radius is choosen in a way the centers of line segments are exactly on the circle
   Vector2<double> x0(centerCircleRadius / cos(angleStep*0.5), 0.0);
