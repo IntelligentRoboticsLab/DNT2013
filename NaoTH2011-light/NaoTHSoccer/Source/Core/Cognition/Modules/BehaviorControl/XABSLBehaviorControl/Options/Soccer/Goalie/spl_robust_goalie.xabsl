@@ -13,14 +13,13 @@ option spl_robust_goalie{
      // TODO hardcoded values, check if positive y is left
      else if(action_done && (robot_pose.x < field.xPosOwnGroundline || robot_pose.x > field.xPosOwnPenaltyArea ||
            robot_pose.y < field.yPosRightGoal || robot_pose.y > field.yPosLeftGoal)) {
-      
               goto localize;
       }
       else stay;
     }
     action{
-      //dnt_static_goalie(); 
-      spl_robust_inside_goalie();
+      dnt_static_goalie(); 
+      //spl_robust_inside_goalie();
     }
   }
 

@@ -32,7 +32,7 @@ option decide_offense_position
     }
     action {
 
-      go_to_point(x=field.xPosOwnGroundline+300, y=0, rot=0);
+      //go_to_point(x=field.xPosOwnGroundline+300, y=0, rot=0);
       head.control_mode = search_for_goal;
       // goto_ready_position(x=-2700, y=0, rot=0, check_by_line=true, distToLine=600, maxLineDist=2000, minLineDist=100);
     }
@@ -64,7 +64,7 @@ option decide_offense_position
     }
     action
     {
-      go_to_point(x=-400, y=1000, rot=0);
+      go_to_point(x=-1000, y=1000, rot=0);
       //goto_ready_position(x=-400, y=1000, rot=-15, check_by_line=true, distToLine=200, maxLineDist=1000, minLineDist=100);
       head.control_mode = search_for_goal;
     }

@@ -57,5 +57,4 @@ option follow_ball_with_foot
       motion.walk.coordinate = right_foot;
     }
   }
-
 }

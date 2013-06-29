@@ -84,10 +84,10 @@ option smart_attack_situation
     	else if( (abs(value=attack.direction) < 15) && 
 			      ((ball.right_foot.preview.x < 250 && 
 			       ball.right_foot.preview.x > 0 && 
-			       body.temperature.leg.right < 63)
+			       body.temperature.leg.right < 70)
 			    || (ball.left_foot.preview.x < 250 && 
 			        ball.left_foot.preview.x > 0 && 
-			        body.temperature.leg.left < 63))) 
+			        body.temperature.leg.left < 70))) 
 	        goto omnidirectional_kick;
 	    else if( abs(value=attack.direction) < 15)
           goto omnidirectional_kick;

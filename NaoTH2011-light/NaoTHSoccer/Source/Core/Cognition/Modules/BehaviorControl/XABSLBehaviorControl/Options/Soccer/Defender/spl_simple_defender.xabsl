@@ -5,17 +5,64 @@ option spl_simple_defender {
     decision {
       if (state_time > 5000 && 
           goal.opp.time_since_seen > 9000 &&
-          goal.own.time_since_seen > 9000 )
-        goto search_goal;
+          goal.own.time_since_seen > 9000 ) 
+        {
+          goto search_goal;
+        } 
       else 
-        stay;
+       {
+        if(game.player_number == 2)
+          goto defense_2;
+        else if(game.player_number == 3)
+          goto defense_3;
+        else if(game.player_number == 4)
+          goto defense_4;
+        else if(game.player_number == 5)
+          goto defense_5;
+        else
+          stay;
+        }
     }
     action {
-      go_to_relative_point(rotation=defense.simplePose.rotation, x=defense.simplePose.translation.x, y=defense.simplePose.translation.y, errorX=30, errorY=30, errorR=15);
+      //decide_defense_position();
       head.control_mode = smart_search;
     }
   }
 
+  state defense_2 {
+    action {
+      // TODO hardcoded values
+      go_to_point(x=clip(value=ball.team.position.x - 700, min=field.xPosOwnPenaltyArea + 100, max=0),
+                  y=clip(value=ball.team.position.y - 300, min=-2000, max=2000),
+                  rot=atan2(y=ball.team.position.y, x=ball.team.position.x));
+     }
+  }
+  state defense_3 {
+    action {
+      // TODO hardcoded values
+      go_to_point(x=clip(value=ball.team.position.x - 700, min=field.xPosOwnPenaltyArea + 100, max=0),
+                  y=clip(value=ball.team.position.y - 600, min=-2000, max=2000),
+                  rot=atan2(y=ball.team.position.y, x=ball.team.position.x));
+     }
+  }
+  state defense_4 {
+    action {
+      // TODO hardcoded values
+      go_to_point(x=clip(value=ball.team.position.x - 400, min=field.xPosOwnPenaltyArea + 100, max=0),
+                  y=clip(value=ball.team.position.y + 300, min=-2000, max=2000),
+                  rot=atan2(y=ball.team.position.y, x=ball.team.position.x));
+     }
+  }
+  state defense_5 {
+    action {
+      // TODO hardcoded values
+      go_to_point(x=clip(value=ball.team.position.x - 400, min=field.xPosOwnPenaltyArea + 100, max=0),
+                  y=clip(value=ball.team.position.y - 600, min=-2000, max=2000),
+                  rot=atan2(y=ball.team.position.y, x=ball.team.position.x));
+     }
+  }
+
+  
   state search_goal {
     decision {
       if ( state_time > 5000 &&

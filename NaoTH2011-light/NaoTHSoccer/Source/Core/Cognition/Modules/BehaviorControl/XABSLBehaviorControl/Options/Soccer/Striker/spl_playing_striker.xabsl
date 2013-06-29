@@ -33,7 +33,6 @@ option spl_playing_striker {
       {
         goto attack_ball_with_obstacle_close;
       }*/ 
-
       else
       {
         goto smart_attack;
