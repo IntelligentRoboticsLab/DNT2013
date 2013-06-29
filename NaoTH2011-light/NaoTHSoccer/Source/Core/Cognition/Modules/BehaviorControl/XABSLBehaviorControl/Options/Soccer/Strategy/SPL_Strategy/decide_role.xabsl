@@ -9,9 +9,12 @@ option decide_role
             game.player_number != 1 && 
             robot_pose.x < field.xPosOwnPenaltyArea + 50 && 
             robot_pose.y < field.yPosLeftPenaltyArea + 50 && 
-            robot_pose.y > field.yPosRightPenaltyArea - 50)
+            robot_pose.y > field.yPosRightPenaltyArea - 50 &&
+            ball.x < field.xPosOwnPenaltyArea + 50 && 
+            ball.y < field.yPosLeftPenaltyArea + 50 &&
+            ball.y > field.yPosRightPenaltyArea + 50)
     {
-      goto wait_striker;
+      goto blocker;
     }
     else if((team.members_alive_count <= 1) ||
 	          (team.calc_if_is_striker && fall_down_state == upright))
@@ -24,10 +27,10 @@ option decide_role
       else
 	      goto striker;
 	  }
-	  else if(team.relative_position_to_ball == 2)
-      goto supporter_aggressive;
-    else if(team.relative_position_to_ball == 3)
-      goto supporter;
+	  //else if(team.relative_position_to_ball == 2)
+    //  goto supporter_defensive;
+    //else if(team.relative_position_to_ball == 3)
+    //  goto supporter;
     else if(true)
       goto defender;
   } 
@@ -111,6 +114,19 @@ option decide_role
       ball_was_outside_circle = true;
       spl_playing_defensive_supporter();
     }
+  }
+
+  state blocker
+  {
+    action
+      {
+        set_first_half_right_eye = blue;
+        team.is_playing_as_striker = false;
+        ball_was_outside_circle = true;
+        go_to_point(x=field.xPosOwnPenaltyArea + 100, 
+                    y=ball.team.position.y, 
+                    rot=0);
+      }
   }
 
   state initial_striker
