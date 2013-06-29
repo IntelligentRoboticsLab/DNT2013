@@ -1,50 +1,70 @@
 /** Behavior that is common to all players (goalie, striker, defender, ...) */
 option decide_role
 {
-
-  common decision 
+  common decision
   {
-    /** Goalie */
-    if(game.player_number == 1) //&& team.members_alive_count >= 0) //become field player, when all others are "dead"
-    {
+    if(game.player_number == 1 && team.members_alive_count >= 0)
       goto goalie;
-    }
-    /* fallback if everything else is broken */
-    else if( (team.members_alive_count <= 1) ||
-             (team.calc_if_is_striker && fall_down_state == upright))
+    else if(ball.time_since_last_seen < 1000 && 
+            game.player_number != 1 && 
+            robot_pose.x < field.xPosOwnPenaltyArea + 50 && 
+            robot_pose.y < field.yPosLeftPenaltyArea + 50 && 
+            robot_pose.y > field.yPosRightPenaltyArea - 50 &&
+            ball.x < field.xPosOwnPenaltyArea + 50 && 
+            ball.y < field.yPosLeftPenaltyArea + 50 &&
+            ball.y > field.yPosRightPenaltyArea + 50)
     {
-      if(state_time < 20000 &&
-         game.own_kickoff && !ball_was_outside_circle)
-        goto initial_striker;
+      goto blocker;
+    }
+    else if((team.members_alive_count <= 1) ||
+	          (team.calc_if_is_striker && fall_down_state == upright))
+	  {
+      if(state_time < 20000 && game.own_kickoff && !ball_was_outside_circle)
+	      goto initial_striker;
+	    else if(game.time_since_game_state_changed < 10000 && !game.own_kickoff && abs(value = ball.position.field.x) < field.centerCircleRadius && abs(value = ball.position.field.y) < field.centerCircleRadius && 
+	             ball.distance < field.centerCircleRadius + 600)
+        goto wait_striker;
       else
-        goto striker;
-    }
-    else if(team.calc_if_is_the_last)
-    {
-      goto defender;
-    }
+	      goto striker;
+	  }
+	  //else if(team.relative_position_to_ball == 2)
+    //  goto supporter_defensive;
+    //else if(team.relative_position_to_ball == 3)
+    //  goto supporter;
     else if(true)
-    {
-      goto supporter;
-    }
-  }
+      goto defender;
+  } 
 
   state goalie
   {
     action
     {
+      set_first_half_right_eye = blue;
       situationStatusOwnHalf = true;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
-      spl_robust_goalie();
+      dnt_static_goalie(); //spl_robust_goalie();
     }
   }
 
-  initial state striker
+  state wait_striker
   {
-    
     action
     {
+      head.control_mode = search_for_ball;
+      motion.type = walk;
+      motion.walk.stop_with_stand = false;
+      motion.walk_speed.x = -5;
+      motion.walk_speed.y = 0;
+      motion.walk_speed.rot = 0;
+    }
+  }
+
+  state striker
+  {
+    action
+    {
+      set_first_half_right_eye = red;
       team.is_playing_as_striker = true;
       ball_was_outside_circle = true;
       spl_playing_striker();
@@ -52,10 +72,11 @@ option decide_role
     }
   }
 
-  state defender
+  initial state defender
   {
     action
     {
+      set_first_half_right_eye = green;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
       spl_playing_defender();
@@ -66,10 +87,46 @@ option decide_role
   {
     action
     {
+      set_first_half_right_eye = blue;
       team.is_playing_as_striker = false;
       ball_was_outside_circle = true;
       spl_playing_supporter();
     }
+  }
+
+  state supporter_aggressive
+  {
+    action
+    {
+      set_first_half_right_eye = blue;
+      team.is_playing_as_striker = false;
+      ball_was_outside_circle = true;
+      spl_playing_aggressive_supporter();
+    }
+  }
+
+  state supporter_defensive
+  {
+   action
+    {
+      set_first_half_right_eye = blue;
+      team.is_playing_as_striker = false;
+      ball_was_outside_circle = true;
+      spl_playing_defensive_supporter();
+    }
+  }
+
+  state blocker
+  {
+    action
+      {
+        set_first_half_right_eye = blue;
+        team.is_playing_as_striker = false;
+        ball_was_outside_circle = true;
+        go_to_point(x=field.xPosOwnPenaltyArea + 100, 
+                    y=ball.team.position.y, 
+                    rot=0);
+      }
   }
 
   state initial_striker
@@ -79,5 +136,4 @@ option decide_role
       initial_kick_off();
     }
   }
-  
 }

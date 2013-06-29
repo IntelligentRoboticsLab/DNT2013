@@ -32,7 +32,6 @@ option check_collision
       motion.type = stand;
       motion.execute_immediately = true;
       set_left_eye=red_green;
-      set_right_eye=red_green;
     }
   }
 
@@ -55,7 +54,6 @@ option check_collision
       motion.type = stand;
       motion.execute_immediately = true;
       set_left_eye=red_green;
-      set_right_eye=red_green;
     }
   }
 
@@ -74,12 +72,9 @@ option check_collision
       motion.walk_speed.x = -100;
       motion.walk_speed.y = -50;
       motion.walk_speed.rot = -20;
-            set_left_eye=red_green;
-      set_right_eye=red_green;
-
+      set_left_eye=red_green;
     }
   }
-
   
   state go_back_left 
   {
@@ -96,9 +91,7 @@ option check_collision
       motion.walk_speed.x = -100;
       motion.walk_speed.y = 50;
       motion.walk_speed.rot = 20;
-            set_left_eye=red_green;
-      set_right_eye=red_green;
-
+      set_left_eye=red_green;
     }
   }
 
@@ -117,8 +110,7 @@ option check_collision
       motion.walk_speed.x = 100;
       motion.walk_speed.y = 0;
       motion.walk_speed.rot = 0;
-            set_left_eye=red_green;
-      set_right_eye=red_green;
+      set_left_eye=red_green;      
 
     }
   }  

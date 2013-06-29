@@ -11,6 +11,8 @@ option decide_strategy_position
         goto goto_strategy_position_supporter;
       else if(game.player_number == 4)
         goto goto_strategy_position_defender;
+      else if(game.player_number == 5)
+        goto goto_strategy_position_supporter_aggressive;
       else
         stay;
     }
@@ -62,6 +64,22 @@ option decide_strategy_position
       go_to_point(x=-2000, y=-500, rot=0);
     }
   }
+ 
+  state goto_strategy_position_supporter_aggressive
+  {
+    decision {
+      if(action_done)
+        goto arrived;
+      else
+        stay;
+    }
+    action
+    {
+      //go_to_point_with_lokalize(x=-200, y=1000, rot=-15);
+      go_to_point(x=-1000, y=500, rot=0);
+    }
+  }
+  
   target state arrived{
     action {
       head.control_mode = search_for_ball;

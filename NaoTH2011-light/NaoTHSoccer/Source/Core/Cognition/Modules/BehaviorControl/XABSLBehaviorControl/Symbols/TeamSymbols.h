@@ -8,6 +8,8 @@
 #ifndef _TEAMSYMBOLS_H
 #define  _TEAMSYMBOLS_H
 
+#include "Tools/Math/Vector2.h"
+
 #include <ModuleFramework/Module.h>
 #include <XabslEngine/XabslEngine.h>
 
@@ -72,6 +74,8 @@ private:
   PlayerInfo& playerInfo;
 
   static TeamSymbols* theInstance;
+  static double getRelativePositionToGoal();
+  static double getRelativePositionToBall();
   static double getTeamMembersAliveCount();
   static bool calculateIfStriker();
   static bool calculateIfStrikerByTimeToBall();

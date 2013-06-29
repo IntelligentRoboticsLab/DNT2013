@@ -25,6 +25,7 @@ public class NaoScpConfig
   boolean copyExe;
   boolean copyLogs;
   boolean copySysLibs;
+  boolean copyBehavior;
 
   boolean backupIsSelected;
 
@@ -75,6 +76,7 @@ public class NaoScpConfig
     copyExe = config.copyExe;
     copyLogs = config.copyLogs;
     copySysLibs = config.copySysLibs;
+    copyBehavior = config.copyBehavior;
 
     backupIsSelected = config.backupIsSelected;
 
@@ -119,6 +121,11 @@ public class NaoScpConfig
   {
     return homePath() + "/naoqi/Config";
   }
+  
+  public String behaviorPath()
+  {
+      return homePath() + "/naoqi/Config";
+  }
 
 
   public String naoqiPrefPath()
@@ -151,6 +158,8 @@ public class NaoScpConfig
   public String localSetupScriptPath(){return jDirPathLabel + "/../Utils/NaoConfigFiles";}
   public String localDeployOutPath(){return localDeployOutPath(sNaoNo);}
   public String localDeployOutPath(String sNaoNo){return localDeployRootPath() + "/out/" + sNaoNo;}
+  public String localBehaviorOutPath(){return jDirPathLabel + "/Config/bahavior-ic.dat";}
+  
 
   public String remoteSetupScriptPath(){return remoteSetupScriptPath(sNaoNo);}
   public String remoteSetupScriptPath(String sNaoNo){return remoteRootPath(sNaoNo) + setupScriptPath();}
@@ -161,6 +170,9 @@ public class NaoScpConfig
   public String remoteConfigPath(){return remoteConfigPath(sNaoNo);}
   public String remoteConfigPath(String sNaoNo){return remoteRootPath(sNaoNo) + configPath();}
   public String remoteRootPath(){return remoteRootPath(sNaoNo);}
+  public String remoteBehaviorPath(){return remoteConfigPath(sNaoNo);}
+  public String remoteBehaviorPath(String sNaoNo){return remoteRootPath(sNaoNo) + configPath();} 
+  
   public String remoteRootPath(String sNaoNo)
   {
     if(fhIsTesting)

@@ -11,6 +11,8 @@ option decide_defense_position
           goto goto_defense_position_supporter;
         else if(game.player_number == 4)
           goto goto_defense_position_defender;
+        else if(game.player_number == 5)
+          goto goto_defense_position_supporter_aggressive;
         else
           stay;
     }
@@ -29,7 +31,7 @@ option decide_defense_position
         stay;
     }
     action {
-      go_to_point(x=-2700, y=0, rot=0);
+      //go_to_point(x=field.xPosOwnGroundline+300, y=0, rot=0);
       head.control_mode = search_for_goal;
       // goto_ready_position(x=-2700, y=0, rot=0, check_by_line=true, distToLine=600, maxLineDist=2000, minLineDist=100);
     }
@@ -62,7 +64,7 @@ option decide_defense_position
     action
     {
       //go_to_point_with_lokalize(x=-1500, y=600, rot=-15);
-      go_to_point(x=-1800, y=700, rot=0);
+      go_to_point(x=-2000, y=1000, rot=0);
       head.control_mode = search_for_goal;
     }
   }
@@ -78,10 +80,27 @@ option decide_defense_position
     action
     {
       //go_to_point_with_lokalize(x=-1500, y=600, rot=-15);
-      go_to_point(x=-1800, y=-700, rot=0);
+      go_to_point(x=-2000, y=-1000, rot=0);
       head.control_mode = search_for_goal;
     }
   }
+
+  state goto_defense_position_supporter_aggressive
+  {
+   decision {
+      if(action_done)
+        goto arrived;
+      else
+        stay;
+    }
+    action
+    {
+      //go_to_point_with_lokalize(x=-1500, y=600, rot=-15);
+      go_to_point(x=-1800, y=-200, rot=0);
+      head.control_mode = search_for_goal;
+    }
+  }
+  
   target state arrived{
     action {
       head.control_mode = look_around;

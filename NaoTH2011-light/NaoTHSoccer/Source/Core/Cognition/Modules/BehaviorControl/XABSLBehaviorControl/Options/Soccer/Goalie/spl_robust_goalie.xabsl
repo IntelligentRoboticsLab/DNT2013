@@ -10,19 +10,20 @@ option spl_robust_goalie{
 
   state inside_penalty_area{
     decision{
-     else if(action_done && (robot_pose.x < -3000 || robot_pose.x > -2400 ||
-           robot_pose.y <   -1100 || robot_pose.y > 1100)) {
-      
-              goto outside_penalty_area;
+     // TODO hardcoded values, check if positive y is left
+     else if(action_done && (robot_pose.x < field.xPosOwnGroundline || robot_pose.x > field.xPosOwnPenaltyArea ||
+           robot_pose.y < field.yPosRightGoal || robot_pose.y > field.yPosLeftGoal)) {
+              goto localize;
       }
       else stay;
     }
     action{
-      spl_robust_inside_goalie();
+      dnt_static_goalie(); 
+      //spl_robust_inside_goalie();
     }
   }
 
-  state outside_penalty_area{
+  /*state outside_penalty_area{
     decision{
       else if(robot_pose.x > -3000 && robot_pose.x < -2400 &&
            robot_pose.y >   -1100 && robot_pose.y < 1100) {
@@ -34,7 +35,7 @@ option spl_robust_goalie{
     action {
        spl_robust_outside_goalie();
     }
-  }
+  }*/
 
   initial state localize{
     decision{

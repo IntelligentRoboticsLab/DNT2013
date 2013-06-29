@@ -34,9 +34,11 @@ public:
     theInstance = this;
     lastREar = 0.0;
     lastLEar = 0.0;
-    lastREye = 0;
-    lastLEye = 0;
-  };
+    lastFirstHalfLEye = 0;
+    lastSecondHalfLEye = 0;
+    lastFirstHalfREye = 0;
+    lastSecondHalfREye = 0;
+};
   virtual ~LedSymbols(){}
   
   /** registers the symbols at an engine */
@@ -57,18 +59,30 @@ private:
 
   static void setRightEar(double id);
   static void setLeftEar(double id);
-  static void setRightEye(int value);
+
+  static void setFirstHalfLeftEye(int value);
+  static void setSecondHalfLeftEye(int value);
   static void setLeftEye(int value);
+
+  static void setFirstHalfRightEye(int value);
+  static void setSecondHalfRightEye(int value);
+  static void setRightEye(int value);
 
   double lastREar;
   double lastLEar;
-  int lastREye;
-  int lastLEye;
+  int lastFirstHalfREye;
+  int lastSecondHalfREye;
+  int lastFirstHalfLEye;
+  int lastSecondHalfLEye;
 
   static double getRightEar();
   static double getLeftEar();
-  static int getRightEye();
+  static int getFirstHalfLeftEye();
+  static int getSecondHalfLeftEye();
   static int getLeftEye();
+  static int getFirstHalfRightEye();
+  static int getSecondHalfRightEye();
+  static int getRightEye();
 
 };//end class LedSymbols
 

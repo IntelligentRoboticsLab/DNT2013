@@ -1,7 +1,7 @@
 /** Symbols for accessing Leds */
 namespace led_symbols("Led Symbols") {
 
- /* Enumeration for possible values of the eye leds  */
+  /** Enumeration for possible values of the eye leds  */
   enum eyeLED
   {
     off,
@@ -15,7 +15,13 @@ namespace led_symbols("Led Symbols") {
   float output set_right_ear;
   /** values 0-9 possible */
   float output set_left_ear; 
-  enum eyeLED output set_right_eye;
+  
+  enum eyeLED output set_first_half_left_eye;  
+  enum eyeLED output set_second_half_left_eye;
   enum eyeLED output set_left_eye;  
+
+  enum eyeLED output set_first_half_right_eye;
+  enum eyeLED output set_second_half_right_eye;
+  enum eyeLED output set_right_eye;
 }
   

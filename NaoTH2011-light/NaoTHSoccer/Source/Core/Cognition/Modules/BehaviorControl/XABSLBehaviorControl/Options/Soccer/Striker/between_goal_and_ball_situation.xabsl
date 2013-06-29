@@ -21,7 +21,10 @@ option between_goal_and_ball_situation
     }
     action
     {
-    
+      // rotation = atan2(ball_y, ball_x)
+      // x = ball_x - 240 * cos(rotation)
+      // y = ball_y - sin(rotation)
+      // with some errors
       go_to_relative_point(rotation = atan2(y = ball.preview.y, x = ball.preview.x), 
                            x = ball.preview.x - 240 * cos(angle=atan2(y = ball.preview.y, x = ball.preview.x)), 
                            y = ball.preview.y - sin(angle=atan2(y = ball.preview.y, x = ball.preview.x)),

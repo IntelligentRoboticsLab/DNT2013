@@ -1,7 +1,7 @@
-/** goto the position between ball and own goal */
-option spl_simple_supporter {
-
- initial target state go_to_position {
+/** Goto a position in front of the ball, close to the penalty area.*/
+option spl_aggressive_supporter{
+ 
+  initial target state go_to_position {
     decision {
       if (state_time > 5000 && goal.opp.time_since_seen > 5000
       && goal.own.time_since_seen > 5000 )
@@ -10,11 +10,9 @@ option spl_simple_supporter {
         stay;
     }
     action {
-      go_to_point(
-        x=clip(value=(ball.position.field.x-1000), min=field.xPosOwnPenaltyArea, max=field.xPosOppPenaltyArea),
-        y=clip(value=ball.position.field.y*0.8, min=field.yPosRightPenaltyArea, max=field.yPosLeftPenaltyArea),
-        rot=atan2(y=ball.position.field.y, x=ball.position.field.x-field.xPosOwnGroundline));
-      head.control_mode = smart_search;
+      go_to_point(x=clip(value=(ball.team.position.x+700), min=field.xPosOwnPenaltyArea, max=field.xPosOppPenaltyArea),
+            y=clip(value=ball.team.position.y*0.4, min=field.yPosRightPenaltyArea, max=field.yPosLeftPenaltyArea),
+            rot=atan2(y=ball.team.position.y, x=ball.team.position.x));
       head.control_mode = smart_search;
     }
   }
@@ -32,5 +30,4 @@ option spl_simple_supporter {
        find_goal();
      }
    }
-      
 }

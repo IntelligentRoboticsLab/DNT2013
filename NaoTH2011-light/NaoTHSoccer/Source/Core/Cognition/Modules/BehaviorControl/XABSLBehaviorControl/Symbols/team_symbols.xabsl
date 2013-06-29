@@ -1,5 +1,11 @@
 /** Symbols for accessing all team relevant information */
 namespace team("Team Symbols") {
+
+  /** Relative position to own goal, closest=1, furthest=amount of team members*/
+  float input team.relative_position_to_goal [number];
+
+  /** Relative position to ball, closest=striker*/
+  float input team.relative_position_to_ball [number];
   
   /** Count of team members who are alive (which means they sent a team-message) */
   float input team.members_alive_count [number];
@@ -16,4 +22,5 @@ namespace team("Team Symbols") {
   /** Whether we actually play as striker */
   bool output team.is_playing_as_striker;
 }
+
   

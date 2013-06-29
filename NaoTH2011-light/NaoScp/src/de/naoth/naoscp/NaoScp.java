@@ -438,7 +438,7 @@ public class NaoScp extends NaoScpMainFrame
       cfg.selectedBackup = "";
     }
 
-    if(cfg.copyConfig || cfg.copyExe || cfg.copyLib || cfg.copyLogs || cfg.forceBackup || cfg.noBackup)
+    if(cfg.copyConfig || cfg.copyExe || cfg.copyLib || cfg.copyLogs || cfg.forceBackup || cfg.noBackup || cfg.copyBehavior)
     {
       showCopyDoneMsg = true;
     }
@@ -2104,6 +2104,10 @@ public class NaoScp extends NaoScpMainFrame
     {
       copyButton.setText("Minimal backup");
     }
+    else if(cbCopyBehavior.isSelected())
+    {
+        copyButton.setText("Copy Behavior");
+    }
     else
     {
       copyButton.setText("Nothing to do");
@@ -2163,6 +2167,7 @@ public class NaoScp extends NaoScpMainFrame
         cbCopyExe = new javax.swing.JCheckBox();
         cbRestartNaoqi = new javax.swing.JCheckBox();
         cbForceBackup = new javax.swing.JCheckBox();
+        cbCopyBehavior = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         jSettingsPanel1 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
@@ -2363,7 +2368,7 @@ public class NaoScp extends NaoScpMainFrame
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(naoByte5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 32, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                 .add(49, 49, 49)
-                                .add(copyButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)))))
+                                .add(copyButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jActionsPanelLayout.setVerticalGroup(
@@ -2554,6 +2559,13 @@ public class NaoScp extends NaoScpMainFrame
             }
         });
 
+        cbCopyBehavior.setText("copyBehavior");
+        cbCopyBehavior.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbCopyBehaviorItemStateChanged(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -2572,25 +2584,27 @@ public class NaoScp extends NaoScpMainFrame
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                     .add(cbCopyConfig)
-                                    .add(cbCopyLogs))
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                                    .add(jPanel1Layout.createSequentialGroup()
-                                        .add(cbRestartNaoth)
-                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(cbForceBackup))
+                                    .add(cbCopyBehavior))
+                                .add(18, 18, 18)
+                                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                     .add(jPanel1Layout.createSequentialGroup()
                                         .add(cbRestartNaoqi)
+                                        .add(18, 18, 18)
+                                        .add(cbNoBackup, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 144, Short.MAX_VALUE))
+                                    .add(jPanel1Layout.createSequentialGroup()
+                                        .add(cbRestartNaoth)
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                                        .add(cbNoBackup, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)))))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                        .add(cbForceBackup)))))
                         .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(jPanel1Layout.createSequentialGroup()
-                                .add(jLabel16)
-                                .add(0, 0, Short.MAX_VALUE))
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 133, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                    .add(jLabel16)))
                             .add(jPanel1Layout.createSequentialGroup()
-                                .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                .addContainerGap())))))
+                                .add(4, 4, 4)
+                                .add(cbCopyLogs)))
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -2600,28 +2614,28 @@ public class NaoScp extends NaoScpMainFrame
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                     .add(jPanel1Layout.createSequentialGroup()
-                        .add(jSettingsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(11, 11, 11)
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jPanel1Layout.createSequentialGroup()
-                                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                                    .add(cbCopyConfig)
-                                    .add(cbRestartNaoth)
-                                    .add(cbForceBackup, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                                .add(8, 8, 8)
-                                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                                    .add(cbCopyLogs)
-                                    .add(cbRestartNaoqi)
-                                    .add(cbNoBackup, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                            .add(jPanel1Layout.createSequentialGroup()
-                                .add(cbCopyExe)
-                                .add(8, 8, 8)
-                                .add(cbCopyLib))))
-                    .add(jPanel1Layout.createSequentialGroup()
                         .add(jLabel16)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jScrollPane2)))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .add(jScrollPane2))
+                    .add(jSettingsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(11, 11, 11)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(cbCopyConfig)
+                            .add(cbRestartNaoth)
+                            .add(cbForceBackup, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(cbCopyLogs))
+                        .add(8, 8, 8)
+                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(cbRestartNaoqi)
+                            .add(cbNoBackup, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(cbCopyBehavior)))
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(cbCopyExe)
+                        .add(8, 8, 8)
+                        .add(cbCopyLib)))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Copy & Run", jPanel1);
@@ -2785,9 +2799,9 @@ public class NaoScp extends NaoScpMainFrame
                                     .add(jLabel22))
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(jSettingsPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                                    .add(org.jdesktop.layout.GroupLayout.LEADING, subnetFieldLAN, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                                    .add(org.jdesktop.layout.GroupLayout.LEADING, netmaskFieldLAN, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                                    .add(org.jdesktop.layout.GroupLayout.LEADING, broadcastFieldLAN, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
+                                    .add(org.jdesktop.layout.GroupLayout.LEADING, subnetFieldLAN)
+                                    .add(org.jdesktop.layout.GroupLayout.LEADING, netmaskFieldLAN)
+                                    .add(org.jdesktop.layout.GroupLayout.LEADING, broadcastFieldLAN))
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(jSettingsPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                     .add(jLabel14)
@@ -2814,9 +2828,9 @@ public class NaoScp extends NaoScpMainFrame
                             .add(org.jdesktop.layout.GroupLayout.TRAILING, jSettingsPanel1Layout.createSequentialGroup()
                                 .add(84, 84, 84)
                                 .add(jSettingsPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                                    .add(org.jdesktop.layout.GroupLayout.LEADING, wlanKey, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE)
+                                    .add(org.jdesktop.layout.GroupLayout.LEADING, wlanKey)
                                     .add(jSettingsPanel1Layout.createSequentialGroup()
-                                        .add(wlanSSID, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                                        .add(wlanSSID, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                                         .add(radioWEP)
                                         .add(18, 18, 18)
@@ -2943,7 +2957,7 @@ public class NaoScp extends NaoScpMainFrame
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jLabel26)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jTeamCommPort, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE))
+                        .add(jTeamCommPort))
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, jSettingsPanel2Layout.createSequentialGroup()
                         .add(jSettingsPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
                             .add(org.jdesktop.layout.GroupLayout.LEADING, jSettingsPanel2Layout.createSequentialGroup()
@@ -2960,8 +2974,8 @@ public class NaoScp extends NaoScpMainFrame
                                 .add(jLabel28)))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jSettingsPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(sshPassword, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
-                            .add(sshRootPassword, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE))))
+                            .add(sshPassword)
+                            .add(sshRootPassword))))
                 .addContainerGap())
         );
         jSettingsPanel2Layout.setVerticalGroup(
@@ -3046,8 +3060,8 @@ public class NaoScp extends NaoScpMainFrame
                     .add(cbRebootSystem, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(jButtonSetRobotNetwork, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, jButtonInitRobotSystem, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(jButtonSaveNetworkConfig, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(jButtonRemoteKernelVideoReload, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                    .add(jButtonSaveNetworkConfig, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                    .add(jButtonRemoteKernelVideoReload, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -3098,12 +3112,12 @@ public class NaoScp extends NaoScpMainFrame
             .add(jCopyStatus, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .add(jPanel3Layout.createSequentialGroup()
                 .add(jScrollPane5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 254, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(0, 60, Short.MAX_VALUE))
+                .add(0, 51, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel3Layout.createSequentialGroup()
-                .add(jScrollPane5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
+                .add(jScrollPane5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jCopyStatus, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 19, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -3121,9 +3135,9 @@ public class NaoScp extends NaoScpMainFrame
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(layout.createSequentialGroup()
                         .add(jLabel12)
-                        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(1014, Short.MAX_VALUE))
                     .add(layout.createSequentialGroup()
-                        .add(jSplitPane1)
+                        .add(jSplitPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .add(28, 28, 28))))
         );
         layout.setVerticalGroup(
@@ -3131,8 +3145,8 @@ public class NaoScp extends NaoScpMainFrame
             .add(layout.createSequentialGroup()
                 .add(jLabel12)
                 .add(2, 2, 2)
-                .add(jSplitPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 378, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .add(jSplitPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 402, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -3384,9 +3398,14 @@ public class NaoScp extends NaoScpMainFrame
         // TODO add your handling code here:
     }//GEN-LAST:event_radioWPAActionPerformed
 
+    private void cbCopyBehaviorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCopyBehaviorItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbCopyBehaviorItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField broadcastFieldLAN;
     private javax.swing.JTextField broadcastFieldWLAN;
+    private javax.swing.JCheckBox cbCopyBehavior;
     private javax.swing.JCheckBox cbCopyConfig;
     private javax.swing.JCheckBox cbCopyExe;
     private javax.swing.JCheckBox cbCopyLib;
