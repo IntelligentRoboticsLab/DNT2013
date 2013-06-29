@@ -16,7 +16,6 @@ option penalty_kicker
     }
   }
   
-
   state approach_ball
   {
     decision
@@ -61,13 +60,12 @@ option penalty_kicker
     }
   }
 
-
   state do_kick
   {
     decision
     {
       if(action_done)
-        goto play_normal_striker;
+        goto finished;
       else
         stay;
     }
@@ -79,17 +77,9 @@ option penalty_kicker
     }
   }
 
-
-  state play_normal_striker
-  {
-    decision
+  target state finished {
+    action 
     {
-      stay;
-    }
-    action
-    {
-      situationStatusOppHalf = false;
-      spl_playing_striker();
     }
   }
 

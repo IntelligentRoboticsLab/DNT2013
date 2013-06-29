@@ -30,13 +30,11 @@ include "Options/Skills/approach_ball_with_correct_foot_ckeck_goal.xabsl";
 include "Options/Skills/go_to_relative_point.xabsl";
 include "Options/Skills/go_to_relative_point_avoid_obstacles.xabsl";
 include "Options/Skills/go_to_absolute_point.xabsl";
-//include "Options/Skills/go_to_pos_behind_ball.xabsl";
 include "Options/Skills/go_to_ball.xabsl";
 include "Options/Skills/go_to_ball_cool.xabsl";
 include "Options/Skills/kick_ball_with_foot.xabsl";
 include "Options/Skills/kick_ball.xabsl";
 include "Options/Skills/move_around_ball.xabsl";
-//include "Options/Skills/move_in_circle_without_turning.xabsl";
 include "Options/Skills/search_ball.xabsl";
 include "Options/Skills/stand_up.xabsl";
 include "Options/Skills/find_goal.xabsl";
@@ -57,48 +55,10 @@ include "Options/Skills/avoid_obstacle.xabsl";
 include "Options/Debug/battery.xabsl";
 
 // Soccer
-// striker
-include "Options/Soccer/Striker/initial_kick_off.xabsl";
-include "Options/Soccer/Striker/ball_far_away_situation.xabsl";
-include "Options/Soccer/Striker/ball_not_seen_situation.xabsl";
-include "Options/Soccer/Striker/attack_situation.xabsl";
-include "Options/Soccer/Striker/between_goal_and_ball_situation.xabsl";
-include "Options/Soccer/Striker/smart_attack_situation.xabsl";
-include "Options/Soccer/Striker/close_to_goal_corner_situation.xabsl";
-include "Options/Soccer/Striker/spl_playing_striker.xabsl";
-include "Options/Soccer/Striker/dribble_attack_direction.xabsl";
-include "Options/Soccer/Striker/strafe_obstacle.xabsl";
-
-// supporter
-include "Options/Soccer/Supporter/spl_playing_supporter.xabsl";
-include "Options/Soccer/Supporter/spl_simple_supporter.xabsl";
-include "Options/Soccer/Supporter/spl_playing_aggressive_supporter.xabsl";
-include "Options/Soccer/Supporter/spl_aggressive_supporter.xabsl";
-include "Options/Soccer/Supporter/spl_playing_defensive_supporter.xabsl";
-include "Options/Soccer/Supporter/spl_defensive_supporter.xabsl";
-
-// defender
-include "Options/Soccer/Defender/spl_playing_defender.xabsl";
-include "Options/Soccer/Defender/spl_simple_defender.xabsl";
-
-// goalie
-include "Options/Soccer/Goalie/clear_ball_far_away.xabsl";
-include "Options/Soccer/Goalie/critical_ball.xabsl";
-include "Options/Soccer/Goalie/spl_robust_goalie.xabsl";
-include "Options/Soccer/Goalie/spl_robust_inside_goalie.xabsl";
-include "Options/Soccer/Goalie/spl_robust_outside_goalie.xabsl";
-include "Options/Soccer/Goalie/dnt_static_goalie.xabsl";
-
-// SPL strategy
-include "Options/Soccer/Strategy/SPL_Strategy/decide_role.xabsl";
-include "Options/Soccer/Strategy/SPL_Strategy/play_with_check_fall_down.xabsl";
-include "Options/Soccer/Strategy/SPL_Strategy/initial_ready_set_play.xabsl";
+// MAIN
 include "Options/Soccer/spl_play_soccer.xabsl";
-include "Options/Soccer/Strategy/SPL_Strategy/decide_ready_position.xabsl";
-include "Options/Soccer/Strategy/SPL_Strategy/decide_strategy_position.xabsl";
-include "Options/Soccer/Strategy/SPL_Strategy/decide_offense_position.xabsl";
-include "Options/Soccer/Strategy/SPL_Strategy/decide_defense_position.xabsl";
-include "Options/Soccer/Strategy/SPL_Strategy/goto_ready_position.xabsl";
+include "Options/Soccer/initial_ready_set_play.xabsl";
+include "Options/Soccer/play_with_check_fall_down.xabsl";
 
 // penalty
 include "Options/Soccer/Penalty/penalty_kicker.xabsl";
