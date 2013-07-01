@@ -49,6 +49,7 @@
 // visual compass stuff
 #include "VisualCompassParameters.h"
 #include "VisualCompassFeature.h"
+#include "VisualGridMapProvider.h"
 
 // motion
 #include "Representations/Motion/Request/HeadMotionRequest.h"

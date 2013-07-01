@@ -24,7 +24,7 @@
 // VisualGridMapProvider
 #define GRID_X_LENGTH 5
 #define GRID_Y_LENGTH 3
-#define NUM_ANGLE_BINS 360
+#define NUM_ANGLE_BINS 12
 #define ANGLE_SIZE 2*M_PI/NUM_ANGLE_BINS;
 
 // WeightedExperts

@@ -11,11 +11,16 @@ typedef vector<Vertex> VertexList;
 
 VisualCompass::VisualCompass()
 {
+    // debug stuff
     DEBUG_REQUEST_REGISTER("VisualCompass:mark_area", "mark the possibles' features area", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:scan_lines", "", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:draw_orientation_loc","from localization", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:draw_orientation_vc","from visual compass", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:draw_visual_grid_map"," dsgew", false);
+
+    // visual compass
+    DEBUG_REQUEST_REGISTER("VisualCompass:clear_feature_grid_map"," delete the previous generated model", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:record","record the feature map for the location of the robot", false);
 
     // motions
     DEBUG_REQUEST_REGISTER("VisualCompass:motion:standard_stand", "stand as standard or not", true);
@@ -74,9 +79,20 @@ bool VisualCompass::isValid()
 
 void VisualCompass::execute()
 {
+    std::cout << Math::toDegrees(getRobotPose().rotation) << std::endl;
     saveModel();
 
     scanner();
+
+
+    DEBUG_REQUEST("VisualCompass:clear_feature_grid_map",
+                  clearCompass();
+                  );
+
+    DEBUG_REQUEST("VisualCompass:record",
+                  std::cout << "recording..." << std::endl;
+                  );
+
     DEBUG_REQUEST("VisualCompass:draw_orientation_loc",
                   FIELD_DRAWING_CONTEXT;
             CIRCLE(getRobotPose().translation.x,
@@ -99,15 +115,40 @@ void VisualCompass::execute()
 
     DEBUG_REQUEST("VisualCompass:draw_visual_grid_map",
                   FIELD_DRAWING_CONTEXT;
-            double dx = getFieldInfo().xLength / GRID_X_LENGTH;
+            // vertical lines
+    double dx = getFieldInfo().xLength / GRID_X_LENGTH;
     for(int i = 1; i < GRID_X_LENGTH; i++)
     {
         LINE(- getFieldInfo().xLength / 2 + dx * i, getFieldInfo().yLength / 2, - getFieldInfo().xLength / 2 + dx * i, - getFieldInfo().yLength / 2);
     }
+    // horizontal lines
     double dy = getFieldInfo().yLength / GRID_Y_LENGTH;
     for(int i = 1; i < GRID_Y_LENGTH; i++)
     {
         LINE(getFieldInfo().xLength / 2, - getFieldInfo().yLength / 2 + dy * i, - getFieldInfo().xLength / 2, - getFieldInfo().yLength / 2 + dy * i);
+    }
+    // circles in the middle of each square
+    double lx = - getFieldInfo().xLength / 2 + dx / 2;
+    double ly = - getFieldInfo().yLength / 2 + dy / 2;
+    for(int i =0; i < GRID_X_LENGTH; i++)
+    {
+        double x = i * dx;
+        for(int j =0; j < GRID_Y_LENGTH; j++)
+        {
+            double y = j * dy;
+            CIRCLE(lx + x, ly + y, 50);
+            // arrow in each circle represent a saved feature
+            for(int ii = 0; ii < NUM_ANGLE_BINS; ii++ )
+            {
+                if( VisualGridMapProvider::gridmap[i][j][ii].valid )
+                {
+//                    ARROW(lx + x, ly + y,
+//                          lx + x + 100 * cos(VisualGridMapProvider::gridmap[i][j][ii].orientation),
+//                          ly + y + 100 * sin(VisualGridMapProvider::gridmap[i][j][ii].orientation);
+//                    );
+                }
+            }
+        }
     }
     );
 
@@ -208,10 +249,6 @@ void VisualCompass::colorExtraction()
 vector< vector<Pixel> > VisualCompass::verticalScanner()
 {
     vector< vector<Pixel> > scanner;
-    vector<Math::LineSegment> img_boundaries;
-    img_boundaries.push_back(Math::LineSegment(Vector2<double>(0, 0), Vector2<double>(getImage().width()-1, 0)));
-    img_boundaries.push_back(Math::LineSegment(Vector2<double>(0, 0), Vector2<double>(0, getImage().height()-1)));
-    img_boundaries.push_back(Math::LineSegment(Vector2<double>(getImage().width()-1, 0), Vector2<double>(getImage().width()-1, getImage().height()-1)));
     for(double p = 5.00; p < (double) getImage().width(); p += COMPASS_FEATURE_STEP)
     {
         vector<Pixel> line;

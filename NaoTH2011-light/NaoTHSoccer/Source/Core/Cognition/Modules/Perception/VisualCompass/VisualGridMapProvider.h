@@ -18,7 +18,7 @@ class VisualGridMapProvider
 {
 
 public:
-    VisualCompassFeature gridmap  [GRID_X_LENGTH][GRID_X_LENGTH][NUM_ANGLE_BINS];
+    static VisualCompassFeature gridmap[GRID_X_LENGTH][GRID_Y_LENGTH][NUM_ANGLE_BINS];
 
     // takes a vector with features and store them in the grid
     void storeFeature(VisualCompassFeature vcf)
