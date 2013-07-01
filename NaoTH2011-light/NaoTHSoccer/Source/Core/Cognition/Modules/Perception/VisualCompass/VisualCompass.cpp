@@ -2,15 +2,9 @@
 using namespace std;
 using namespace cv;
 
-struct Vertex
-{
-    float x, y, z;
-};
-
-typedef vector<Vertex> VertexList;
-
 VisualCompass::VisualCompass()
 {
+    GridMapProvider.isInitialized = false;
     // debug stuff
     DEBUG_REQUEST_REGISTER("VisualCompass:mark_area", "mark the possibles' features area", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:scan_lines", "", false);
@@ -32,23 +26,43 @@ VisualCompass::~VisualCompass()
 {
 }
 
-bool VisualCompass::saveModel()
+void VisualCompass::saveModel()
 {
-    // Create a list for testing
-    VertexList list;
-    Vertex v1 = {1.0f, 2.0f,   3.0f}; list.push_back(v1);
-    Vertex v2 = {2.0f, 100.0f, 3.0f}; list.push_back(v2);
-    Vertex v3 = {3.0f, 200.0f, 3.0f}; list.push_back(v3);
-    Vertex v4 = {4.0f, 300.0f, 3.0f}; list.push_back(v4);
+    std::ofstream outBinFile;
+    outBinFile.open(COMPASS_DATA_FILE, ios::out | ios::binary);
+    for (int i = 0; i < GRID_X_LENGTH; i++){
+        for (int j = 0; j < GRID_Y_LENGTH; j++){
+            for (int k = 0; k < NUM_ANGLE_BINS; k++){
+                outBinFile.write(reinterpret_cast<char*> (&GridMapProvider.gridmap[i][j][k]), sizeof(VisualCompassFeature));
+            }
+        }
+    }
+    outBinFile.close();
+    return;
+}
 
-    // Write out a list to a disk file
-    ofstream os (COMPASS_DATA_FILE, ios::binary);
+void VisualCompass::readModel()
+{
+    if(!GridMapProvider.isInitialized)
+    {
+        GridMapProvider.initializeStorageArray();
+        std::ifstream inBinFile;
+        inBinFile.open(COMPASS_DATA_FILE, ios::in | ios::binary);
+        for (int i = 0; i < GRID_X_LENGTH; i++){
+            for (int j = 0; j < GRID_Y_LENGTH; j++){
+                for (int k = 0; k < NUM_ANGLE_BINS; k++){
+                    inBinFile.read(reinterpret_cast<char*> (&GridMapProvider.gridmap[i][j][k]), sizeof(VisualCompassFeature));
+                }
+            }
+        }
+        inBinFile.close();
+    }
+    return;
+}
 
-    int size1 = list.size();
-    os.write((const char*)&size1, 4);
-    os.write((const char*)&list[0], size1 * sizeof(Vertex));
-    os.close();
-    return true;
+void VisualCompass::recordFeatures()
+{
+
 }
 
 void VisualCompass::clearCompass()
@@ -57,6 +71,7 @@ void VisualCompass::clearCompass()
     if(hasModel()){
         remove(COMPASS_DATA_FILE);
     }
+    GridMapProvider.destroyStorageArray();
 }
 
 bool VisualCompass::hasModel()
@@ -79,19 +94,21 @@ bool VisualCompass::isValid()
 
 void VisualCompass::execute()
 {
-    std::cout << Math::toDegrees(getRobotPose().rotation) << std::endl;
+    //    saveModel();
+    //    scanner();
+    if(!GridMapProvider.isInitialized)
+        GridMapProvider.initializeStorageArray();
+
     saveModel();
-
-    scanner();
-
+    readModel();
 
     DEBUG_REQUEST("VisualCompass:clear_feature_grid_map",
                   clearCompass();
-                  );
+            );
 
     DEBUG_REQUEST("VisualCompass:record",
                   std::cout << "recording..." << std::endl;
-                  );
+            );
 
     DEBUG_REQUEST("VisualCompass:draw_orientation_loc",
                   FIELD_DRAWING_CONTEXT;
@@ -116,7 +133,7 @@ void VisualCompass::execute()
     DEBUG_REQUEST("VisualCompass:draw_visual_grid_map",
                   FIELD_DRAWING_CONTEXT;
             // vertical lines
-    double dx = getFieldInfo().xLength / GRID_X_LENGTH;
+            double dx = getFieldInfo().xLength / GRID_X_LENGTH;
     for(int i = 1; i < GRID_X_LENGTH; i++)
     {
         LINE(- getFieldInfo().xLength / 2 + dx * i, getFieldInfo().yLength / 2, - getFieldInfo().xLength / 2 + dx * i, - getFieldInfo().yLength / 2);
@@ -140,12 +157,11 @@ void VisualCompass::execute()
             // arrow in each circle represent a saved feature
             for(int ii = 0; ii < NUM_ANGLE_BINS; ii++ )
             {
-                if( VisualGridMapProvider::gridmap[i][j][ii].valid )
+                if(GridMapProvider.gridmap[i][j][ii].valid)
                 {
-//                    ARROW(lx + x, ly + y,
-//                          lx + x + 100 * cos(VisualGridMapProvider::gridmap[i][j][ii].orientation),
-//                          ly + y + 100 * sin(VisualGridMapProvider::gridmap[i][j][ii].orientation);
-//                    );
+                    ARROW(lx + x, ly + y,
+                          lx + x + 100*cos(getRobotPose().rotation),
+                          ly + y + 100*sin(getRobotPose().rotation));
                 }
             }
         }

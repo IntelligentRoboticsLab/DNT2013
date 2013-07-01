@@ -91,23 +91,32 @@ public:
 private:
     vector<Pixel> pixelVector;
     vector<naoth::Image> imageVector;
+    VisualGridMapProvider GridMapProvider;
     void head();
     void motion();
 
     /*
-     *
+     * During the off line phase, this method records features
+     * and creates the model. You can enable this function through
+     * robotControl.
      */
-    bool readModel(vector<naoth::Image> model);
+    void recordFeatures();
     /*
-     *
+     * reads the already saved model from the disk, if there is one.
      */
-    bool saveModel();
+    void readModel();
     /*
-     * checks if there is already a model
+     * saves the current model in a binary file in the config directory.
+     * We call this method after the recording function, to save the model.
+     */
+    void saveModel();
+    /*
+     * checks if there is already a model saved into the disk.
      */
     bool hasModel();
     /*
-     * clears any previous files stored from the compass
+     * clears any previous files stored from the compass. We can enable
+     * this function only from robotControl.
      */
     void clearCompass();
     /*
