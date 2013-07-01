@@ -134,9 +134,9 @@ solution "NaoTHSoccer"
   	  kind "ConsoleApp"
   	  links { "NaoTHSoccer", "NaoTH-Commons" }
 	  --debugargs { "--sync" }
-      dofile (FRAMEWORK_PATH .. "/Platforms/Make/Webots.lua")
-  	  kind "ConsoleApp"
-  	  links { "NaoTHSoccer", "NaoTH-Commons" }
+      --dofile (FRAMEWORK_PATH .. "/Platforms/Make/Webots.lua")
+  	  --kind "ConsoleApp"
+  	  --links { "NaoTHSoccer", "NaoTH-Commons" }
     dofile (FRAMEWORK_PATH .. "/Platforms/Make/LogSimulator.lua")
 	  kind "ConsoleApp"
 	  links { "NaoTHSoccer", "NaoTH-Commons" }
