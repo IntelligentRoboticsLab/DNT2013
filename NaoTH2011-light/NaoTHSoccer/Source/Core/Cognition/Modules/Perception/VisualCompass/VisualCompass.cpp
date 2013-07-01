@@ -20,8 +20,6 @@ VisualCompass::VisualCompass()
     // motions
     DEBUG_REQUEST_REGISTER("VisualCompass:motion:standard_stand", "stand as standard or not", true);
     DEBUG_REQUEST_REGISTER("VisualCompass:motion:stand", "The default motion, otherwise do nothing", true);
-
-    // walk
     DEBUG_REQUEST_REGISTER("VisualCompass:motion:turn_right", "Set the motion request to 'turn_right'.", false);
 }
 
@@ -77,6 +75,7 @@ bool VisualCompass::isValid()
 void VisualCompass::execute()
 {
     saveModel();
+
     scanner();
     DEBUG_REQUEST("VisualCompass:draw_orientation_loc",
                   FIELD_DRAWING_CONTEXT;
