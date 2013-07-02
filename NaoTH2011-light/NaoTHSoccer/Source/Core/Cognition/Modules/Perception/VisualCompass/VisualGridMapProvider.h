@@ -30,7 +30,13 @@ public:
         {
             gridmap[i] = new VisualCompassFeature*[GRID_Y_LENGTH];
             for (int j = 0; j < GRID_Y_LENGTH; j++)
+            {
                 gridmap[i][j] = new VisualCompassFeature[NUM_ANGLE_BINS];
+                for(int k = 0; k < NUM_ANGLE_BINS; k++)
+                {
+                    gridmap[i][j][k].valid = false;
+                }
+            }
         }
         isInitialized = true;
         return;
@@ -81,7 +87,7 @@ public:
     static void fieldPosToGridPos(Vector2<double> fieldPos, Vector2<int> &gridPos)
     {
         gridPos.x = floor(( fieldPos.x + FieldInfo().xLength * 0.5 ) / GRID_X_LENGTH);
-        gridPos.y = floor(( fieldPos.y + FieldInfo().yLength * 0.5 ) / GRID_X_LENGTH);
+        gridPos.y = floor(( fieldPos.y + FieldInfo().yLength * 0.5 ) / GRID_Y_LENGTH);
     }
 
 

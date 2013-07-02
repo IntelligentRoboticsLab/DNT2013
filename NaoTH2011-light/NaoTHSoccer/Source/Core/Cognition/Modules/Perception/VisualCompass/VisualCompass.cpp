@@ -62,7 +62,24 @@ void VisualCompass::readModel()
 
 void VisualCompass::recordFeatures()
 {
+    int x = 0,
+        y = 0,
+        theta = 0;
+    double dx = getFieldInfo().xLength / GRID_X_LENGTH;
+    double dy = getFieldInfo().yLength / GRID_Y_LENGTH;
 
+    if(getRobotPose().isValid)
+    {
+        double poseX = getRobotPose().translation.x + getFieldInfo().xFieldLength / 2;
+        double poseY = getRobotPose().translation.y + getFieldInfo().yFieldLength / 2;
+        x = Math::clamp((int) floor(poseX / dx), 0, GRID_X_LENGTH - 1);
+        y = Math::clamp((int) floor(poseY / dy), 0, GRID_Y_LENGTH - 1);
+        // rotation from 0 to 360 degrees
+        double theta_full = getRobotPose().rotation + M_PI;
+        theta = Math::clamp((int) floor(theta_full / ANGLE_SIZE), 0, NUM_ANGLE_BINS);
+        GridMapProvider.gridmap[x][y][theta].valid = true;
+        GridMapProvider.gridmap[x][y][theta].orientation = getRobotPose().rotation;
+    }
 }
 
 void VisualCompass::clearCompass()
@@ -99,8 +116,8 @@ void VisualCompass::execute()
     if(!GridMapProvider.isInitialized)
         GridMapProvider.initializeStorageArray();
 
-    saveModel();
-    readModel();
+//    saveModel();
+//    readModel();
 
     DEBUG_REQUEST("VisualCompass:clear_feature_grid_map",
                   clearCompass();
@@ -108,6 +125,7 @@ void VisualCompass::execute()
 
     DEBUG_REQUEST("VisualCompass:record",
                   std::cout << "recording..." << std::endl;
+                recordFeatures();
             );
 
     DEBUG_REQUEST("VisualCompass:draw_orientation_loc",
@@ -160,8 +178,8 @@ void VisualCompass::execute()
                 if(GridMapProvider.gridmap[i][j][ii].valid)
                 {
                     ARROW(lx + x, ly + y,
-                          lx + x + 100*cos(getRobotPose().rotation),
-                          ly + y + 100*sin(getRobotPose().rotation));
+                          lx + x + 100*cos(GridMapProvider.gridmap[i][j][ii].orientation),
+                          ly + y + 100*sin(GridMapProvider.gridmap[i][j][ii].orientation));
                 }
             }
         }
