@@ -1,0 +1,39 @@
+option fatal_striker
+{  
+//initial!!
+  initial state attacking
+  {
+    decision {
+      //if(fall_down_state != upright)
+      //{
+        if(action_done) {
+          goto execute_kick;
+        } else {
+          stay;
+        }
+      //} else {
+      //  goto stand_up;
+      //}
+    }
+    action {
+      go_to_ball_cool(distance = 150, right_foot=true);
+      
+    }
+  }
+
+  state execute_kick 
+  {
+    decision
+    {
+      if(action_done) {
+        goto execute_kick;
+      } else {
+        stay;
+      }
+    }
+    action
+    {
+      perform_omnidirectional_kick(distance = 110, right_foot = ball.preview.y<0, errorX=30, errorY=30, errorR=20);      
+    }
+  }
+}

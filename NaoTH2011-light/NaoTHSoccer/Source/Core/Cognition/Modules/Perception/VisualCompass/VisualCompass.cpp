@@ -62,9 +62,9 @@ void VisualCompass::readModel()
 
 void VisualCompass::recordFeatures()
 {
-    int x = 0,
-        y = 0,
-        theta = 0;
+    int x = 0;
+    int y = 0;
+    int theta = 0;
     double dx = getFieldInfo().xLength / GRID_X_LENGTH;
     double dy = getFieldInfo().yLength / GRID_Y_LENGTH;
 
@@ -72,11 +72,15 @@ void VisualCompass::recordFeatures()
     {
         double poseX = getRobotPose().translation.x + getFieldInfo().xFieldLength / 2;
         double poseY = getRobotPose().translation.y + getFieldInfo().yFieldLength / 2;
-        x = Math::clamp((int) floor(poseX / dx), 0, GRID_X_LENGTH - 1);
-        y = Math::clamp((int) floor(poseY / dy), 0, GRID_Y_LENGTH - 1);
-        // rotation from 0 to 360 degrees
-        double theta_full = getRobotPose().rotation + M_PI;
-        theta = Math::clamp((int) floor(theta_full / ANGLE_SIZE), 0, NUM_ANGLE_BINS);
+        x = max(0, (int) floor(poseX / dx));
+        x = min(GRID_X_LENGTH-1, x);
+        y = max(0, (int) floor(poseY / dy));
+        y = min(GRID_Y_LENGTH-1, y);
+
+        // rotation from 0 to 360 degrees -- normalize
+        double theta_full = Math::toDegrees(getRobotPose().rotation) + 180.0;
+        // TODO:: fix it work with rads
+        theta = (int) theta_full / 30;
         GridMapProvider.gridmap[x][y][theta].valid = true;
         GridMapProvider.gridmap[x][y][theta].orientation = getRobotPose().rotation;
     }
@@ -85,10 +89,10 @@ void VisualCompass::recordFeatures()
 void VisualCompass::clearCompass()
 {
     // check if there is a model file and delete it
-    if(hasModel()){
-        remove(COMPASS_DATA_FILE);
+    if(GridMapProvider.isInitialized)
+    {
+        GridMapProvider.destroyStorageArray();
     }
-    GridMapProvider.destroyStorageArray();
 }
 
 bool VisualCompass::hasModel()
@@ -111,13 +115,8 @@ bool VisualCompass::isValid()
 
 void VisualCompass::execute()
 {
-    //    saveModel();
-    //    scanner();
     if(!GridMapProvider.isInitialized)
         GridMapProvider.initializeStorageArray();
-
-//    saveModel();
-//    readModel();
 
     DEBUG_REQUEST("VisualCompass:clear_feature_grid_map",
                   clearCompass();

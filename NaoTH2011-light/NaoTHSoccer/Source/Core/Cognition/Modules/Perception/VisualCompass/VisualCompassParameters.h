@@ -25,7 +25,7 @@
 #define GRID_X_LENGTH 5
 #define GRID_Y_LENGTH 3
 #define NUM_ANGLE_BINS 12
-#define ANGLE_SIZE 2 * M_PI / NUM_ANGLE_BINS
+#define ANGLE_SIZE 360.0 / NUM_ANGLE_BINS
 
 // WeightedExperts
 #define SMOOTHING_FACTOR 0.1 //TODO test this value later
