@@ -187,9 +187,6 @@ void ColorDiscretizer::generateClusterIndex(const cv::Mat &samples,
                                             const cv::TermCriteria &criteria,
                                             int attempts,
                                             int flags)
-    {
+{
     cv::kmeans(samples, this->clusters, cv::noArray(), criteria, attempts, flags, this->clusterColors);
-    this->knnIndex = new cv::flann::GenericIndex<cvflann::L1<float> >(this->clusterColors, indexingParams);
-    //this->knnIndex = new cv::flann::Index_<float>(this->clusterColors, indexingParams);
-    this->isClustersIndexed = true;
 }

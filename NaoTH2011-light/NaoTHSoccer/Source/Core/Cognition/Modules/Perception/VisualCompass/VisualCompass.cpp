@@ -84,6 +84,7 @@ void VisualCompass::recordFeatures()
         GridMapProvider.gridmap[x][y][theta].valid = true;
         GridMapProvider.gridmap[x][y][theta].orientation = getRobotPose().rotation;
     }
+    return;
 }
 
 void VisualCompass::clearCompass()
@@ -93,6 +94,7 @@ void VisualCompass::clearCompass()
     {
         GridMapProvider.destroyStorageArray();
     }
+    return;
 }
 
 bool VisualCompass::hasModel()
@@ -124,8 +126,8 @@ void VisualCompass::execute()
 
     DEBUG_REQUEST("VisualCompass:record",
                   std::cout << "recording..." << std::endl;
-                recordFeatures();
-            );
+            recordFeatures();
+    );
 
     DEBUG_REQUEST("VisualCompass:draw_orientation_loc",
                   FIELD_DRAWING_CONTEXT;

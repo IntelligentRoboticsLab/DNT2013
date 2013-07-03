@@ -2,6 +2,7 @@
 #define COLORDISCRETIZER_H
 
 #include <opencv2/core/core.hpp>
+#include <opencv2/flann/flann_base.hpp>
 #include <opencv2/flann/flann.hpp>
 
 #include "Representations/Infrastructure/Image.h"
