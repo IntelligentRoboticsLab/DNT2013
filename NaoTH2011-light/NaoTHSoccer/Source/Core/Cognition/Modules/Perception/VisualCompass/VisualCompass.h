@@ -46,11 +46,6 @@
 #include "Representations/Modeling/ColorClassificationModel.h"
 #include "Representations/Modeling/AttentionModel.h"
 
-// visual compass stuff
-#include "VisualCompassParameters.h"
-#include "VisualCompassFeature.h"
-#include "VisualGridMapProvider.h"
-
 // motion
 #include "Representations/Motion/Request/HeadMotionRequest.h"
 #include "Representations/Motion/Request/MotionRequest.h"
@@ -59,10 +54,13 @@
 //debug requests
 #include "Tools/Debug/DebugRequest.h"
 #include "Tools/Debug/DebugModify.h"
-
 #include "DebugCommunication/DebugCommandManager.h"
 
-
+// visual compass stuff
+#include "Cognition/Modules/Perception/VisualCompass/VisualCompassParameters.h"
+#include "Cognition/Modules/Perception/VisualCompass/VisualCompassFeature.h"
+#include "Cognition/Modules/Perception/VisualCompass/VisualGridMapProvider.h"
+#include "Cognition/Modules/Perception/VisualCortex/ColorDiscretizer.h"
 
 BEGIN_DECLARE_MODULE(VisualCompass)
 REQUIRE(Image)
@@ -89,8 +87,11 @@ public:
     ~VisualCompass();
     void execute();
 private:
-    vector< vector<Pixel> > pixelVector;
+    bool cluster;
+    vector<Pixel> pixelVector;
+    int num_images;
     VisualGridMapProvider GridMapProvider;
+    ColorDiscretizer ClusteringProvider;
     void head();
     void motion();
 

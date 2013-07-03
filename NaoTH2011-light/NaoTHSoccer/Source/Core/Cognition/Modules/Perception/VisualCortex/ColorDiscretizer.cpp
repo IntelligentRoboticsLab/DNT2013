@@ -3,6 +3,19 @@
 #include "ColorDiscretizer.h"
 /*
 */
+ColorDiscretizer::ColorDiscretizer()
+{
+}
+
+ColorDiscretizer::~ColorDiscretizer()
+{
+}
+
+void ColorDiscretizer::setClusters(int num_clusters)
+{
+    this->clusters = num_clusters;
+}
+
 bool ColorDiscretizer::initializeColorModel(cv::InputArrayOfArrays images, int clusters)
 {
     if (!this->checkClusters(clusters)) {
@@ -17,7 +30,7 @@ bool ColorDiscretizer::initializeColorModel(cv::InputArrayOfArrays images, int c
         sampleSize += images.getMat(i).size().area();
     }
 
-    cv::Mat samples(sampleSize, 3, CV_32F);
+    cv::Mat samples(sampleSize, 3, CV_32FC3);
     cv::Mat image;
     cv::Vec3b* row;
 
@@ -137,7 +150,7 @@ void ColorDiscretizer::discretize(const naoth::Image &image, std::vector<std::ve
             // Copied yuv422 indices from Representations/Infrastructure/Image.h, l.125--129
             (*row)[x] = this->nearestNeighborIndex(image.yuv422[yOffset],
                                                    image.yuv422[yOffset+1-((x & 1)<<1)],
-                                                   image.yuv422[yOffset+3-((x & 1) <<1)]);
+                    image.yuv422[yOffset+3-((x & 1) <<1)]);
         }
     }
 }
@@ -164,7 +177,8 @@ void ColorDiscretizer::generateClusterIndex(const cv::Mat &samples,
                                             int attempts,
                                             int flags)
 {
-    cv::kmeans(samples, this->clusters, cv::noArray(), criteria, attempts, flags, this->clusterColors);
+    cv::Mat labels;
+    cv::kmeans(samples, this->clusters, labels, criteria, attempts, flags, this->clusterColors);
 }
 
 unsigned int ColorDiscretizer::nearestNeighborIndex(float channel1, float channel2, float channel3)

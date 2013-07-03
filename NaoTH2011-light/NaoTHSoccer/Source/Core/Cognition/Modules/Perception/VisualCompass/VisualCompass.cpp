@@ -5,6 +5,7 @@ using namespace cv;
 VisualCompass::VisualCompass()
 {
     GridMapProvider.isInitialized = false;
+    cluster = false;
     // debug stuff
     DEBUG_REQUEST_REGISTER("VisualCompass:mark_area", "mark the possibles' features area", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:scan_lines", "", false);
@@ -149,13 +150,15 @@ void VisualCompass::execute()
                   // here sent the pixelVector to
                   // the k-means clustering and then
                   // take back the clusters
+                  ClusteringProvider.setClusters(NUM_OF_COLORS);
+                  ClusteringProvider.initializeColorModel(pixelVector, 10);
             );
 
     DEBUG_REQUEST("VisualCompass:record_images",
             colorExtraction();
     FIELD_DRAWING_CONTEXT;
     stringstream ss;
-    ss << pixelVector.size();
+    ss << num_images;
     string str = ss.str();
     TEXT_DRAWING(300, - getFieldInfo().yLength / 2 - 300, str);
     TEXT_DRAWING(-300, - getFieldInfo().yLength / 2 - 300, "Images: ");
@@ -223,8 +226,6 @@ void VisualCompass::execute()
 
     Vector2<double> a(getArtificialHorizon().begin());
     Vector2<double> b(getArtificialHorizon().end());
-
-
     ColorClasses::Color color = ColorClasses::red;
     if(isValid(a, b))
         color = ColorClasses::green;
@@ -306,15 +307,14 @@ void VisualCompass::colorExtraction()
 {
     if(getFrameInfo().getFrameNumber() % 5 == 0)
     {
-        vector<Pixel> image;
         for(unsigned int i = 0; i < getImage().width(); i++)
         {
             for (unsigned int j = 0; j < getImage().height(); j++)
             {
-                image.push_back(getImage().get(i, j));
+                pixelVector.push_back(getImage().get(i, j));
             }
         }
-        pixelVector.push_back(image);
+        num_images++;
     }
 }
 
