@@ -41,7 +41,7 @@ bool ColorDiscretizer::initializeColorModel(cv::InputArrayOfArrays images, int c
     return true;
 }
 
-bool ColorDiscretizer::initializeColorModel(std::vector<naoth::Image> images, int clusters)
+bool ColorDiscretizer::initializeColorModel(const std::vector<naoth::Image> &images, int clusters)
 {
     if (!this->checkClusters(clusters)) {
         return false;
@@ -49,7 +49,7 @@ bool ColorDiscretizer::initializeColorModel(std::vector<naoth::Image> images, in
 
     int sampleSize = 0, sampleCount = 0;
 
-    for (std::vector<naoth::Image>::iterator image = images.begin() ; image != images.end(); ++image)
+    for (std::vector<naoth::Image>::const_iterator image = images.begin() ; image != images.end(); ++image)
     {
         sampleSize += image->width() * image->height();
     }
@@ -57,7 +57,7 @@ bool ColorDiscretizer::initializeColorModel(std::vector<naoth::Image> images, in
     cv::Mat samples(sampleSize, 3, CV_32F);
     Pixel pixel;
 
-    for (std::vector<naoth::Image>::iterator image = images.begin() ; image != images.end(); ++image)
+    for (std::vector<naoth::Image>::const_iterator image = images.begin() ; image != images.end(); ++image)
     {
         for (unsigned int y = 0; y < image->width(); y++)
         {
@@ -76,7 +76,7 @@ bool ColorDiscretizer::initializeColorModel(std::vector<naoth::Image> images, in
     return true;
 }
 
-bool ColorDiscretizer::initializeColorModel(std::vector<Pixel> pixels, int clusters)
+bool ColorDiscretizer::initializeColorModel(const std::vector<Pixel> &pixels, int clusters)
 {
     if (!this->checkClusters(clusters)) {
         return false;
@@ -110,22 +110,13 @@ void ColorDiscretizer::discretize(cv::InputArray _image, cv::OutputArray _discre
     cv::MatConstIterator_<cv::Vec3i> src = image.begin<cv::Vec3i>(), src_end = image.end<cv::Vec3i>();
     cv::MatIterator_<int> dst = discretizedImage.begin<int>(), dst_end = discretizedImage.end<int>();
 
-    std::vector<float> query(3), distances;
-    std::vector<int> indices(1);
-    const cvflann::SearchParams params;
-
     for (; src != src_end && dst != dst_end; ++src, ++dst)
     {
-        query[0] = (*src)[0];
-        query[1] = (*src)[1];
-        query[2] = (*src)[2];
-
-        this->knnIndex->knnSearch(query, indices, distances, 1, params);
-        *dst = indices[0];
+        *dst = this->nearestNeighborIndex((*src)[0], (*src)[1], (*src)[2]);
     }
 }
 
-void ColorDiscretizer::discretize(naoth::Image image, std::vector<std::vector<int> > &discretizedImage)
+void ColorDiscretizer::discretize(const naoth::Image &image, std::vector<std::vector<int> > &discretizedImage)
 {
     if (!this->isClustersIndexed)
     {
@@ -134,9 +125,7 @@ void ColorDiscretizer::discretize(naoth::Image image, std::vector<std::vector<in
 
     discretizedImage = std::vector<std::vector<int> >(image.height());
 
-    std::vector<int> *row, indices(1);
-    std::vector<float> query(3), distances;
-    const cvflann::SearchParams params;
+    std::vector<int> *row;
     unsigned int x, y, yOffset;
 
     for (y = 0; y < image.height(); ++y)
@@ -145,48 +134,57 @@ void ColorDiscretizer::discretize(naoth::Image image, std::vector<std::vector<in
         for (x = 0; x < image.width(); ++x)
         {
             yOffset = 2 * (y * image.cameraInfo.resolutionWidth + x);
-
-            query[0] = image.yuv422[yOffset];
-            query[1] = image.yuv422[yOffset+1-((x & 1)<<1)];
-            query[2] = image.yuv422[yOffset+3-((x & 1)<<1)];
-
-            this->knnIndex->knnSearch(query, indices, distances, 1, params);
-            (*row)[x] = indices[0];
+            // Copied yuv422 indices from Representations/Infrastructure/Image.h, l.125--129
+            (*row)[x] = this->nearestNeighborIndex(image.yuv422[yOffset],
+                                                   image.yuv422[yOffset+1-((x & 1)<<1)],
+                                                   image.yuv422[yOffset+3-((x & 1) <<1)]);
         }
     }
 }
 
-void ColorDiscretizer::discretize(std::vector<Pixel> pixels, std::vector<int> &discretizedPixels)
+void ColorDiscretizer::discretize(const std::vector<Pixel> &pixels, std::vector<int> &discretizedPixels)
 {
     if (!this->isClustersIndexed)
     {
         return;
     }
 
-    Pixel* pixel;
+    const Pixel* pixel;
     discretizedPixels = std::vector<int>(pixels.size());
-
-    std::vector<float> query(3), distances;
-    std::vector<int> indices(1);
-    const cvflann::SearchParams params;
 
     for (unsigned int i = 0; i < pixels.size(); ++i)
     {
-        pixel = &(pixels[i]);
-        query[0] = pixel->channels[0];
-        query[1] = pixel->channels[1];
-        query[2] = pixel->channels[2];
-
-        this->knnIndex->knnSearch(query, indices, distances, 1, params);
-        discretizedPixels[i] = indices[0];
+        pixel = &pixels[i];
+        discretizedPixels[i] = this->nearestNeighborIndex(pixel->channels[0], pixel->channels[1], pixel->channels[2]);
     }
 }
 
 void ColorDiscretizer::generateClusterIndex(const cv::Mat &samples,
-                                            const cvflann::IndexParams &indexingParams,
                                             const cv::TermCriteria &criteria,
                                             int attempts,
                                             int flags)
 {
     cv::kmeans(samples, this->clusters, cv::noArray(), criteria, attempts, flags, this->clusterColors);
+}
+
+unsigned int ColorDiscretizer::nearestNeighborIndex(float channel1, float channel2, float channel3)
+{
+    float minDist = INFINITY, dist;
+    unsigned int minIndex = this->clusters, i = 0;
+    cv::Vec3f *row;
+
+    for (; i < this->clusters; i++)
+    {
+        row = this->clusterColors.ptr<cv::Vec3f>(i);
+        dist = (channel1 - (*row)[0]) * (channel1 - (*row)[0]);
+        dist += (channel2 - (*row)[1]) * (channel2 - (*row)[1]);
+        dist += (channel3 - (*row)[2]) * (channel3 - (*row)[2]);
+
+        if (dist < minDist)
+        {
+            minDist = dist;
+            minIndex = i;
+        }
+    }
+    return minIndex;
 }
