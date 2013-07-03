@@ -89,8 +89,7 @@ public:
     ~VisualCompass();
     void execute();
 private:
-    vector<Pixel> pixelVector;
-    vector<naoth::Image> imageVector;
+    vector< vector<Pixel> > pixelVector;
     VisualGridMapProvider GridMapProvider;
     void head();
     void motion();
@@ -129,7 +128,6 @@ private:
      *check for features
      */
     bool isValid(Vector2<double> a, Vector2<double> b);
-
     /*
      *extracts the colors above the horizon
      */

@@ -14,7 +14,12 @@ VisualCompass::VisualCompass()
 
     // visual compass
     DEBUG_REQUEST_REGISTER("VisualCompass:clear_feature_grid_map"," delete the previous generated model", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:record","record the feature map for the location of the robot", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:record_offline","record the feature map for the location of the robot", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:record_images","stores images to use them for color extraction", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:clear_images","", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:read_model_from_config","", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:save_model_to_config","", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:cluster_colors", "", false);
 
     // motions
     DEBUG_REQUEST_REGISTER("VisualCompass:motion:standard_stand", "stand as standard or not", true);
@@ -70,8 +75,8 @@ void VisualCompass::recordFeatures()
 
     if(getRobotPose().isValid)
     {
-        double poseX = getRobotPose().translation.x + getFieldInfo().xFieldLength / 2;
-        double poseY = getRobotPose().translation.y + getFieldInfo().yFieldLength / 2;
+        double poseX = getRobotPose().translation.x + getFieldInfo().xLength / 2;
+        double poseY = getRobotPose().translation.y + getFieldInfo().yLength / 2;
         x = max(0, (int) floor(poseX / dx));
         x = min(GRID_X_LENGTH-1, x);
         y = max(0, (int) floor(poseY / dy));
@@ -124,10 +129,39 @@ void VisualCompass::execute()
                   clearCompass();
             );
 
-    DEBUG_REQUEST("VisualCompass:record",
-                  std::cout << "recording..." << std::endl;
+    DEBUG_REQUEST("VisualCompass:record_offline",
             recordFeatures();
     );
+
+    DEBUG_REQUEST("VisualCompass:clear_images",
+                  pixelVector.clear();
+            );
+
+    DEBUG_REQUEST("VisualCompass:save_model_to_config",
+                  saveModel();
+            );
+
+    DEBUG_REQUEST("VisualCompass:read_model_from_config",
+                  readModel();
+            );
+
+    DEBUG_REQUEST("VisualCompass:cluster_colors",
+                  // here sent the pixelVector to
+                  // the k-means clustering and then
+                  // take back the clusters
+            );
+
+    DEBUG_REQUEST("VisualCompass:record_images",
+            colorExtraction();
+    FIELD_DRAWING_CONTEXT;
+    stringstream ss;
+    ss << pixelVector.size();
+    string str = ss.str();
+    TEXT_DRAWING(300, - getFieldInfo().yLength / 2 - 300, str);
+    TEXT_DRAWING(-300, - getFieldInfo().yLength / 2 - 300, "Images: ");
+    );
+
+
 
     DEBUG_REQUEST("VisualCompass:draw_orientation_loc",
                   FIELD_DRAWING_CONTEXT;
@@ -187,7 +221,6 @@ void VisualCompass::execute()
     }
     );
 
-    VisualCompass::pixelVector.clear();
     Vector2<double> a(getArtificialHorizon().begin());
     Vector2<double> b(getArtificialHorizon().end());
 
@@ -204,7 +237,6 @@ void VisualCompass::execute()
     );
     if(isValid(a, b))
     {
-        colorExtraction();
         verticalScanner();
     }
 
@@ -272,12 +304,17 @@ bool VisualCompass::isValid(Vector2<double> a, Vector2<double> b)
 
 void VisualCompass::colorExtraction()
 {
-    for(unsigned int i = 0; i < getImage().width(); i++)
+    if(getFrameInfo().getFrameNumber() % 5 == 0)
     {
-        for (unsigned int j = 0; j < getImage().height(); j++)
+        vector<Pixel> image;
+        for(unsigned int i = 0; i < getImage().width(); i++)
         {
-            VisualCompass::pixelVector.push_back(getImage().get(i, j));
+            for (unsigned int j = 0; j < getImage().height(); j++)
+            {
+                image.push_back(getImage().get(i, j));
+            }
         }
+        pixelVector.push_back(image);
     }
 }
 
