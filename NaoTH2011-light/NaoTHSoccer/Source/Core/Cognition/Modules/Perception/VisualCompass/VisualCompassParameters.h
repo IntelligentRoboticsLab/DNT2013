@@ -19,7 +19,7 @@
 // ...
 
 // ColorDiscretizer
-#define NUM_OF_COLORS 5
+#define NUM_OF_COLORS 10
 
 // VisualGridMapProvider
 #define GRID_X_LENGTH 5

@@ -81,13 +81,11 @@ void VisualCompass::recordFeatures()
     {
         vector< vector<Pixel> > stripes;
         verticalScanner(stripes);
-        //todo: MAKE THE FEATURE
-        //...
-//        for(unsigned int i = 0; i < stripes.size(); i++)
-//        {
-//            VisualCompassFeature tmp;
-//            tmp.createFeatureFromScanLine(stripes.at(i), ClusteringProvider);
-//        }
+        for(unsigned int i = 0; i < stripes.size(); i++)
+        {
+            VisualCompassFeature tmp;
+            tmp.createFeatureFromScanLine(stripes.at(i), ClusteringProvider);
+        }
 
         //find the proper bin and grid cell
         double poseX = getRobotPose().translation.x + getFieldInfo().xLength / 2;
@@ -164,7 +162,7 @@ void VisualCompass::execute()
                   // here sent the pixelVector to
                   // the k-means clustering and then
                   // take back the clusters
-                  if(pixelVector.size() > 0)
+                  if(pixelVector.size() > 0 && !clustered)
                   {
                     ClusteringProvider.setClusters(NUM_OF_COLORS);
                     ClusteringProvider.initializeColorModel(pixelVector, 10);
@@ -343,6 +341,7 @@ void VisualCompass::verticalScanner(vector< vector<Pixel> > &scanner)
         double distance = 0.0;
         while(getImage().isInside(point.x, point.y))
         {
+            line.push_back(getImage().get(point.x, point.y));
             DEBUG_REQUEST("VisualCompass:scan_lines", POINT_PX(ColorClasses::blue, point.x, point.y););
             point.x = (int) (start.x + distance * cos(angle));
             point.y = (int) (start.y + distance * sin(angle));
