@@ -13,8 +13,7 @@
 // others
 #include <ModuleFramework/Module.h>
 #include <vector>
-#include <fstream>
-#include <stdio.h>
+#include <string>
 
 // tools
 #include "Tools/Math/Line.h"
@@ -93,6 +92,15 @@ private:
     VisualGridMapProvider GridMapProvider;
     ColorDiscretizer ClusteringProvider;
     WeightedExperts queryModel;
+    void drawInfo();
+    /*
+     *
+     */
+    void saveColorClusters();
+    /*
+     *
+     */
+    void readColorClusters();
     /*
      *
      */

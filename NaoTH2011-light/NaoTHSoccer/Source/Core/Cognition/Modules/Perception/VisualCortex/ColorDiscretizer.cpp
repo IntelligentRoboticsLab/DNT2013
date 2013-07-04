@@ -1,5 +1,3 @@
-#include "Tools/ImageProcessing/ImagePrimitives.h"
-
 #include "ColorDiscretizer.h"
 /*
 */
@@ -201,4 +199,27 @@ unsigned int ColorDiscretizer::nearestNeighborIndex(float channel1, float channe
         }
     }
     return minIndex;
+}
+
+void ColorDiscretizer::saveClusters(const char* fileName)
+{
+    if (!this->isClustersIndexed) return;
+    std::ofstream outBinFile;
+    outBinFile.open(fileName, std::ios::out | std::ios::binary);
+    for (int i = 0; i < this->getClusters(); i++){
+        outBinFile.write(reinterpret_cast<char*> (this->clusterColors.ptr<cv::Vec3f>(i)), sizeof(cv::Vec3f));
+    }
+    outBinFile.close();
+    return;
+}
+
+void ColorDiscretizer::readClusters(const char *fileName)
+{
+    std::ifstream inBinFile;
+    inBinFile.open(fileName, std::ios::in | std::ios::binary);
+    for (int i = 0; i < this->getClusters(); i++){
+        inBinFile.read(reinterpret_cast<char*> (this->clusterColors.ptr<cv::Vec3f>(i)), sizeof(cv::Vec3f));
+    }
+    inBinFile.close();
+    return;
 }

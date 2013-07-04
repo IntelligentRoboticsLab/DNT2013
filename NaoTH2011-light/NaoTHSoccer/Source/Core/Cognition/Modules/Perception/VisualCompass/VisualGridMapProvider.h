@@ -12,7 +12,7 @@
 #include "Representations/Infrastructure/FieldInfo.h"
 #include "VisualCompassParameters.h"
 #include "VisualCompassFeature.h"
-#include <time.h> 
+#include <time.h>
 
 
 class VisualGridMapProvider
@@ -58,24 +58,6 @@ public:
     // takes a vector with features and store them in the grid
     void storeFeature(VisualCompassFeature vcf)
     {
-        Vector2<int> grid_pos;
-        fieldPosToGridPos(vcf.source_position, grid_pos);
-        //TODO compare reliability of old and new feature, change if needed
-        int angle_bin = (int) vcf.orientation/ANGLE_SIZE;
-        VisualCompassFeature model_vcf = gridmap[grid_pos.x][grid_pos.y][angle_bin];
-        if (!model_vcf.valid){
-            gridmap[grid_pos.x][grid_pos.y][angle_bin] = vcf;
-        }else{
-            double model_cert;
-            double vcf_cert;
-            time_t timer;
-            time(&timer);
-            vcf.getCertainty(timer, model_cert);
-            model_vcf.getCertainty(timer, vcf_cert);
-            if (vcf_cert > model_cert){
-                gridmap[grid_pos.x][grid_pos.y][angle_bin] = vcf;
-            }
-        }
         return;
     }
 
@@ -90,24 +72,39 @@ public:
         gridPos.y = floor(( fieldPos.y + FieldInfo().yLength * 0.5 ) / GRID_Y_LENGTH);
     }
 
-
-private:
-    void removeTheOldest(std::vector<VisualCompassFeature> &gridMapFeatureVector)
+    void saveGridMapModel()
     {
-        //unsigned int minTime = INT_MAX;
-        int minPos = 0;
-        for(unsigned int i=0; i < gridMapFeatureVector.size(); i++)
-        {
-            //            if(gridMapFeatureVector.at(i).time < minTime)
-            //            {
-            //                minTime = gridMapFeatureVector.at(i).time;
-            //                minPos = i;
-            //            }
+        std::ofstream outBinFile;
+        outBinFile.open(COMPASS_DATA_FILE, ios::out | ios::binary);
+        for (int i = 0; i < GRID_X_LENGTH; i++){
+            for (int j = 0; j < GRID_Y_LENGTH; j++){
+                for (int k = 0; k < NUM_ANGLE_BINS; k++){
+                    outBinFile.write(reinterpret_cast<char*> (&this->gridmap[i][j][k]), sizeof(VisualCompassFeature));
+                }
+            }
         }
-        gridMapFeatureVector.erase(gridMapFeatureVector.begin() + minPos);
+        outBinFile.close();
+        return;
     }
 
-
+    void readGridMapModel()
+    {
+        if(!this->isInitialized)
+        {
+            this->initializeStorageArray();
+            std::ifstream inBinFile;
+            inBinFile.open(COMPASS_DATA_FILE, ios::in | ios::binary);
+            for (int i = 0; i < GRID_X_LENGTH; i++){
+                for (int j = 0; j < GRID_Y_LENGTH; j++){
+                    for (int k = 0; k < NUM_ANGLE_BINS; k++){
+                        inBinFile.read(reinterpret_cast<char*> (&this->gridmap[i][j][k]), sizeof(VisualCompassFeature));
+                    }
+                }
+            }
+            inBinFile.close();
+        }
+        return;
+    }
 };
 
 #endif // VISUALGRIDPMAPROVIDER_H

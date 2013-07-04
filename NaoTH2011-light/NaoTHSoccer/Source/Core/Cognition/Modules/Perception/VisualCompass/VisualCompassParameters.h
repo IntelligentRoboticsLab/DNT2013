@@ -19,6 +19,7 @@
 
 // ColorDiscretizer
 #define NUM_OF_COLORS 10
+#define CLUSTER_DATA_FILE "clusters.dat"
 
 // VisualGridMapProvider
 #define GRID_X_LENGTH 5

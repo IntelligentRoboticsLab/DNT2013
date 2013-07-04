@@ -12,18 +12,21 @@ VisualCompass::VisualCompass()
     DEBUG_REQUEST_REGISTER("VisualCompass:debug:scan_lines", "", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_orientation_loc","from localization", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_orientation_vc","from visual compass", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_visual_grid_map"," dsgew", false);
-
+    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_visual_grid_map","", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_info","", false);
     // visual compass
-    DEBUG_REQUEST_REGISTER("VisualCompass:functions:clear_feature_grid_map"," delete the previous generated model", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:functions:record_offline","record the feature map for the location of the robot", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:functions:record_images","stores images to use them for color extraction", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:functions:clear_images","", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:functions:read_model_from_config","", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:functions:save_model_to_config","", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:functions:cluster_colors", "", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:functions:online_mode", "", false);
 
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:grid:read_model_from_config","", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:grid:save_model_to_config","", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:grid:clear_feature_grid_map"," delete the previous generated model", false);
+
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:save_color_clusters", "", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:read_color_clusters", "", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:cluster_colors", "", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:clear_images","", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:record_images","stores images to use them for color extraction", false);
     // motions
     DEBUG_REQUEST_REGISTER("VisualCompass:motion:scanner_standing", "", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:motion:standard_stand", "stand as standard or not", true);
@@ -38,27 +41,37 @@ VisualCompass::~VisualCompass()
 void VisualCompass::execute()
 {
     initializeGridMapModel();
-    vector< vector<Pixel> > stripes;
-    verticalScanner(stripes);
-    DEBUG_REQUEST("VisualCompass:functions:clear_feature_grid_map", clearCompass(););
+
     DEBUG_REQUEST("VisualCompass:functions:record_offline", recordFeatures(););
-    DEBUG_REQUEST("VisualCompass:functions:clear_images", pixelVector.clear(););
-    DEBUG_REQUEST("VisualCompass:functions:save_model_to_config", saveGridMapModel(););
-    DEBUG_REQUEST("VisualCompass:functions:read_model_from_config", readGridMapModel(););
-    DEBUG_REQUEST("VisualCompass:functions:cluster_colors", colorClustering(););
-    DEBUG_REQUEST("VisualCompass:functions:record_images", extractPixelsFromImages(););
     DEBUG_REQUEST("VisualCompass:functions:online_mode", victoria(););
+
+    DEBUG_REQUEST("VisualCompass:functions:grid:save_model_to_config", saveGridMapModel(););
+    DEBUG_REQUEST("VisualCompass:functions:grid:read_model_from_config", readGridMapModel(););
+    DEBUG_REQUEST("VisualCompass:functions:grid:clear_feature_grid_map", clearCompass(););
+
+    DEBUG_REQUEST("VisualCompass:functions:color:cluster_colors", colorClustering(););
+    DEBUG_REQUEST("VisualCompass:functions:color:record_images", extractPixelsFromImages(););
+    DEBUG_REQUEST("VisualCompass:functions:color:save_color_clusters", saveColorClusters(););
+    DEBUG_REQUEST("VisualCompass:functions:color:read_color_clusters", readColorClusters(););
+    DEBUG_REQUEST("VisualCompass:functions:color:clear_images", pixelVector.clear(););
 
     DEBUG_REQUEST("VisualCompass:debug:draw_orientation_loc", drawPoseOrientation(););
     DEBUG_REQUEST("VisualCompass:debug:draw_orientation_vc", drawCompassOrientation(););
     DEBUG_REQUEST("VisualCompass:debug:draw_visual_grid_map", drawVisualGridModel(););
     DEBUG_REQUEST("VisualCompass:debug:mark_area", drawROI(););
+    DEBUG_REQUEST("VisualCompass:debug:draw_info", drawInfo(););
 
     DEBUG_REQUEST("VisualCompass:motion:standard_stand", scannerPosition(););
-
+    return;
 }
 
 void VisualCompass::victoria()
+{
+
+
+}
+
+void VisualCompass::drawInfo()
 {
 
 }
@@ -71,35 +84,27 @@ void VisualCompass::initializeGridMapModel()
 
 void VisualCompass::saveGridMapModel()
 {
-    std::ofstream outBinFile;
-    outBinFile.open(COMPASS_DATA_FILE, ios::out | ios::binary);
-    for (int i = 0; i < GRID_X_LENGTH; i++){
-        for (int j = 0; j < GRID_Y_LENGTH; j++){
-            for (int k = 0; k < NUM_ANGLE_BINS; k++){
-                outBinFile.write(reinterpret_cast<char*> (&GridMapProvider.gridmap[i][j][k]), sizeof(VisualCompassFeature));
-            }
-        }
-    }
-    outBinFile.close();
+    GridMapProvider.saveGridMapModel();
     return;
 }
 
 void VisualCompass::readGridMapModel()
 {
-    if(!GridMapProvider.isInitialized)
-    {
-        GridMapProvider.initializeStorageArray();
-        std::ifstream inBinFile;
-        inBinFile.open(COMPASS_DATA_FILE, ios::in | ios::binary);
-        for (int i = 0; i < GRID_X_LENGTH; i++){
-            for (int j = 0; j < GRID_Y_LENGTH; j++){
-                for (int k = 0; k < NUM_ANGLE_BINS; k++){
-                    inBinFile.read(reinterpret_cast<char*> (&GridMapProvider.gridmap[i][j][k]), sizeof(VisualCompassFeature));
-                }
-            }
-        }
-        inBinFile.close();
-    }
+    GridMapProvider.readGridMapModel();
+    return;
+}
+
+void VisualCompass::saveColorClusters()
+{
+    const char* str = CLUSTER_DATA_FILE;
+    ClusteringProvider.saveClusters(str);
+    return;
+}
+
+void VisualCompass::readColorClusters()
+{
+    const char* str = CLUSTER_DATA_FILE;
+    ClusteringProvider.readClusters(str);
     return;
 }
 

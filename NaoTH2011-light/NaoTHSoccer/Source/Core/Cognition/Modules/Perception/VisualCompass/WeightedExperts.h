@@ -4,13 +4,14 @@
 #include "Cognition/Modules/Perception/VisualCompass/VisualCompassFeature.h"
 #include "Cognition/Modules/Perception/VisualCompass/VisualCompassParameters.h"
 #include "Cognition/Modules/Perception/VisualCompass/VisualGridMapProvider.h"
+#include "Representations/Modeling/RobotPose.h"
 
 class WeightedExperts
 {
     public:
         WeightedExperts();
         ~WeightedExperts();
-        void best_match(VisualGridMapProvider &map, VisualCompassFeature &inputFeature, double &orientation);
+        void best_match(RobotPose pose, VisualGridMapProvider &map, VisualCompassFeature &inputFeature, double &orientation);
     private:
         void checkApprCell();
 

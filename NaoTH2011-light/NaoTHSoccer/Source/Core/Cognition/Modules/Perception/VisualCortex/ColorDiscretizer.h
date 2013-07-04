@@ -2,8 +2,11 @@
 #define COLORDISCRETIZER_H
 
 #include <opencv2/core/core.hpp>
-
+#include "Tools/ImageProcessing/ImagePrimitives.h"
 #include "Representations/Infrastructure/Image.h"
+#include <fstream>
+#include <stdio.h>
+#include <string>
 
 class ColorDiscretizer
 {
@@ -22,6 +25,8 @@ public:
     void discretize(const std::vector<Pixel> &pixels, std::vector<int> &discretizedPixels);
     inline int getClusters() const { return this->clusters; }
     inline cv::Mat getClusterColors() const { return this->clusterColors; }
+    void saveClusters(const char* fileName);
+    void readClusters(const char* fileName);
 private:
     unsigned int clusters;
     cv::Mat clusterColors;

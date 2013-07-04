@@ -8,7 +8,7 @@ WeightedExperts::~WeightedExperts()
 {
 }
 
-void WeightedExperts::best_match(VisualGridMapProvider &map, VisualCompassFeature &inputFeature, double &orientation)
+void WeightedExperts::best_match(RobotPose pose, VisualGridMapProvider &map, VisualCompassFeature &inputFeature, double &orientation)
 {
     return;
 }

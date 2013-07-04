@@ -12,7 +12,7 @@ VisualCompassFeature::~VisualCompassFeature()
 void VisualCompassFeature::createFeatureFromScanLine(vector< vector<Pixel> > scanLine, ColorDiscretizer& ClusteringProvider)
 {
     if(scanLine.size() == 0) return;
-    for(unsigned int stripe = 0; scanLine.size(); stripe++)
+    for(unsigned int stripe = 0; stripe < scanLine.size(); stripe++)
     {
         vector<int> labels;
         ClusteringProvider.discretize(scanLine.at(stripe), labels);
