@@ -61,6 +61,7 @@
 #include "Cognition/Modules/Perception/VisualCompass/VisualCompassFeature.h"
 #include "Cognition/Modules/Perception/VisualCompass/VisualGridMapProvider.h"
 #include "Cognition/Modules/Perception/VisualCortex/ColorDiscretizer.h"
+#include "Cognition/Modules/Perception/VisualCompass/WeightedExperts.h"
 
 BEGIN_DECLARE_MODULE(VisualCompass)
 REQUIRE(Image)
@@ -87,14 +88,55 @@ public:
     ~VisualCompass();
     void execute();
 private:
-    vector<Pixel> pixelVector;
     int num_images;
+    vector<Pixel> pixelVector;
     VisualGridMapProvider GridMapProvider;
     ColorDiscretizer ClusteringProvider;
+    WeightedExperts queryModel;
+    /*
+     *
+     */
     void head();
+    /*
+     *
+     */
     void motion();
+    /*
+     *
+     */
     bool clustered;
-
+    /*
+     *
+     */
+    void initializeGridMapModel();
+    /*
+     *
+     */
+    void extractPixelsFromImages();
+    /*
+     *
+     */
+    void drawPoseOrientation();
+    /*
+     *
+     */
+    void drawCompassOrientation();
+    /*
+     *
+     */
+    void drawROI();
+    /*
+     *
+     */
+    void colorClustering();
+    /*
+     *
+     */
+    void drawVisualGridModel();
+    /*
+     *
+     */
+    void victoria();
     /*
      * During the off line phase, this method records features
      * and creates the model. You can enable this function through
@@ -104,16 +146,16 @@ private:
     /*
      * reads the already saved model from the disk, if there is one.
      */
-    void readModel();
+    void readGridMapModel();
     /*
      * saves the current model in a binary file in the config directory.
      * We call this method after the recording function, to save the model.
      */
-    void saveModel();
+    void saveGridMapModel();
     /*
      * checks if there is already a model saved into the disk.
      */
-    bool hasModel();
+    bool hasGridMapModel();
     /*
      * clears any previous files stored from the compass. We can enable
      * this function only from robotControl.
@@ -123,7 +165,6 @@ private:
      *returns true if the visual compass has an output to give
      */
     bool isValid();
-
     /*
      *checks if the horizon leaves us the space to
      *check for features
@@ -133,19 +174,19 @@ private:
      *extracts the colors above the horizon
      */
     void colorExtraction();
-
     /*
      *gets the image and the horizon and scans every 10 pixels
      *a vertical line storing the pixel values into a vector
      */
     void verticalScanner(vector< vector<Pixel> > &stripes);
-
     /*
      *does the robot to turn 360 degrees, to map the environment
      */
     void mapping(cv::Mat &mappingImages);
-
-    void scanner();
+    /*
+     *make the robot position stand in order to record features
+     */
+    void scannerPosition();
 
 
 };//end class VisualCompass

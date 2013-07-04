@@ -8,22 +8,24 @@ VisualCompass::VisualCompass()
     clustered = false;
 
     // debug stuff
-    DEBUG_REQUEST_REGISTER("VisualCompass:mark_area", "mark the possibles' features area", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:scan_lines", "", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:draw_orientation_loc","from localization", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:draw_orientation_vc","from visual compass", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:draw_visual_grid_map"," dsgew", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:debug:mark_area", "mark the possibles' features area", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:debug:scan_lines", "", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_orientation_loc","from localization", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_orientation_vc","from visual compass", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_visual_grid_map"," dsgew", false);
 
     // visual compass
-    DEBUG_REQUEST_REGISTER("VisualCompass:clear_feature_grid_map"," delete the previous generated model", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:record_offline","record the feature map for the location of the robot", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:record_images","stores images to use them for color extraction", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:clear_images","", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:read_model_from_config","", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:save_model_to_config","", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:cluster_colors", "", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:clear_feature_grid_map"," delete the previous generated model", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:record_offline","record the feature map for the location of the robot", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:record_images","stores images to use them for color extraction", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:clear_images","", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:read_model_from_config","", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:save_model_to_config","", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:cluster_colors", "", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:online_mode", "", false);
 
     // motions
+    DEBUG_REQUEST_REGISTER("VisualCompass:motion:scanner_standing", "", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:motion:standard_stand", "stand as standard or not", true);
     DEBUG_REQUEST_REGISTER("VisualCompass:motion:stand", "The default motion, otherwise do nothing", true);
     DEBUG_REQUEST_REGISTER("VisualCompass:motion:turn_right", "Set the motion request to 'turn_right'.", false);
@@ -35,127 +37,39 @@ VisualCompass::~VisualCompass()
 
 void VisualCompass::execute()
 {
-    if(!GridMapProvider.isInitialized)
-        GridMapProvider.initializeStorageArray();
+    initializeGridMapModel();
+    vector< vector<Pixel> > stripes;
+    verticalScanner(stripes);
+    DEBUG_REQUEST("VisualCompass:functions:clear_feature_grid_map", clearCompass(););
+    DEBUG_REQUEST("VisualCompass:functions:record_offline", recordFeatures(););
+    DEBUG_REQUEST("VisualCompass:functions:clear_images", pixelVector.clear(););
+    DEBUG_REQUEST("VisualCompass:functions:save_model_to_config", saveGridMapModel(););
+    DEBUG_REQUEST("VisualCompass:functions:read_model_from_config", readGridMapModel(););
+    DEBUG_REQUEST("VisualCompass:functions:cluster_colors", colorClustering(););
+    DEBUG_REQUEST("VisualCompass:functions:record_images", extractPixelsFromImages(););
+    DEBUG_REQUEST("VisualCompass:functions:online_mode", victoria(););
 
-    DEBUG_REQUEST("VisualCompass:clear_feature_grid_map",
-                  clearCompass();
-            );
+    DEBUG_REQUEST("VisualCompass:debug:draw_orientation_loc", drawPoseOrientation(););
+    DEBUG_REQUEST("VisualCompass:debug:draw_orientation_vc", drawCompassOrientation(););
+    DEBUG_REQUEST("VisualCompass:debug:draw_visual_grid_map", drawVisualGridModel(););
+    DEBUG_REQUEST("VisualCompass:debug:mark_area", drawROI(););
 
-    DEBUG_REQUEST("VisualCompass:record_offline",
-            recordFeatures();
-    );
-
-    DEBUG_REQUEST("VisualCompass:clear_images",
-                  pixelVector.clear();
-            );
-
-    DEBUG_REQUEST("VisualCompass:save_model_to_config",
-                  saveModel();
-            );
-
-    DEBUG_REQUEST("VisualCompass:read_model_from_config",
-                  readModel();
-            );
-
-    DEBUG_REQUEST("VisualCompass:cluster_colors",
-                  // here sent the pixelVector to
-                  // the k-means clustering and then
-                  // take back the clusters
-                  if(pixelVector.size() > 0 && !clustered)
-                  {
-                    ClusteringProvider.setClusters(NUM_OF_COLORS);
-                    ClusteringProvider.initializeColorModel(pixelVector, 10);
-                    clustered = true;
-                  }
-            );
-
-    DEBUG_REQUEST("VisualCompass:record_images",
-            colorExtraction();
-    FIELD_DRAWING_CONTEXT;
-    stringstream ss;
-    ss << num_images;
-    string str = ss.str();
-    TEXT_DRAWING(300, - getFieldInfo().yLength / 2 - 300, str);
-    TEXT_DRAWING(-300, - getFieldInfo().yLength / 2 - 300, "Images: ");
-    );
-
-
-
-    DEBUG_REQUEST("VisualCompass:draw_orientation_loc",
-                  FIELD_DRAWING_CONTEXT;
-            CIRCLE(getRobotPose().translation.x,
-                   getRobotPose().translation.y, 50);
-
-    ARROW(getRobotPose().translation.x, getRobotPose().translation.y,
-          getRobotPose().translation.x + 200*cos(getRobotPose().rotation),
-          getRobotPose().translation.y + 200*sin(getRobotPose().rotation));
-    );
-
-    DEBUG_REQUEST("VisualCompass:draw_orientation_vc",
-                  FIELD_DRAWING_CONTEXT;
-            CIRCLE(getRobotPose().translation.x,
-                   getRobotPose().translation.y, 50);
-
-    ARROW(getRobotPose().translation.x, getRobotPose().translation.y,
-          getRobotPose().translation.x + 400*cos(getRobotPose().rotation),
-          getRobotPose().translation.y + 400*sin(getRobotPose().rotation));
-    );
-
-    DEBUG_REQUEST("VisualCompass:draw_visual_grid_map",
-                  FIELD_DRAWING_CONTEXT;
-            // vertical lines
-            double dx = getFieldInfo().xLength / GRID_X_LENGTH;
-    for(int i = 1; i < GRID_X_LENGTH; i++)
-    {
-        LINE(- getFieldInfo().xLength / 2 + dx * i, getFieldInfo().yLength / 2, - getFieldInfo().xLength / 2 + dx * i, - getFieldInfo().yLength / 2);
-    }
-    // horizontal lines
-    double dy = getFieldInfo().yLength / GRID_Y_LENGTH;
-    for(int i = 1; i < GRID_Y_LENGTH; i++)
-    {
-        LINE(getFieldInfo().xLength / 2, - getFieldInfo().yLength / 2 + dy * i, - getFieldInfo().xLength / 2, - getFieldInfo().yLength / 2 + dy * i);
-    }
-    // circles in the middle of each square
-    double lx = - getFieldInfo().xLength / 2 + dx / 2;
-    double ly = - getFieldInfo().yLength / 2 + dy / 2;
-    for(int i =0; i < GRID_X_LENGTH; i++)
-    {
-        double x = i * dx;
-        for(int j =0; j < GRID_Y_LENGTH; j++)
-        {
-            double y = j * dy;
-            CIRCLE(lx + x, ly + y, 50);
-            // arrow in each circle represent a saved feature
-            for(int ii = 0; ii < NUM_ANGLE_BINS; ii++ )
-            {
-                if(GridMapProvider.gridmap[i][j][ii].valid)
-                {
-                    ARROW(lx + x, ly + y,
-                          lx + x + 100*cos(GridMapProvider.gridmap[i][j][ii].orientation),
-                          ly + y + 100*sin(GridMapProvider.gridmap[i][j][ii].orientation));
-                }
-            }
-        }
-    }
-    );
-
-    Vector2<double> a(getArtificialHorizon().begin());
-    Vector2<double> b(getArtificialHorizon().end());
-    ColorClasses::Color color = ColorClasses::red;
-    if(isValid(a, b))
-        color = ColorClasses::green;
-
-    DEBUG_REQUEST("VisualCompass:mark_area",
-                  LINE_PX( color, (int)a.x, (int)(a.y), (int)b.x, (int)(b.y) );
-            LINE_PX( color, (int)0, (int)0, (int)a.x, (int)a.y );
-    LINE_PX( color, (int)getImage().width()-1, (int)0, (int)b.x, (int)(b.y) );
-    LINE_PX( color, (int)0, (int)0, (int)getImage().width()-1, (int)0 );
-    );
+    DEBUG_REQUEST("VisualCompass:motion:standard_stand", scannerPosition(););
 
 }
 
-void VisualCompass::saveModel()
+void VisualCompass::victoria()
+{
+
+}
+
+void VisualCompass::initializeGridMapModel()
+{
+    if(!GridMapProvider.isInitialized) GridMapProvider.initializeStorageArray();
+    return;
+}
+
+void VisualCompass::saveGridMapModel()
 {
     std::ofstream outBinFile;
     outBinFile.open(COMPASS_DATA_FILE, ios::out | ios::binary);
@@ -170,7 +84,7 @@ void VisualCompass::saveModel()
     return;
 }
 
-void VisualCompass::readModel()
+void VisualCompass::readGridMapModel()
 {
     if(!GridMapProvider.isInitialized)
     {
@@ -203,12 +117,8 @@ void VisualCompass::recordFeatures()
     {
         vector< vector<Pixel> > stripes;
         verticalScanner(stripes);
-        for(unsigned int i = 0; i < stripes.size(); i++)
-        {
-            VisualCompassFeature tmp;
-            tmp.createFeatureFromScanLine(stripes.at(i), ClusteringProvider);
-        }
-
+        VisualCompassFeature tmp;
+        tmp.createFeatureFromScanLine(stripes, ClusteringProvider);
         //find the proper bin and grid cell
         double poseX = getRobotPose().translation.x + getFieldInfo().xLength / 2;
         double poseY = getRobotPose().translation.y + getFieldInfo().yLength / 2;
@@ -237,17 +147,11 @@ void VisualCompass::clearCompass()
     return;
 }
 
-bool VisualCompass::hasModel()
+bool VisualCompass::hasGridMapModel()
 {
     std::ifstream ifs (COMPASS_DATA_FILE);
-    if (ifs.is_open())
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    if (ifs.is_open()) return true;
+    return false;
 }
 
 bool VisualCompass::isValid()
@@ -255,18 +159,20 @@ bool VisualCompass::isValid()
     return false;
 }
 
-void VisualCompass::scanner()
+void VisualCompass::scannerPosition()
 {
     // reset some stuff by default
     getMotionRequest().forced = false;
     getMotionRequest().standHeight = -1; // sit in a stable position
     head();
     motion();
+    return;
 }
 
 void VisualCompass::head()
 {
     getHeadMotionRequest().id = HeadMotionRequest::look_straight_ahead;
+    return;
 }
 
 void VisualCompass::motion()
@@ -297,9 +203,9 @@ void VisualCompass::motion()
     MODIFY("walk.offset.x", getMotionRequest().walkRequest.offset.translation.x);
     MODIFY("walk.offset.y", getMotionRequest().walkRequest.offset.translation.y);
     MODIFY("walk.character", getMotionRequest().walkRequest.character);
+    return;
 
-}//end testMotion
-
+}
 
 bool VisualCompass::isValid(Vector2<double> a, Vector2<double> b)
 {
@@ -328,11 +234,14 @@ void VisualCompass::colorExtraction()
         }
         num_images++;
     }
+    return;
 }
 
 void VisualCompass::verticalScanner(vector< vector<Pixel> > &scanner)
 {
-    for(double p = 5.00; p < (double) getImage().width(); p += COMPASS_FEATURE_STEP)
+    double start = 0.50 * getImage().width() / COMPASS_FEATURE_NUMBER;
+    double step = getImage().width() / COMPASS_FEATURE_NUMBER;
+    for(double p = start; p < (double) getImage().width(); p += step)
     {
         vector<Pixel> line;
         Vector2<double> start = getArtificialHorizon().point(p);
@@ -342,11 +251,113 @@ void VisualCompass::verticalScanner(vector< vector<Pixel> > &scanner)
         while(getImage().isInside(point.x, point.y))
         {
             line.push_back(getImage().get(point.x, point.y));
-            DEBUG_REQUEST("VisualCompass:scan_lines", POINT_PX(ColorClasses::blue, point.x, point.y););
+            DEBUG_REQUEST("VisualCompass:debug:scan_lines", POINT_PX(ColorClasses::blue, point.x, point.y););
             point.x = (int) (start.x + distance * cos(angle));
             point.y = (int) (start.y + distance * sin(angle));
             distance++;
         }
         scanner.push_back(line);
     }
+    return;
+}
+
+void VisualCompass::colorClustering()
+{
+    if(pixelVector.size() > 0 && !clustered)
+    {
+        ClusteringProvider.setClusters(NUM_OF_COLORS);
+        ClusteringProvider.initializeColorModel(pixelVector, NUM_OF_COLORS);
+        clustered = true;
+    }
+    return;
+}
+
+void VisualCompass::drawVisualGridModel()
+{
+    FIELD_DRAWING_CONTEXT;
+    // vertical lines
+    double dx = getFieldInfo().xLength / GRID_X_LENGTH;
+    for(int i = 1; i < GRID_X_LENGTH; i++)
+    {
+        LINE(- getFieldInfo().xLength / 2 + dx * i, getFieldInfo().yLength / 2, - getFieldInfo().xLength / 2 + dx * i, - getFieldInfo().yLength / 2);
+    }
+    // horizontal lines
+    double dy = getFieldInfo().yLength / GRID_Y_LENGTH;
+    for(int i = 1; i < GRID_Y_LENGTH; i++)
+    {
+        LINE(getFieldInfo().xLength / 2, - getFieldInfo().yLength / 2 + dy * i, - getFieldInfo().xLength / 2, - getFieldInfo().yLength / 2 + dy * i);
+    }
+    // circles in the middle of each square
+    double lx = - getFieldInfo().xLength / 2 + dx / 2;
+    double ly = - getFieldInfo().yLength / 2 + dy / 2;
+    for(int i =0; i < GRID_X_LENGTH; i++)
+    {
+        double x = i * dx;
+        for(int j =0; j < GRID_Y_LENGTH; j++)
+        {
+            double y = j * dy;
+            CIRCLE(lx + x, ly + y, 50);
+            // arrow in each circle represent a saved feature
+            for(int ii = 0; ii < NUM_ANGLE_BINS; ii++ )
+            {
+                if(GridMapProvider.gridmap[i][j][ii].valid)
+                {
+                    ARROW(lx + x, ly + y,
+                          lx + x + 100*cos(GridMapProvider.gridmap[i][j][ii].orientation),
+                          ly + y + 100*sin(GridMapProvider.gridmap[i][j][ii].orientation));
+                }
+            }
+        }
+    }
+    return;
+}
+
+void VisualCompass::drawPoseOrientation()
+{
+    FIELD_DRAWING_CONTEXT;
+    CIRCLE(getRobotPose().translation.x,
+           getRobotPose().translation.y, 50);
+
+    ARROW(getRobotPose().translation.x, getRobotPose().translation.y,
+          getRobotPose().translation.x + 200*cos(getRobotPose().rotation),
+          getRobotPose().translation.y + 200*sin(getRobotPose().rotation));
+    return;
+}
+
+void VisualCompass::drawCompassOrientation()
+{
+    FIELD_DRAWING_CONTEXT;
+    CIRCLE(getRobotPose().translation.x,
+           getRobotPose().translation.y, 50);
+
+    ARROW(getRobotPose().translation.x, getRobotPose().translation.y,
+          getRobotPose().translation.x + 400*cos(getRobotPose().rotation),
+          getRobotPose().translation.y + 400*sin(getRobotPose().rotation));
+    return;
+}
+
+void VisualCompass::drawROI()
+{
+    Vector2<double> a(getArtificialHorizon().begin());
+    Vector2<double> b(getArtificialHorizon().end());
+    ColorClasses::Color color = ColorClasses::red;
+    if(isValid(a, b))
+        color = ColorClasses::green;
+    LINE_PX( color, (int)a.x, (int)(a.y), (int)b.x, (int)(b.y) );
+    LINE_PX( color, (int)0, (int)0, (int)a.x, (int)a.y );
+    LINE_PX( color, (int)getImage().width()-1, (int)0, (int)b.x, (int)(b.y) );
+    LINE_PX( color, (int)0, (int)0, (int)getImage().width()-1, (int)0 );
+    return;
+}
+
+void VisualCompass::extractPixelsFromImages()
+{
+    colorExtraction();
+    FIELD_DRAWING_CONTEXT;
+    stringstream ss;
+    ss << num_images;
+    string str = ss.str();
+    TEXT_DRAWING(300, - getFieldInfo().yLength / 2 - 300, str);
+    TEXT_DRAWING(-300, - getFieldInfo().yLength / 2 - 300, "Images: ");
+    return;
 }

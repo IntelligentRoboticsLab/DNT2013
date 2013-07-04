@@ -33,7 +33,7 @@
 #include "Cognition/Modules/Infrastructure/OpenCV/OpenCVImageProvider.h"
 #include "Cognition/Modules/Perception/VisualCompass/VisualCompassParameters.h"
 #include "Cognition/Modules/Perception/VisualCortex/ColorDiscretizer.h"
-#include <time.h> 
+#include <time.h>
 
 class VisualCompassFeature
 {
@@ -43,7 +43,7 @@ public:
     /*
      *attributes for these feature type elements
      */
-    unsigned int featureTable2D[NUM_OF_COLORS][NUM_OF_COLORS];
+    Matrix_nxn<unsigned int, NUM_OF_COLORS> featureTable2D[COMPASS_FEATURE_NUMBER];
     int length;
     double orientation;
     time_t time;
@@ -60,7 +60,7 @@ public:
      *gets a the pixels for a line in the image and creates a
      *feature
      */
-    void createFeatureFromScanLine(vector<Pixel> scanLine, ColorDiscretizer &ClusteringProvider);
+    void createFeatureFromScanLine(vector< vector<Pixel> > scanLine, ColorDiscretizer &ClusteringProvider);
 
 	void getCertainty(time_t current_time, double &certainty);
 private:

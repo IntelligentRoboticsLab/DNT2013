@@ -8,12 +8,12 @@ WeightedExperts::~WeightedExperts()
 {
 }
 
-void WeightedExperts::best_match (VisualGridMapProvider &grid, vector<VisualCompassFeature> input, double &out)
+void WeightedExperts::best_match(VisualGridMapProvider &map, VisualCompassFeature &inputFeature, double &orientation)
 {
     return;
 }
 
-WeightedExperts::checkApprCell()
+void WeightedExperts::checkApprCell()
 {
     return;
 }

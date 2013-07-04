@@ -11,8 +11,7 @@
 // VisualCompass
 #define COMPASS_WIDTH_MIN 0.49
 #define COMPASS_WIDTH_MAX 0.80
-#define COMPASS_FEATURE_STEP 10
-#define COMPASS_FEATURE_START 5.00
+#define COMPASS_FEATURE_NUMBER 20
 #define COMPASS_DATA_FILE "compass.dat"
 
 // VisualCompassFeature

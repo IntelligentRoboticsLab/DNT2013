@@ -10,7 +10,7 @@ class WeightedExperts
     public:
         WeightedExperts();
         ~WeightedExperts();
-        void best_match(const VisualGridMapProvider &map, const VisualCompassFeature &inputFeature, double &orientation);
+        void best_match(VisualGridMapProvider &map, VisualCompassFeature &inputFeature, double &orientation);
     private:
         void checkApprCell();
 

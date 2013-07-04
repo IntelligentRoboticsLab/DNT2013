@@ -9,33 +9,37 @@ VisualCompassFeature::~VisualCompassFeature()
     //nothing here.
 }
 
-void VisualCompassFeature::createFeatureFromScanLine(vector<Pixel> scanLine, ColorDiscretizer& ClusteringProvider)
+void VisualCompassFeature::createFeatureFromScanLine(vector< vector<Pixel> > scanLine, ColorDiscretizer& ClusteringProvider)
 {
     if(scanLine.size() == 0) return;
-    vector<int> labels;
-    ClusteringProvider.discretize(scanLine, labels);
-    for(unsigned int i = 1; i < labels.size(); i++)
+    for(unsigned int stripe = 0; scanLine.size(); stripe++)
     {
-        // here the knn will decide the class of each pixel
-        std::cout << labels.at(i) << std::endl;
-        this->featureTable2D[labels.at(i-1)][labels.at(i)]++;
+        vector<int> labels;
+        ClusteringProvider.discretize(scanLine.at(stripe), labels);
+        for(unsigned int i = 1; i < labels.size(); i++)
+        {
+            this->featureTable2D[stripe][labels.at(i-1)][labels.at(i)]++;
+        }
     }
     return;
 }
 
 void VisualCompassFeature::getCertainty(time_t current_time, double &certainty)
 {
-	certainty = this->measurement_certainty * exp(difftime(this->time, current_time));
+    certainty = this->measurement_certainty * exp(difftime(this->time, current_time));
 }
 
 void VisualCompassFeature::compare(VisualCompassFeature vcf, double &similarity_measure)
 {
-    similarity_measure = 0;
-    for(unsigned int i = 0; i < NUM_OF_COLORS; i++)
+    similarity_measure = 0.00;
+    for(unsigned int index = 0; index < COMPASS_FEATURE_NUMBER; index++)
     {
-        for(unsigned int j = 0; j < NUM_OF_COLORS; j++)
+        for(unsigned int i = 0; i < NUM_OF_COLORS; i++)
         {
-            similarity_measure += this->featureTable2D[i][j] - vcf.featureTable2D[i][j];
+            for(unsigned int j = 0; j < NUM_OF_COLORS; j++)
+            {
+                similarity_measure += abs(this->featureTable2D[index][i][j] - vcf.featureTable2D[index][i][j]);
+            }
         }
     }
     return;

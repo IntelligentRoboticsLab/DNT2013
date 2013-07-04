@@ -13,6 +13,7 @@ public:
     /*
     */
     void setClusters(int num_clusters);
+    // TODO: fix the cluster number arguments
     bool initializeColorModel(cv::InputArrayOfArrays images, int clusters=-1);
     bool initializeColorModel(const std::vector<naoth::Image> &images, int clusters=-1);
     bool initializeColorModel(const std::vector<Pixel> &pixels, int clusters=-1);
