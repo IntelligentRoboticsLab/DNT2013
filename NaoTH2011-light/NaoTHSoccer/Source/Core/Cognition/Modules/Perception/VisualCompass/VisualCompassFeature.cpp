@@ -30,10 +30,13 @@ void VisualCompassFeature::getCertainty(time_t current_time, double &certainty)
 
 void VisualCompassFeature::compare(VisualCompassFeature vcf, double &similarity_measure)
 {
-    similarity_measure = 1.0; 
-	//M_PI is the maximum distance possible between 2 angles
-	similarity_measure *= abs(this->orientation - vcf.orientation)/M_PI;
-	//TODO factor in the certainties
-	//TODO normalise distance?
-	similarity_measure *= sqrt(pow(this->source_position.x - vcf.source_position.x, 2) + pow(this->source_position.y - vcf.source_position.y, 2));
+    similarity_measure = 0;
+    for(unsigned int i = 0; i < NUM_OF_COLORS; i++)
+    {
+        for(unsigned int j = 0; j < NUM_OF_COLORS; j++)
+        {
+            similarity_measure += this->featureTable2D[i][j] - vcf.featureTable2D[i][j];
+        }
+    }
+    return;
 }

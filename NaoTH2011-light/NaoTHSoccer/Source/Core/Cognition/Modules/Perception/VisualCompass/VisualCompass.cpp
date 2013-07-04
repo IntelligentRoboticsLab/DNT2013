@@ -33,106 +33,6 @@ VisualCompass::~VisualCompass()
 {
 }
 
-void VisualCompass::saveModel()
-{
-    std::ofstream outBinFile;
-    outBinFile.open(COMPASS_DATA_FILE, ios::out | ios::binary);
-    for (int i = 0; i < GRID_X_LENGTH; i++){
-        for (int j = 0; j < GRID_Y_LENGTH; j++){
-            for (int k = 0; k < NUM_ANGLE_BINS; k++){
-                outBinFile.write(reinterpret_cast<char*> (&GridMapProvider.gridmap[i][j][k]), sizeof(VisualCompassFeature));
-            }
-        }
-    }
-    outBinFile.close();
-    return;
-}
-
-void VisualCompass::readModel()
-{
-    if(!GridMapProvider.isInitialized)
-    {
-        GridMapProvider.initializeStorageArray();
-        std::ifstream inBinFile;
-        inBinFile.open(COMPASS_DATA_FILE, ios::in | ios::binary);
-        for (int i = 0; i < GRID_X_LENGTH; i++){
-            for (int j = 0; j < GRID_Y_LENGTH; j++){
-                for (int k = 0; k < NUM_ANGLE_BINS; k++){
-                    inBinFile.read(reinterpret_cast<char*> (&GridMapProvider.gridmap[i][j][k]), sizeof(VisualCompassFeature));
-                }
-            }
-        }
-        inBinFile.close();
-    }
-    return;
-}
-
-void VisualCompass::recordFeatures()
-{
-    int x = 0;
-    int y = 0;
-    int theta = 0;
-    double dx = getFieldInfo().xLength / GRID_X_LENGTH;
-    double dy = getFieldInfo().yLength / GRID_Y_LENGTH;
-    Vector2<double> a(getArtificialHorizon().begin());
-    Vector2<double> b(getArtificialHorizon().end());
-
-    if(isValid(a, b) && clustered && getRobotPose().isValid)
-    {
-        vector< vector<Pixel> > stripes;
-        verticalScanner(stripes);
-        for(unsigned int i = 0; i < stripes.size(); i++)
-        {
-            VisualCompassFeature tmp;
-            tmp.createFeatureFromScanLine(stripes.at(i), ClusteringProvider);
-        }
-
-        //find the proper bin and grid cell
-        double poseX = getRobotPose().translation.x + getFieldInfo().xLength / 2;
-        double poseY = getRobotPose().translation.y + getFieldInfo().yLength / 2;
-        x = max(0, (int) floor(poseX / dx));
-        x = min(GRID_X_LENGTH-1, x);
-        y = max(0, (int) floor(poseY / dy));
-        y = min(GRID_Y_LENGTH-1, y);
-
-        // rotation from 0 to 360 degrees -- normalize
-        double theta_full = Math::toDegrees(getRobotPose().rotation) + 180.0;
-        // TODO:: fix it work with rads
-        theta = (int) theta_full / 30;
-        GridMapProvider.gridmap[x][y][theta].valid = true;
-        GridMapProvider.gridmap[x][y][theta].orientation = getRobotPose().rotation;
-    }
-    return;
-}
-
-void VisualCompass::clearCompass()
-{
-    // check if there is a model file and delete it
-    if(GridMapProvider.isInitialized)
-    {
-        GridMapProvider.destroyStorageArray();
-    }
-    return;
-}
-
-bool VisualCompass::hasModel()
-{
-    std::ifstream ifs (COMPASS_DATA_FILE);
-    if (ifs.is_open())
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool VisualCompass::isValid()
-{
-    return false;
-}
-
 void VisualCompass::execute()
 {
     if(!GridMapProvider.isInitialized)
@@ -253,6 +153,106 @@ void VisualCompass::execute()
     LINE_PX( color, (int)0, (int)0, (int)getImage().width()-1, (int)0 );
     );
 
+}
+
+void VisualCompass::saveModel()
+{
+    std::ofstream outBinFile;
+    outBinFile.open(COMPASS_DATA_FILE, ios::out | ios::binary);
+    for (int i = 0; i < GRID_X_LENGTH; i++){
+        for (int j = 0; j < GRID_Y_LENGTH; j++){
+            for (int k = 0; k < NUM_ANGLE_BINS; k++){
+                outBinFile.write(reinterpret_cast<char*> (&GridMapProvider.gridmap[i][j][k]), sizeof(VisualCompassFeature));
+            }
+        }
+    }
+    outBinFile.close();
+    return;
+}
+
+void VisualCompass::readModel()
+{
+    if(!GridMapProvider.isInitialized)
+    {
+        GridMapProvider.initializeStorageArray();
+        std::ifstream inBinFile;
+        inBinFile.open(COMPASS_DATA_FILE, ios::in | ios::binary);
+        for (int i = 0; i < GRID_X_LENGTH; i++){
+            for (int j = 0; j < GRID_Y_LENGTH; j++){
+                for (int k = 0; k < NUM_ANGLE_BINS; k++){
+                    inBinFile.read(reinterpret_cast<char*> (&GridMapProvider.gridmap[i][j][k]), sizeof(VisualCompassFeature));
+                }
+            }
+        }
+        inBinFile.close();
+    }
+    return;
+}
+
+void VisualCompass::recordFeatures()
+{
+    int x = 0;
+    int y = 0;
+    int theta = 0;
+    double dx = getFieldInfo().xLength / GRID_X_LENGTH;
+    double dy = getFieldInfo().yLength / GRID_Y_LENGTH;
+    Vector2<double> a(getArtificialHorizon().begin());
+    Vector2<double> b(getArtificialHorizon().end());
+
+    if(isValid(a, b) && clustered && getRobotPose().isValid)
+    {
+        vector< vector<Pixel> > stripes;
+        verticalScanner(stripes);
+        for(unsigned int i = 0; i < stripes.size(); i++)
+        {
+            VisualCompassFeature tmp;
+            tmp.createFeatureFromScanLine(stripes.at(i), ClusteringProvider);
+        }
+
+        //find the proper bin and grid cell
+        double poseX = getRobotPose().translation.x + getFieldInfo().xLength / 2;
+        double poseY = getRobotPose().translation.y + getFieldInfo().yLength / 2;
+        x = max(0, (int) floor(poseX / dx));
+        x = min(GRID_X_LENGTH-1, x);
+        y = max(0, (int) floor(poseY / dy));
+        y = min(GRID_Y_LENGTH-1, y);
+
+        // rotation from 0 to 360 degrees -- normalize
+        double theta_full = Math::toDegrees(getRobotPose().rotation) + 180.0;
+        // TODO:: fix it work with rads
+        theta = (int) theta_full / 30;
+        GridMapProvider.gridmap[x][y][theta].valid = true;
+        GridMapProvider.gridmap[x][y][theta].orientation = getRobotPose().rotation;
+    }
+    return;
+}
+
+void VisualCompass::clearCompass()
+{
+    // check if there is a model file and delete it
+    if(GridMapProvider.isInitialized)
+    {
+        GridMapProvider.destroyStorageArray();
+    }
+    return;
+}
+
+bool VisualCompass::hasModel()
+{
+    std::ifstream ifs (COMPASS_DATA_FILE);
+    if (ifs.is_open())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool VisualCompass::isValid()
+{
+    return false;
 }
 
 void VisualCompass::scanner()
