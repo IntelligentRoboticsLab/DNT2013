@@ -31,7 +31,8 @@
 #include "Representations/Perception/ObjectPercept.h"
 #include "Representations/Modeling/ColorClassificationModel.h"
 #include "Cognition/Modules/Infrastructure/OpenCV/OpenCVImageProvider.h"
-#include "VisualCompassParameters.h"
+#include "Cognition/Modules/Perception/VisualCompass/VisualCompassParameters.h"
+#include "Cognition/Modules/Perception/VisualCortex/ColorDiscretizer.h"
 #include <time.h> 
 
 class VisualCompassFeature
@@ -59,7 +60,7 @@ public:
      *gets a the pixels for a line in the image and creates a
      *feature
      */
-    void createFeatureFromScanLine(vector<Pixel> scanLine);
+    void createFeatureFromScanLine(vector<Pixel> scanLine, const ColorDiscretizer &ClusteringProvider);
 
 	void getCertainty(time_t current_time, double &certainty);
 private:

@@ -9,16 +9,18 @@ VisualCompassFeature::~VisualCompassFeature()
     //nothing here.
 }
 
-void VisualCompassFeature::createFeatureFromScanLine(vector<Pixel> scanLine)
+void VisualCompassFeature::createFeatureFromScanLine(vector<Pixel> scanLine, const ColorDiscretizer& ClusteringProvider)
 {
     if(scanLine.size() == 0) return;
-    for(unsigned int i = 1; i < scanLine.size(); i++)
-    {
-        // here the knn will decide the class of each pixel
-        int class_0 = 1; //class of the previous pixel
-        int class_1 = 2; //class of the current pixel
-        this->table[class_0][class_1]++;
-    }
+
+//    vector<int> labels;
+//    ClusteringProvider.discretize(scanLine, labels);
+//    for(unsigned int i = 1; i < labels.size(); i++)
+//    {
+//        // here the knn will decide the class of each pixel
+//        this->table[labels.at(i-1)][labels.at(i)]++;
+//    }
+    return;
 }
 
 void VisualCompassFeature::getCertainty(time_t current_time, double &certainty)

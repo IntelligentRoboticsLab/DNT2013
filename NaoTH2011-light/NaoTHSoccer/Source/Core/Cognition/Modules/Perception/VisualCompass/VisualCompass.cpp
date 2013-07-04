@@ -83,7 +83,11 @@ void VisualCompass::recordFeatures()
         verticalScanner(stripes);
         //todo: MAKE THE FEATURE
         //...
-
+//        for(unsigned int i = 0; i < stripes.size(); i++)
+//        {
+//            VisualCompassFeature tmp;
+//            tmp.createFeatureFromScanLine(stripes.at(i), ClusteringProvider);
+//        }
 
         //find the proper bin and grid cell
         double poseX = getRobotPose().translation.x + getFieldInfo().xLength / 2;
