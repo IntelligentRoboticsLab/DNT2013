@@ -87,13 +87,13 @@ public:
     ~VisualCompass();
     void execute();
 private:
-    bool cluster;
     vector<Pixel> pixelVector;
     int num_images;
     VisualGridMapProvider GridMapProvider;
     ColorDiscretizer ClusteringProvider;
     void head();
     void motion();
+    bool clustered;
 
     /*
      * During the off line phase, this method records features
@@ -138,7 +138,7 @@ private:
      *gets the image and the horizon and scans every 10 pixels
      *a vertical line storing the pixel values into a vector
      */
-    vector< vector<Pixel> > verticalScanner();
+    void verticalScanner(vector< vector<Pixel> > &stripes);
 
     /*
      *does the robot to turn 360 degrees, to map the environment

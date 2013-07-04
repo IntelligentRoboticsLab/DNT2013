@@ -5,7 +5,8 @@ using namespace cv;
 VisualCompass::VisualCompass()
 {
     GridMapProvider.isInitialized = false;
-    cluster = false;
+    clustered = false;
+
     // debug stuff
     DEBUG_REQUEST_REGISTER("VisualCompass:mark_area", "mark the possibles' features area", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:scan_lines", "", false);
@@ -73,9 +74,18 @@ void VisualCompass::recordFeatures()
     int theta = 0;
     double dx = getFieldInfo().xLength / GRID_X_LENGTH;
     double dy = getFieldInfo().yLength / GRID_Y_LENGTH;
+    Vector2<double> a(getArtificialHorizon().begin());
+    Vector2<double> b(getArtificialHorizon().end());
 
-    if(getRobotPose().isValid)
+    if(isValid(a, b) && clustered && getRobotPose().isValid)
     {
+        vector< vector<Pixel> > stripes;
+        verticalScanner(stripes);
+        //todo: MAKE THE FEATURE
+        //...
+
+
+        //find the proper bin and grid cell
         double poseX = getRobotPose().translation.x + getFieldInfo().xLength / 2;
         double poseY = getRobotPose().translation.y + getFieldInfo().yLength / 2;
         x = max(0, (int) floor(poseX / dx));
@@ -150,8 +160,12 @@ void VisualCompass::execute()
                   // here sent the pixelVector to
                   // the k-means clustering and then
                   // take back the clusters
-                  ClusteringProvider.setClusters(NUM_OF_COLORS);
-                  ClusteringProvider.initializeColorModel(pixelVector, 10);
+                  if(pixelVector.size() > 0)
+                  {
+                    ClusteringProvider.setClusters(NUM_OF_COLORS);
+                    ClusteringProvider.initializeColorModel(pixelVector, 10);
+                    clustered = true;
+                  }
             );
 
     DEBUG_REQUEST("VisualCompass:record_images",
@@ -236,10 +250,6 @@ void VisualCompass::execute()
     LINE_PX( color, (int)getImage().width()-1, (int)0, (int)b.x, (int)(b.y) );
     LINE_PX( color, (int)0, (int)0, (int)getImage().width()-1, (int)0 );
     );
-    if(isValid(a, b))
-    {
-        verticalScanner();
-    }
 
 }
 
@@ -318,9 +328,8 @@ void VisualCompass::colorExtraction()
     }
 }
 
-vector< vector<Pixel> > VisualCompass::verticalScanner()
+void VisualCompass::verticalScanner(vector< vector<Pixel> > &scanner)
 {
-    vector< vector<Pixel> > scanner;
     for(double p = 5.00; p < (double) getImage().width(); p += COMPASS_FEATURE_STEP)
     {
         vector<Pixel> line;
@@ -337,5 +346,4 @@ vector< vector<Pixel> > VisualCompass::verticalScanner()
         }
         scanner.push_back(line);
     }
-    return scanner;
 }
