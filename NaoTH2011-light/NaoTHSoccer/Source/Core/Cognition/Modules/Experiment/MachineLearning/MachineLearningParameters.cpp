@@ -29,6 +29,9 @@ MachineLearningParameters::MachineLearningParameters()
     PARAMETER_REGISTER(evolution.iterationsToGetUp) = 60;
     PARAMETER_REGISTER(evolution.savedirname) = "Evolution";
 
+    PARAMETER_REGISTER(evolution.beamposition_y) = 0;
+    PARAMETER_REGISTER(evolution.beamposition_x) = 0;
+
     // Dummy method parameters
     PARAMETER_REGISTER(method2.resettingTime) = 1000;
     PARAMETER_REGISTER(method2.standingTime) = 1000;

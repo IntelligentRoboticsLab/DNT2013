@@ -106,6 +106,9 @@ private:
     unsigned int uprightCount;
 
     int lastChestButtonEventCounter;
+    int theBeamParameter_x;
+    int theBeamParameter_y;
+
     bool manualReset;
     unsigned int iterationsToGetUp;
 

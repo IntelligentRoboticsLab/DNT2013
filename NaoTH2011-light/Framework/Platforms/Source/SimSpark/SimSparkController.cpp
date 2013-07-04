@@ -296,6 +296,8 @@ void SimSparkController::singleThreadMain()
 
 void SimSparkController::executeDebugCommand(const std::string &command, const std::map<std::string, std::string> &arguments, std::ostream &outstream)
 {
+  std::cout << "Command received " << command.c_str() << std::endl;
+
   if(command == "beam")
   {
     Vector3d pose;

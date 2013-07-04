@@ -31,7 +31,9 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
   stateTime(0),
   fallenCount(0),
   uprightCount(0),
-  lastChestButtonEventCounter(0)
+  lastChestButtonEventCounter(0),
+  theBeamParameter_x(0),
+  theBeamParameter_y(0)
 {
   #define REG_WALK_PARAMETER(name, minv, maxv)\
   theIKParameterBounds[#name] = Vector2<double>(minv, maxv);\
@@ -88,6 +90,8 @@ void LearnToWalk::setMethod(std::string methodName)
     this->resettingTime = theParameters.evolution.resettingTime;
     this->standingTime = theParameters.evolution.standingTime;
     this->runningTime = theParameters.evolution.runningTime * theTests.size();
+    theBeamParameter_x = theParameters.evolution.beamposition_x;
+    theBeamParameter_y = theParameters.evolution.beamposition_y;
 
   } else {
     std::cout << "Trying to use unknown method '"  << methodName << "'.";
@@ -155,7 +159,9 @@ void LearnToWalk::run()
         std::map<std::string,std::string> args;
         args["on"] = "";
         DebugRequest::getInstance().executeDebugCommand("SimSparkController:beam",args,answer);
-
+        //args["x"] = theBeamParameter_x;
+        //args["y"] = theBeamParameter_y;
+        //DebugRequest::getInstance().executeDebugCommand("beam",args,answer);
         theMotionRequest.id = motion::stand;
         theMotionRequest.forced = true;
 
@@ -193,6 +199,7 @@ void LearnToWalk::run()
         std::map<std::string, std::string> args;
         args["off"] = "";
         DebugRequest::getInstance().executeDebugCommand("SimSparkController:beam", args, answer);
+
         theMotionRequest.id = motion::stand;
         theMotionRequest.forced = false;
         if (stateTime + standingTime < theFrameInfo.getTime()) {

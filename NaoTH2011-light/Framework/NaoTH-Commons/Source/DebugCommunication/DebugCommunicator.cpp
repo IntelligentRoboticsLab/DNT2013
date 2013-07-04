@@ -29,7 +29,6 @@ fatalFail(false)
 void DebugCommunicator::init(unsigned short portNum)
 {
   port = portNum;
-  
   GError* err = internalInit();
   if (err)
   {

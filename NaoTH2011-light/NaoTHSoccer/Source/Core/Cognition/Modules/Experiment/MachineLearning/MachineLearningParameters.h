@@ -22,7 +22,12 @@ public:
 
     bool manualReset;
     unsigned int iterationsToGetUp;
+
     std::string savedirname;
+
+    int beamposition_x;
+    int beamposition_y;
+
   } evolution;
 
   struct Method2 {
