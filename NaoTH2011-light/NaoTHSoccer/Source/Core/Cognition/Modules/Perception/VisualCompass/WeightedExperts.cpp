@@ -18,8 +18,8 @@ double WeightedExperts::best_match(RobotPose pose, FieldInfo fInfo, VisualGridMa
     {
         if(map.gridmap[gridCoordinates.x][gridCoordinates.y][i].valid)
         {
-            std::cout << "berb" << std::endl;
             map.gridmap[gridCoordinates.x][gridCoordinates.y][i].compare(inputFeature, similarity);
+            std::cout << similarity << std::endl;
         }
         else
         {
