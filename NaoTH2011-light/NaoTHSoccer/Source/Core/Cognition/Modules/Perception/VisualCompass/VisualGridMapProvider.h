@@ -63,6 +63,16 @@ public:
             Vector3<int> transRot = fieldPosToGridPos(robotPose, fInfo);
             this->gridmap[transRot.x][transRot.y][transRot.z].valid = true;
             memcpy(this->gridmap[transRot.x][transRot.y][transRot.z].featureTable2D, vcf.featureTable2D, sizeof (vcf.featureTable2D));
+//            for(int i=0; i<COMPASS_FEATURE_NUMBER; i++)
+//            {
+//                for(int j=0; j<NUM_OF_COLORS; j++)
+//                {
+//                    for(int jj=0; jj<NUM_OF_COLORS; jj++)
+//                    {
+//                        this->gridmap[transRot.x][transRot.y][transRot.z].featureTable2D[i][j][jj] = vcf.featureTable2D[i][j][jj];
+//                    }
+//                }
+//            }
             this->gridmap[transRot.x][transRot.y][transRot.z].orientation = robotPose.rotation;
         }
         return;
@@ -89,7 +99,7 @@ public:
         // rotation from 0 to 360 degrees -- normalize
         double theta_full = Math::toDegrees(robotPose.rotation) + 180.0;
         // TODO:: fix it work with rads, HARDCODED VALUE!!!!!!!!!
-        int theta = (int) theta_full / 30;
+        int theta = (int) theta_full / 2;
         return Vector3<int>(x, y, theta);
     }
 

@@ -92,6 +92,7 @@ private:
     VisualGridMapProvider GridMapProvider;
     ColorDiscretizer ClusteringProvider;
     WeightedExperts queryModel;
+    void drawClusteredColors();
     void drawInfo();
     /*
      *

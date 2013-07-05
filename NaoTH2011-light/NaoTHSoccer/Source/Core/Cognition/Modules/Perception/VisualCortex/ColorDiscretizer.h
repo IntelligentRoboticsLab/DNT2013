@@ -27,6 +27,7 @@ public:
     inline cv::Mat getClusterColors() const { return this->clusterColors; }
     void saveClusters(const char* fileName);
     void readClusters(const char* fileName);
+    unsigned int nearestNeighborIndex(float channel1, float channel2, float channel3);
 private:
     unsigned int clusters;
     cv::Mat clusterColors;
@@ -36,7 +37,7 @@ private:
                               const cv::TermCriteria &criteria=cv::TermCriteria(CV_TERMCRIT_EPS+CV_TERMCRIT_ITER, 5, 1.0),
                               int attempts=3,
                               int flags=cv::KMEANS_PP_CENTERS);
-    unsigned int nearestNeighborIndex(float channel1, float channel2, float channel3);
+
 };
 
 #endif // COLORDISCRETIZER_H

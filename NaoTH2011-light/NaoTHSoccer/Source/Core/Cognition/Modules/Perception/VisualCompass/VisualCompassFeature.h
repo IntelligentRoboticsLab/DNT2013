@@ -43,7 +43,7 @@ public:
     /*
      *attributes for these feature type elements
      */
-    Matrix_nxn<unsigned int, NUM_OF_COLORS> featureTable2D[COMPASS_FEATURE_NUMBER];
+    unsigned int featureTable2D[COMPASS_FEATURE_NUMBER][NUM_OF_COLORS][NUM_OF_COLORS];
     int length;
     double orientation;
     time_t time;
@@ -54,7 +54,7 @@ public:
     /*
      *gets two features and compares them
      */
-    void compare(VisualCompassFeature vcf, double &similarity_measure);
+    void compare(VisualCompassFeature vcf, long double &similarity_measure);
 
     /*
      *gets a the pixels for a line in the image and creates a

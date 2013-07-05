@@ -2,6 +2,16 @@
 
 VisualCompassFeature::VisualCompassFeature()
 {
+    for(unsigned int index = 0; index < COMPASS_FEATURE_NUMBER; index++)
+    {
+        for(unsigned int i = 0; i < NUM_OF_COLORS; i++)
+        {
+            for(unsigned int j = 0; j < NUM_OF_COLORS; j++)
+            {
+                this->featureTable2D[index][i][j] = 123456.78;
+            }
+        }
+    }
 }
 
 VisualCompassFeature::~VisualCompassFeature()
@@ -29,7 +39,7 @@ void VisualCompassFeature::getCertainty(time_t current_time, double &certainty)
     certainty = this->measurement_certainty * exp(difftime(this->time, current_time));
 }
 
-void VisualCompassFeature::compare(VisualCompassFeature vcf, double &similarity_measure)
+void VisualCompassFeature::compare(VisualCompassFeature vcf, long double &similarity_measure)
 {
     similarity_measure = 0.00;
     for(unsigned int index = 0; index < COMPASS_FEATURE_NUMBER; index++)
@@ -38,10 +48,9 @@ void VisualCompassFeature::compare(VisualCompassFeature vcf, double &similarity_
         {
             for(unsigned int j = 0; j < NUM_OF_COLORS; j++)
             {
-                similarity_measure += pow(abs(this->featureTable2D[index][i][j] - vcf.featureTable2D[index][i][j]), 2);
+                similarity_measure += abs(this->featureTable2D[index][i][j] - vcf.featureTable2D[index][i][j]);
             }
         }
     }
-    similarity_measure = sqrt(similarity_measure);
     return;
 }

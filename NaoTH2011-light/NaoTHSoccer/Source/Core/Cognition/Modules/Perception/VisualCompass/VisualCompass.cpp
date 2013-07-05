@@ -27,6 +27,7 @@ VisualCompass::VisualCompass()
     DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:cluster_colors", "", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:clear_images","", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:record_images","stores images to use them for color extraction", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:show_clustered_colors","", false);
     // motions
     DEBUG_REQUEST_REGISTER("VisualCompass:motion:scanner_standing", "", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:motion:standard_stand", "stand as standard or not", true);
@@ -54,6 +55,7 @@ void VisualCompass::execute()
     DEBUG_REQUEST("VisualCompass:functions:color:save_color_clusters", saveColorClusters(););
     DEBUG_REQUEST("VisualCompass:functions:color:read_color_clusters", readColorClusters(););
     DEBUG_REQUEST("VisualCompass:functions:color:clear_images", pixelVector.clear(););
+    DEBUG_REQUEST("VisualCompass:functions:color:show_clustered_colors", drawClusteredColors(););
 
     DEBUG_REQUEST("VisualCompass:debug:draw_orientation_loc", drawPoseOrientation(););
     DEBUG_REQUEST("VisualCompass:debug:draw_orientation_vc", drawCompassOrientation(););
@@ -162,6 +164,48 @@ void VisualCompass::head()
     return;
 }
 
+void VisualCompass::drawClusteredColors()
+{
+    unsigned int clustered = 0;
+    for(unsigned int i = 0; i < getImage().width(); i++)
+    {
+        for (unsigned int j = 0; j < getImage().height(); j++)
+        {
+            clustered = ClusteringProvider.nearestNeighborIndex(getImage().get(i,j).channels[0], getImage().get(i,j).channels[1],getImage().get(i,j).channels[2]);
+            switch (clustered) {
+            case 0:
+                POINT_PX(ColorClasses::black, i , j);
+                break;
+            case 1:
+                POINT_PX(ColorClasses::blue, i , j);
+                break;
+            case 2:
+                POINT_PX(ColorClasses::gray, i , j);
+                break;
+            case 3:
+                POINT_PX(ColorClasses::green, i , j);
+                break;
+            case 4:
+                POINT_PX(ColorClasses::red, i , j);
+                break;
+            case 5:
+                POINT_PX(ColorClasses::orange, i , j);
+                break;
+            case 6:
+                POINT_PX(ColorClasses::pink, i , j);
+                break;
+            case 7:
+                POINT_PX(ColorClasses::skyblue, i , j);
+                break;
+            default:
+                break;
+            }
+
+        }
+    }
+    return;
+}
+
 void VisualCompass::motion()
 {
     getMotionRequest().walkRequest.target = Pose2D();
@@ -234,6 +278,8 @@ void VisualCompass::verticalScanner(vector< vector<Pixel> > &scanner)
     {
         vector<Pixel> line;
         Vector2<double> start = getArtificialHorizon().point(p);
+        // HACK starting from bottom pixel
+        start.y = getImage().height() - 1;
         Vector2<int> point((int) start.x, (int) start.y);
         double angle = getArtificialHorizon().getDirection().rotateRight().angle();
         double distance = 0.0;

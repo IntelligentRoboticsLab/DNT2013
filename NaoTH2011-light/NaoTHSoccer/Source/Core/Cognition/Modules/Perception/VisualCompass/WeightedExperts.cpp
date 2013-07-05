@@ -11,8 +11,8 @@ WeightedExperts::~WeightedExperts()
 double WeightedExperts::best_match(RobotPose pose, FieldInfo fInfo, VisualGridMapProvider &map, VisualCompassFeature inputFeature)
 {
     Vector3<int> gridCoordinates = map.fieldPosToGridPos(pose, fInfo);
-    double similarity;
-    double min_similarity = DBL_MAX;
+    long double similarity;
+    long double min_similarity = DBL_MAX;
     unsigned int min_sim = 0;
     for(unsigned int i = 0; i < NUM_ANGLE_BINS; i++)
     {
@@ -31,7 +31,7 @@ double WeightedExperts::best_match(RobotPose pose, FieldInfo fInfo, VisualGridMa
             min_sim = i;
         }
     }
-    return (double)min_sim;
+    return (double)min_sim*2;
 }
 
 void WeightedExperts::checkApprCell()
