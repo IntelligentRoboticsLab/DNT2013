@@ -13,7 +13,8 @@ class GA : public MachineLearningMethod, public GeneticAlgorithms
 public:
     GA(MachineLearningParameters::Evolution params,
        std::map<std::string, double> initialGene,
-       std::map<std::string, Vector2<double> > genes);
+       std::map<std::string, Vector2<double> > genes,
+       bool loadLatest);
     virtual ~GA() {}
 
     void update(double fitness);

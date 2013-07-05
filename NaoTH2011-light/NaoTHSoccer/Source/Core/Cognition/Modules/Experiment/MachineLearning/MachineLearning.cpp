@@ -87,14 +87,12 @@ void MachineLearning::executeDebugCommand(const std::string &command,
         finished = false;
 
         ltw->setMethod("evolution");
+    } else if (arguments.find("off")!=arguments.end()) {
+      if(ltw->method!=NULL) {
+        std::cout<<"MachineLearning method " << ltw->method->name << " finished!"<<std::endl;
+      }
+      finished = true;
     }
-  }
-  else if (!command.compare("machinelearning:end"))
-  {
-    if(ltw->method!=NULL) {
-      std::cout<<"MachineLearning method " << ltw->method->name << " finished!"<<std::endl;
-    }
-    finished = true;
   }
   else if (!command.compare("machinelearning:getinfo"))
   {
@@ -109,9 +107,7 @@ void MachineLearning::executeDebugCommand(const std::string &command,
     ltw->killCurrent = true;
   } else if (!command.compare("machinelearning:loadlastgen"))
   {
-    GeneticAlgorithms* ga = dynamic_cast<GeneticAlgorithms*>(ltw->method);
-    ga->loadGeneration();
-
+    ltw->loadLatest=true;
   } else if(!command.compare("machinelearning:getTaskList"))
   {
     for (std::map<std::string, LearnToWalk::Test >::iterator iter=tests.begin(); iter!=tests.end(); iter++)

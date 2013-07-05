@@ -85,6 +85,7 @@ public:
 
     MachineLearningMethod* method;
     bool killCurrent;
+    bool loadLatest;
 
 private:
     int state;

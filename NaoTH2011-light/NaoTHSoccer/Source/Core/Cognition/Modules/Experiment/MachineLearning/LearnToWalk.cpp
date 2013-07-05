@@ -17,6 +17,7 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
                          HeadMotionRequest &hmq)
 : method(NULL),
   killCurrent(false),
+  loadLatest(false),
 
   theVirtualVision(vv),
   theInertialSensorData(isd),
@@ -56,8 +57,8 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
 //  REG_WALK_PARAMETER(walk.rightFootRollOffset, 0.0);
   REG_WALK_PARAMETER(walk.footCurveFactor, 5, 15) = 10;
   REG_WALK_PARAMETER(walk.maxStepLength, 50, 120) = 100.0;
-  REG_WALK_PARAMETER(walk.maxStepWidth, 20, 50) = 30.0;
-  REG_WALK_PARAMETER(walk.maxStepTurn, 20, 60) = 40.0;
+//  REG_WALK_PARAMETER(walk.maxStepWidth, 20, 50) = 30.0;
+//  REG_WALK_PARAMETER(walk.maxStepTurn, 20, 60) = 40.0;
   REG_WALK_PARAMETER(walk.comHeight, 245, 265) = 260;
 //  REG_WALK_PARAMETER(walk.stiffness, 1);
   //REG_WALK_PARAMETER(walk.useArm, -1, 1) = 0;
@@ -83,16 +84,15 @@ LearnToWalk::LearnToWalk(const naoth::VirtualVision &vv,
 void LearnToWalk::setMethod(std::string methodName)
 {
   if(!methodName.compare("evolution")) {
-    this->method = new GA(theParameters.evolution, theIKParameterValues, theIKParameterBounds);
-    this->manualReset = theParameters.evolution.manualReset;
-    this->iterationsToGetUp = theParameters.evolution.iterationsToGetUp;
+    method = new GA(theParameters.evolution, theIKParameterValues, theIKParameterBounds, loadLatest);
+    manualReset = theParameters.evolution.manualReset;
+    iterationsToGetUp = theParameters.evolution.iterationsToGetUp;
 
-    this->resettingTime = theParameters.evolution.resettingTime;
-    this->standingTime = theParameters.evolution.standingTime;
-    this->runningTime = theParameters.evolution.runningTime * theTests.size();
+    resettingTime = theParameters.evolution.resettingTime;
+    standingTime = theParameters.evolution.standingTime;
+    runningTime = theParameters.evolution.runningTime * theTests.size();
     theBeamParameter_x = theParameters.evolution.beamposition_x;
     theBeamParameter_y = theParameters.evolution.beamposition_y;
-
   } else {
     std::cout << "Trying to use unknown method '"  << methodName << "'.";
   }

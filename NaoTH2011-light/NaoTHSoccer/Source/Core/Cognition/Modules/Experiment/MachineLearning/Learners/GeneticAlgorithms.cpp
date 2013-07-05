@@ -172,39 +172,22 @@ void GeneticAlgorithms::saveGeneration(const std::vector<Individual>& gen, const
   }
 }
 
-void GeneticAlgorithms::loadGeneration(){
-  this->generations.clear();
+void GeneticAlgorithms::loadGeneration() {
+  std::cout << "=== LOADING GENERATION ===" << std::endl;
 
-    std::vector<Individual>* lastGen = new std::vector<Individual>();
+  this->generations.clear();
+  std::vector<Individual>* lastGen = new std::vector<Individual>();
 
   vector<string> files = vector<string>();
   getdir(dataDir,files);
-
-  /*int max = 0;
-  int x = 0;
-
-  for (unsigned int i = 0;i < files.size();i++) {
-     string fileName = files [i];
-     std :: cout<< files[i] << endl;
-     size_t position = fileName.find(".");
-     string extractName = (string::npos == position)? fileName : fileName.substr(0, position);
-
-     stringstream(extractName) >> x;
-     if (x > max) max = x;
-
-  }
-
-  std::cout<< x << std::endl;*/
-
   int x;
-
   if (files.size()==2) x = 1;
   else x = files.size() - 2;
 
   string line;
   stringstream sstm;
   sstm << dataDir << "/" << x << ".txt";
-   cout << sstm.str() << endl;
+  cout << "SaveDIR: " << sstm.str() << endl;
   ifstream myfile(sstm.str().c_str());
   int i = -1;
   string extractValue= "";
@@ -214,26 +197,25 @@ void GeneticAlgorithms::loadGeneration(){
   {
     while ( myfile.good() )
     {
-
       getline (myfile,line);
 
       if(strcmp(line.c_str(),"") == 0) continue;
 
       size_t position = line.find("=");
-      if (string::npos == position){
-          position = line.find("-");
-          if (string::npos != position){
-              i++;
-              if(i!=0) lastGen->push_back(*ind);
-              ind = new Individual();
+      if (string::npos == position) {
+        position = line.find("-");
+        if (string::npos != position){
+          i++;
+          if(i!=0) lastGen->push_back(*ind);
+          ind = new Individual();
 
-              extractValue = (string::npos == position)? line : line.substr(0, position);
+          extractValue = (string::npos == position)? line : line.substr(0, position);
 
-              ind->fitness = atof(extractValue.c_str());
-              std::cout << extractValue << endl;
-              std::cout<< ind->fitness << endl;
-              continue;
-          }
+          ind->fitness = atof(extractValue.c_str());
+
+          std::cout<< "Loaded individual with fitness " << ind->fitness << "." << std::endl;
+          continue;
+        }
       }
 
       extractName = (string::npos == position)? line : line.substr(0, position - 1);
@@ -241,17 +223,13 @@ void GeneticAlgorithms::loadGeneration(){
       position = extractValue.find(";");
       extractValue = (string::npos == position)? extractValue : extractValue.substr(0, position);
       ind->gene[extractName]= atof(extractValue.c_str());
-      std::cout << extractName << ":" << extractValue << endl;
-
-    i++;
-
-
+      i++;
     }
-
     lastGen->push_back(*ind);
-
     myfile.close();
   }
+  init(*lastGen);
+  std::cout << "=== DONE ===" << std::endl;
 }
 
 std::ostream& operator <<(std::ostream& ost, const GeneticAlgorithms::Individual& v)

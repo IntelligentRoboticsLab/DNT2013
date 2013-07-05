@@ -2,7 +2,8 @@
 
 GA::GA(MachineLearningParameters::Evolution params,
        std::map<std::string, double > initialGene,
-       std::map<std::string, Vector2<double> > genes ) :
+       std::map<std::string, Vector2<double> > genes,
+       bool loadLatest) :
     GeneticAlgorithms(params.parentsNum,
                       params.populationSize,
                       params.surviveNum,
@@ -13,14 +14,16 @@ GA::GA(MachineLearningParameters::Evolution params,
                       params.savedirname),
     genes(genes)
 {
-    std::vector<Individual> initialGeneration;
-
-    Individual i;
-    i.gene =  initialGene ;
-
-    initialGeneration.push_back(i);
-    initialGeneration.push_back(i); // to make sure inital value is tested correctly (?! ok)
-    init(initialGeneration);
+    if(loadLatest) {
+      loadGeneration();
+    } else {
+      std::vector<Individual> initialGeneration;
+      Individual i;
+      i.gene = initialGene ;
+      initialGeneration.push_back(i);
+      initialGeneration.push_back(i); // to make sure inital value is tested correctly (?! ok)
+      init(initialGeneration);
+    }
 
     this->name = "Evolution";
 }
