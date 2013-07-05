@@ -60,7 +60,7 @@ public:
      *gets a the pixels for a line in the image and creates a
      *feature
      */
-    void createFeatureFromScanLine(vector< vector<Pixel> > scanLine, ColorDiscretizer &ClusteringProvider);
+    void createFeatureFromScanLine(vector< vector<Pixel> > scanLine, ColorDiscretizer ClusteringProvider);
 
 	void getCertainty(time_t current_time, double &certainty);
 private:

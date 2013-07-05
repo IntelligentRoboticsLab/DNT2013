@@ -67,8 +67,16 @@ void VisualCompass::execute()
 
 void VisualCompass::victoria()
 {
-
-
+    if(validHorizon() && clustered)
+    {
+        vector< vector<Pixel> > stripes;
+        verticalScanner(stripes);
+        VisualCompassFeature tmp;
+        tmp.createFeatureFromScanLine(stripes, ClusteringProvider);
+        double ora = queryModel.best_match(getRobotPose(), getFieldInfo(), GridMapProvider, tmp);
+        std::cout << "<<" << ora << ">>>" << std::endl;
+    }
+    return;
 }
 
 void VisualCompass::drawInfo()
@@ -110,34 +118,13 @@ void VisualCompass::readColorClusters()
 
 void VisualCompass::recordFeatures()
 {
-    int x = 0;
-    int y = 0;
-    int theta = 0;
-    double dx = getFieldInfo().xLength / GRID_X_LENGTH;
-    double dy = getFieldInfo().yLength / GRID_Y_LENGTH;
-    Vector2<double> a(getArtificialHorizon().begin());
-    Vector2<double> b(getArtificialHorizon().end());
-
-    if(isValid(a, b) && clustered && getRobotPose().isValid)
+    if(validHorizon() && clustered)
     {
         vector< vector<Pixel> > stripes;
         verticalScanner(stripes);
         VisualCompassFeature tmp;
         tmp.createFeatureFromScanLine(stripes, ClusteringProvider);
-        //find the proper bin and grid cell
-        double poseX = getRobotPose().translation.x + getFieldInfo().xLength / 2;
-        double poseY = getRobotPose().translation.y + getFieldInfo().yLength / 2;
-        x = max(0, (int) floor(poseX / dx));
-        x = min(GRID_X_LENGTH-1, x);
-        y = max(0, (int) floor(poseY / dy));
-        y = min(GRID_Y_LENGTH-1, y);
-
-        // rotation from 0 to 360 degrees -- normalize
-        double theta_full = Math::toDegrees(getRobotPose().rotation) + 180.0;
-        // TODO:: fix it work with rads
-        theta = (int) theta_full / 30;
-        GridMapProvider.gridmap[x][y][theta].valid = true;
-        GridMapProvider.gridmap[x][y][theta].orientation = getRobotPose().rotation;
+        GridMapProvider.storeFeature(tmp, getRobotPose(), getFieldInfo());
     }
     return;
 }
@@ -156,11 +143,6 @@ bool VisualCompass::hasGridMapModel()
 {
     std::ifstream ifs (COMPASS_DATA_FILE);
     if (ifs.is_open()) return true;
-    return false;
-}
-
-bool VisualCompass::isValid()
-{
     return false;
 }
 
@@ -212,8 +194,10 @@ void VisualCompass::motion()
 
 }
 
-bool VisualCompass::isValid(Vector2<double> a, Vector2<double> b)
+bool VisualCompass::validHorizon()
 {
+    Vector2<double> a(getArtificialHorizon().begin());
+    Vector2<double> b(getArtificialHorizon().end());
     int min_ = (int) min(a.y, b.y);
     int max_ = (int) max(a.y, b.y);
     double max_area = getImage().width() * getImage().height();
@@ -346,7 +330,7 @@ void VisualCompass::drawROI()
     Vector2<double> a(getArtificialHorizon().begin());
     Vector2<double> b(getArtificialHorizon().end());
     ColorClasses::Color color = ColorClasses::red;
-    if(isValid(a, b))
+    if(validHorizon())
         color = ColorClasses::green;
     LINE_PX( color, (int)a.x, (int)(a.y), (int)b.x, (int)(b.y) );
     LINE_PX( color, (int)0, (int)0, (int)a.x, (int)a.y );

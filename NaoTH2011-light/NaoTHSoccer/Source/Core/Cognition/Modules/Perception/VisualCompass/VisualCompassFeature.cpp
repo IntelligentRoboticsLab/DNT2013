@@ -9,7 +9,7 @@ VisualCompassFeature::~VisualCompassFeature()
     //nothing here.
 }
 
-void VisualCompassFeature::createFeatureFromScanLine(vector< vector<Pixel> > scanLine, ColorDiscretizer& ClusteringProvider)
+void VisualCompassFeature::createFeatureFromScanLine(vector< vector<Pixel> > scanLine, ColorDiscretizer ClusteringProvider)
 {
     if(scanLine.size() == 0) return;
     for(unsigned int stripe = 0; stripe < scanLine.size(); stripe++)
@@ -38,9 +38,10 @@ void VisualCompassFeature::compare(VisualCompassFeature vcf, double &similarity_
         {
             for(unsigned int j = 0; j < NUM_OF_COLORS; j++)
             {
-                similarity_measure += abs(this->featureTable2D[index][i][j] - vcf.featureTable2D[index][i][j]);
+                similarity_measure += pow(abs(this->featureTable2D[index][i][j] - vcf.featureTable2D[index][i][j]), 2);
             }
         }
     }
+    similarity_measure = sqrt(similarity_measure);
     return;
 }

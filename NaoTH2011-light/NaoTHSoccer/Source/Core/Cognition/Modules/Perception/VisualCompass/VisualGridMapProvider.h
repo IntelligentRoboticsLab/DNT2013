@@ -9,15 +9,15 @@
 #define VISUALGRIDMAPPROVIDER_H
 
 #include <vector>
+#include "Cognition/Modules/Perception/VisualCompass/VisualCompassParameters.h"
+#include "Cognition/Modules/Perception/VisualCompass/VisualCompassFeature.h"
 #include "Representations/Infrastructure/FieldInfo.h"
-#include "VisualCompassParameters.h"
-#include "VisualCompassFeature.h"
+#include "Representations/Modeling/RobotPose.h"
 #include <time.h>
 
 
 class VisualGridMapProvider
 {
-
 public:
     VisualCompassFeature ***gridmap;
     bool isInitialized;
@@ -56,8 +56,15 @@ public:
     }
 
     // takes a vector with features and store them in the grid
-    void storeFeature(VisualCompassFeature vcf)
+    void storeFeature(VisualCompassFeature vcf, RobotPose robotPose, FieldInfo fInfo)
     {
+        if(robotPose.isValid)
+        {
+            Vector3<int> transRot = fieldPosToGridPos(robotPose, fInfo);
+            this->gridmap[transRot.x][transRot.y][transRot.z].valid = true;
+            memcpy(this->gridmap[transRot.x][transRot.y][transRot.z].featureTable2D, vcf.featureTable2D, sizeof (vcf.featureTable2D));
+            this->gridmap[transRot.x][transRot.y][transRot.z].orientation = robotPose.rotation;
+        }
         return;
     }
 
@@ -66,10 +73,24 @@ public:
      *where we are going to store the feature.
      *Assumes: field pos in the center 0,0
      */
-    static void fieldPosToGridPos(Vector2<double> fieldPos, Vector2<int> &gridPos)
+    static Vector3<int> fieldPosToGridPos(RobotPose robotPose, FieldInfo fInfo)
     {
-        gridPos.x = floor(( fieldPos.x + FieldInfo().xLength * 0.5 ) / GRID_X_LENGTH);
-        gridPos.y = floor(( fieldPos.y + FieldInfo().yLength * 0.5 ) / GRID_Y_LENGTH);
+        int x = 0;
+        int y = 0;
+        double dx = fInfo.xLength / GRID_X_LENGTH;
+        double dy = fInfo.yLength / GRID_Y_LENGTH;
+        //find the proper bin and grid cell
+        double poseX = robotPose.translation.x + fInfo.xLength / 2;
+        double poseY = robotPose.translation.y + fInfo.yLength / 2;
+        x = max(0, (int) floor(poseX / dx));
+        x = min(GRID_X_LENGTH-1, x);
+        y = max(0, (int) floor(poseY / dy));
+        y = min(GRID_Y_LENGTH-1, y);
+        // rotation from 0 to 360 degrees -- normalize
+        double theta_full = Math::toDegrees(robotPose.rotation) + 180.0;
+        // TODO:: fix it work with rads, HARDCODED VALUE!!!!!!!!!
+        int theta = (int) theta_full / 30;
+        return Vector3<int>(x, y, theta);
     }
 
     void saveGridMapModel()
@@ -105,6 +126,7 @@ public:
         }
         return;
     }
+
 };
 
 #endif // VISUALGRIDPMAPROVIDER_H

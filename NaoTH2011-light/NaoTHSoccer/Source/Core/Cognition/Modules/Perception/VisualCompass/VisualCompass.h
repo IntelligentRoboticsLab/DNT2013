@@ -172,12 +172,7 @@ private:
     /*
      *returns true if the visual compass has an output to give
      */
-    bool isValid();
-    /*
-     *checks if the horizon leaves us the space to
-     *check for features
-     */
-    bool isValid(Vector2<double> a, Vector2<double> b);
+    bool validHorizon();
     /*
      *extracts the colors above the horizon
      */
