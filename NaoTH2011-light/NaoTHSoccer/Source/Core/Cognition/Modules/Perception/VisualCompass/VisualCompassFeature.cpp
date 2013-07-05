@@ -28,8 +28,8 @@ void VisualCompassFeature::createFeatureFromScanLine(vector< vector<Pixel> > sca
         ClusteringProvider.discretize(scanLine.at(stripe), labels);
         for(unsigned int i = 1; i < labels.size(); i++)
         {
-            this->featureTable2D[stripe][labels.at(i-1)][labels.at(i)]++;
-        }
+            this->featureTable2D[stripe][labels.at(i-1)][labels.at(i)] += (double) 1 / (double) labels.size();
+        } 
     }
     return;
 }

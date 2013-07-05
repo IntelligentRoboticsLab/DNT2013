@@ -43,7 +43,7 @@ public:
     /*
      *attributes for these feature type elements
      */
-    unsigned int featureTable2D[COMPASS_FEATURE_NUMBER][NUM_OF_COLORS][NUM_OF_COLORS];
+    double featureTable2D[COMPASS_FEATURE_NUMBER][NUM_OF_COLORS][NUM_OF_COLORS];
     int length;
     double orientation;
     time_t time;
