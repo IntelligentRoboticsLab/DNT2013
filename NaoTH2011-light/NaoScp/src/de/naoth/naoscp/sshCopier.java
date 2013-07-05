@@ -28,7 +28,7 @@ abstract class sshCopier extends sshWorker
   protected Boolean exec() throws JSchException, InterruptedException
   {
     boolean onlyMinimalBackup = config.debugVersion && config.noBackup && !config.forceBackup;
-    boolean copyFiles = config.copyConfig || config.copyExe || config.copyLib || config.copyLogs;
+    boolean copyFiles = config.copyConfig || config.copyExe || config.copyLib || config.copyLogs ||config.copyBehavior;
     boolean backupNeeded = config.forceBackup || copyFiles;
 
     if(onlyMinimalBackup)
@@ -289,7 +289,32 @@ abstract class sshCopier extends sshWorker
         String localLibPath = config.localLibPath();
         String localBinPath = config.localBinPath();
         String localConfigPath = config.localConfigDeployOutPath();
-
+        String localBehaviorPath = config.localBehaviorOutPath();
+        
+        // copy the behavior, delete the previous one
+        if(config.copyBehavior)
+        {
+          try
+          {
+            setInfo("try to delete behavior");
+            c.rm(config.remoteConfigPath() + "behavior-ic.dat");
+          }
+          catch(SftpException ex)
+          {
+            // if the file is not there its ok
+            if(ex.id != ChannelSftp.SSH_FX_NO_SUCH_FILE)
+            {
+              throw ex;
+            }
+          }//end try
+          
+          File behaviorFile = new File(config.localBehaviorOutPath() + "behavior-ic.dat");
+          if(behaviorFile.exists() && behaviorFile.isFile())
+          {
+              setInfo("upload the new behavior");
+              recursiveSftpPut(behaviorFile, config.remoteBehaviorPath() + "behavior-ic.dat");   
+          }     
+        }
         if(config.backupIsSelected)
         {
           if(config.copyLib)

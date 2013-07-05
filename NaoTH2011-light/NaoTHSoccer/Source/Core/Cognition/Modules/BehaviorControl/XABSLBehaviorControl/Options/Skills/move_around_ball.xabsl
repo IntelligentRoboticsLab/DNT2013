@@ -21,7 +21,7 @@ option move_around_ball
   initial state face_to_ball
   {
     action {
-      motion.type = walk;
+      motion.type = walk;      // 0.5 for slowing down
       motion.walk_speed.rot = atan2(y=ball.preview.y, x=ball.preview.x);//ball.angle;
       motion.walk_speed.x = 0;
       motion.walk_speed.y = 0;

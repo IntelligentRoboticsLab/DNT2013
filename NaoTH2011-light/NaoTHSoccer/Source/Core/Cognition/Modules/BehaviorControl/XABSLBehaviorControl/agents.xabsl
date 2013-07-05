@@ -1,9 +1,3 @@
-/*** 
-  Title: NaoTH Soccer
-  Platform: Aldebaran Nao V3 (RoboCup edition).
-  Software-Environment: NaoTH2012
-*/
-
 // Symbols
 include "Symbols/goal_symbols.xabsl";
 include "Symbols/ball_symbols.xabsl";
@@ -36,13 +30,11 @@ include "Options/Skills/approach_ball_with_correct_foot_ckeck_goal.xabsl";
 include "Options/Skills/go_to_relative_point.xabsl";
 include "Options/Skills/go_to_relative_point_avoid_obstacles.xabsl";
 include "Options/Skills/go_to_absolute_point.xabsl";
-//include "Options/Skills/go_to_pos_behind_ball.xabsl";
 include "Options/Skills/go_to_ball.xabsl";
 include "Options/Skills/go_to_ball_cool.xabsl";
 include "Options/Skills/kick_ball_with_foot.xabsl";
 include "Options/Skills/kick_ball.xabsl";
 include "Options/Skills/move_around_ball.xabsl";
-//include "Options/Skills/move_in_circle_without_turning.xabsl";
 include "Options/Skills/search_ball.xabsl";
 include "Options/Skills/stand_up.xabsl";
 include "Options/Skills/find_goal.xabsl";
@@ -57,54 +49,16 @@ include "Options/Skills/falling_down_standing_up.xabsl";
 include "Options/Skills/perform_omnidirectional_kick.xabsl";
 include "Options/Skills/sidekick.xabsl";
 include "Options/Skills/check_collision.xabsl";
+include "Options/Skills/avoid_obstacle.xabsl";
 
 // Debug 
 include "Options/Debug/battery.xabsl";
 
 // Soccer
-// striker
-include "Options/Soccer/Striker/initial_kick_off.xabsl";
-include "Options/Soccer/Striker/ball_far_away_situation.xabsl";
-include "Options/Soccer/Striker/ball_not_seen_situation.xabsl";
-include "Options/Soccer/Striker/attack_situation.xabsl";
-include "Options/Soccer/Striker/between_goal_and_ball_situation.xabsl";
-include "Options/Soccer/Striker/smart_attack_situation.xabsl";
-include "Options/Soccer/Striker/close_to_goal_corner_situation.xabsl";
-include "Options/Soccer/Striker/spl_playing_striker.xabsl";
-include "Options/Soccer/Striker/dribble_attack_direction.xabsl";
-include "Options/Soccer/Striker/strafe_obstacle.xabsl";
-
-/* Not tested yet!
-include "Options/Soccer/Striker/attack_ball_with_obstacle_close_situation.xabsl";
-include "Options/Soccer/Striker/obstacle_clear_kick.xabsl";
-include "Options/Soccer/Striker/approach_ball_obstacle_clear_kick.xabsl";*/
-
-// supporter
-include "Options/Soccer/Supporter/spl_simple_supporter.xabsl";
-include "Options/Soccer/Supporter/spl_playing_supporter.xabsl";
-
-
-// defender
-include "Options/Soccer/Defender/spl_playing_defender.xabsl";
-include "Options/Soccer/Defender/spl_simple_defender.xabsl";
-
-// goalie
-include "Options/Soccer/Goalie/clear_ball_far_away.xabsl";
-include "Options/Soccer/Goalie/critical_ball.xabsl";
-include "Options/Soccer/Goalie/spl_robust_goalie.xabsl";
-include "Options/Soccer/Goalie/spl_robust_inside_goalie.xabsl";
-include "Options/Soccer/Goalie/spl_robust_outside_goalie.xabsl";
-
-// SPL strategy
-include "Options/Soccer/Strategy/SPL_Strategy/decide_role.xabsl";
-include "Options/Soccer/Strategy/SPL_Strategy/play_with_check_fall_down.xabsl";
-include "Options/Soccer/Strategy/SPL_Strategy/initial_ready_set_play.xabsl";
+// MAIN
 include "Options/Soccer/spl_play_soccer.xabsl";
-include "Options/Soccer/Strategy/SPL_Strategy/decide_ready_position.xabsl";
-include "Options/Soccer/Strategy/SPL_Strategy/decide_strategy_position.xabsl";
-include "Options/Soccer/Strategy/SPL_Strategy/decide_offense_position.xabsl";
-include "Options/Soccer/Strategy/SPL_Strategy/decide_defense_position.xabsl";
-include "Options/Soccer/Strategy/SPL_Strategy/goto_ready_position.xabsl";
+include "Options/Soccer/initial_ready_set_play.xabsl";
+include "Options/Soccer/play_with_check_fall_down.xabsl";
 
 // penalty
 include "Options/Soccer/Penalty/penalty_kicker.xabsl";
@@ -114,14 +68,13 @@ include "Options/Soccer/Penalty/play_penalty.xabsl";
 include "Options/Soccer/Penalty/decide_penalty_role.xabsl";
 include "Options/Soccer/Penalty/penalty_set_penalized_play.xabsl";
 
-
 // NonSoccer
 include "Options/NonSoccer/Test/dribble_agent.xabsl";
 include "Options/NonSoccer/Test/dribble_stand_test.xabsl";
 include "Options/NonSoccer/Test/dribble_stand_test2.xabsl";
 
 //NonSoccer - Search Ball
-include"Options/NonSoccer/Test/search_ball_agent.xabsl";
+include "Options/NonSoccer/Test/search_ball_agent.xabsl";
 include "Options/NonSoccer/Test/search_ball_test/search_ball_test.xabsl";
 include "Options/NonSoccer/Test/search_ball_test/search_for_ball_test.xabsl";
 include "Options/NonSoccer/Test/kicker_agent_root.xabsl";
@@ -142,6 +95,5 @@ agent obstacles("Obstacles", obstacle_avoidance);
 /** dribble test */
 agent dribble_agent("DribbleAgent", dribble_agent);
 agent search_ball_agent("SearchBallAgent", search_ball_agent);
-
 agent kicker_agent("KickTestAgent", kicker_agent_root);
 //agent go_behind_ball("GoBehindBallAgent", go_to_pos_behind_ball);

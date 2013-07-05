@@ -54,6 +54,13 @@ ImageProcessor::ImageProcessor()
   theGoalDetector = registerModule<GoalDetector>("GoalDetector");
   theGoalDetector->setEnabled(true);
 
+  // UNDER DEVELOPMENT...
+
+  theLineDetectorDNT = registerModule<LineDetectorDNT>("LineDetectorDNT");
+  theLineDetectorDNT->setEnabled(false);
+
+  // ...END OF UNDER DEVELOPMENT
+
 }//end constructor
 
 
@@ -111,6 +118,15 @@ void ImageProcessor::execute()
   STOPWATCH_START("LineDetector");
   theLineDetector->execute();
   STOPWATCH_STOP("LineDetector");
+
+  // UNDER DEVELOPMENT...
+
+  GT_TRACE("executing LineDetectorDNT");
+  STOPWATCH_START("LineDetectorDNT");
+  theLineDetectorDNT->execute();
+  STOPWATCH_STOP("LineDetectorDNT");
+
+  // ...END OF UNDER DEVELOPMENT
 
   GT_TRACE("executing rest of ImageProcessor::execute()");
 

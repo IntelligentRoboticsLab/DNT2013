@@ -28,6 +28,8 @@
 #include "ObjectDetectors/RobotDetector.h"
 #include "ObjectDetectors/GoalDetector.h"
 #include "../BodyContourProvider/BodyContourProvider.h"
+// evolution
+#include "ObjectDetectors/LineDetectorDNT.h"
 
 // Representations
 #include <Representations/Infrastructure/FrameInfo.h>
@@ -81,6 +83,10 @@ private:
   
   ModuleCreator<LineDetector>* theLineDetector;
   ModuleCreator<GoalDetector>* theGoalDetector;
+
+  // UNDER DEVELOPMENT...
+  ModuleCreator<LineDetectorDNT>* theLineDetectorDNT;
+  // ...END OF UNDER DEVELOPMENT
 
   const ColorClassificationModel& getColorTable64() const
   {

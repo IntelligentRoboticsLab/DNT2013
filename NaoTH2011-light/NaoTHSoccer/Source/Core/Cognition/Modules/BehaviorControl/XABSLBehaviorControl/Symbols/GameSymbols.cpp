@@ -60,6 +60,7 @@ void GameSymbols::registerSymbols(xabsl::Engine& engine)
   engine.registerDecimalInputSymbol("game.player_number", &getPlayerNumber);
   engine.registerDecimalInputSymbol("game.msecsRemaining", &getMsecsRemaining);
   engine.registerBooleanInputSymbol("game.own_kickoff", &getOwnKickOff);
+  engine.registerDecimalInputSymbol("game.time_since_game_state_changed", &getTimeSinceGameStateChanged);
 
 }//end registerSymbols
 
@@ -83,6 +84,11 @@ double GameSymbols::getPlayerNumber()
 double GameSymbols::getMsecsRemaining()
 {
   return theInstance->playerInfo.gameData.msecsRemaining;
+}
+
+double GameSymbols::getTimeSinceGameStateChanged()
+{
+  return (double)(theInstance->theFrameInfo.getTime() - theInstance->playerInfo.gameData.timeWhenGameStateChanged);
 }
 
 int GameSymbols::getPlayMode()

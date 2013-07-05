@@ -1,13 +1,13 @@
 /**
-* This is an attacking behavior. 
-* It should go to the ball, and dribble or kick 
+* This is an attacking behavior.
+* It should go to the ball, and dribble or kick
 **/
 
 option smart_attack_situation
 {
   common decision
   {
-    //Change angle here (and in walk_against_ball) to influence walk against ball decision 
+    //Change angle here (and in walk_against_ball) to influence walk against ball decision
     if(goal.opp.time_since_seen > 30000 || !robot_pose.is_valid)
       goto validate_field_position;
     else if( (goal.opp.distance < field.xPosOpponentGroundline && abs(value=attack.direction) < 5)
@@ -18,7 +18,7 @@ option smart_attack_situation
         {
           goto omnidirectional_kick;
         }
-      
+
     else if( ((abs(value = attack.direction) < 30 && goal.opp.distance > 1500) ||
          (abs(value = attack.direction) < 5))
         && (ball.preview.x > 50 && ball.preview.x < 250 && abs(value=ball.preview.y) < 40)
@@ -98,7 +98,7 @@ option smart_attack_situation
       else if(goal.opp.time_since_seen > 50000 || !robot_pose.is_valid)
       {
         goto validate_field_position;
-      } 
+      }
       // ball is somewhat close
       else if( ball.right_foot.preview.x < 500
             || ball.left_foot.preview.x < 500)
@@ -114,7 +114,7 @@ option smart_attack_situation
 	      }
 	      // Ball lies good enough for sidekick with left foot
 	      else if (executed_motion.step_control.left_movable
-               && abs(value=(atan2(y = ball.left_foot.preview.y, x = ball.left_foot.preview.x))) < 15       
+               && abs(value=(atan2(y = ball.left_foot.preview.y, x = ball.left_foot.preview.x))) < 15
                && ball.right_foot.preview.x <= 200
                && ball.right_foot.preview.y >= 95 && ball.right_foot.preview.y <= 105)
 	      {
@@ -129,7 +129,7 @@ option smart_attack_situation
         {
           goto sidekick_right;
         }
-        //else 
+        //else
         else
         {
           // default situation
@@ -147,12 +147,12 @@ option smart_attack_situation
 
       // approach the ball
       follow_ball_with_foot();
-      
+
       //motion.walk.style = stable; // is also set in the follow_ball_with_foot->go_to_relative_point
       motion.walk.stop_with_stand = false;
       head.control_mode = search_for_ball;
     }
-  }  
+  }
 
 
   state omnidirectional_kick
@@ -182,7 +182,7 @@ option smart_attack_situation
     }
     action {
       common_decision.allowed = false;
-    
+
       motion.type = walk;
       motion.walk.coordinate = hip;
       motion.walk.style = fast;
