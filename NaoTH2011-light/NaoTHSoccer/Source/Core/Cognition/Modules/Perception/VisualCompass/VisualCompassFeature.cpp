@@ -48,7 +48,7 @@ void VisualCompassFeature::compare(VisualCompassFeature vcf, long double &simila
         {
             for(unsigned int j = 0; j < NUM_OF_COLORS; j++)
             {
-                similarity_measure += abs(this->featureTable2D[index][i][j] - vcf.featureTable2D[index][i][j]);
+                similarity_measure += abs((1 - this->featureTable2D[index][i][j]) - (1 - vcf.featureTable2D[index][i][j]));
             }
         }
     }

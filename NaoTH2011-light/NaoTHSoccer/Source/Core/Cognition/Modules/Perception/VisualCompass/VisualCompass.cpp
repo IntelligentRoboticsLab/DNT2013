@@ -4,6 +4,8 @@ using namespace cv;
 
 VisualCompass::VisualCompass()
 {
+    total = 0, has_answer = 0;
+    sum_angle_error = 0;
     GridMapProvider.isInitialized = false;
     clustered = false;
 
@@ -58,7 +60,6 @@ void VisualCompass::execute()
     DEBUG_REQUEST("VisualCompass:functions:color:show_clustered_colors", drawClusteredColors(););
 
     DEBUG_REQUEST("VisualCompass:debug:draw_orientation_loc", drawPoseOrientation(););
-    DEBUG_REQUEST("VisualCompass:debug:draw_orientation_vc", drawCompassOrientation(););
     DEBUG_REQUEST("VisualCompass:debug:draw_visual_grid_map", drawVisualGridModel(););
     DEBUG_REQUEST("VisualCompass:debug:mark_area", drawROI(););
     DEBUG_REQUEST("VisualCompass:debug:draw_info", drawInfo(););
@@ -69,15 +70,47 @@ void VisualCompass::execute()
 
 void VisualCompass::victoria()
 {
+    // for statistics
+    total++;
+
+    // end
     if(validHorizon() && clustered)
     {
         vector< vector<Pixel> > stripes;
         verticalScanner(stripes);
         VisualCompassFeature tmp;
         tmp.createFeatureFromScanLine(stripes, ClusteringProvider);
-        double ora = queryModel.best_match(getRobotPose(), getFieldInfo(), GridMapProvider, tmp);
-        std::cout << "<<" << ora << ">>>" << std::endl;
+        vector<WeightedExperts::output> temp = queryModel.best_match(getRobotPose(), getFieldInfo(), GridMapProvider, tmp);
+
+        double sim = DBL_MAX;
+        double ori = 0;
+        for(unsigned int i = 0; i < temp.size(); i++)
+        {
+            if(sim > temp.at(i).confidence)
+            {
+                sim = temp.at(i).confidence;
+                ori = temp.at(i).orientation;
+            }
+        }
+        DEBUG_REQUEST("VisualCompass:debug:draw_orientation_vc", drawCompassOrientation(ori););
+        if(temp.size() > 0)
+        {
+            if(ori != getRobotPose().rotation)
+            {
+                has_answer++;
+                double kati = abs(ori - getRobotPose().rotation);
+                if(kati > Math::pi)
+                {
+                    kati -= Math::pi2;
+                }
+                sum_angle_error = abs(kati);
+            }
+        }
+
     }
+    std::cout <<  "total " << total << std::endl;
+    std::cout <<  "has answer " << has_answer << std::endl;
+    std::cout <<  "error " << Math::toDegrees(sum_angle_error/has_answer) << std::endl;
     return;
 }
 
@@ -114,6 +147,8 @@ void VisualCompass::saveColorClusters()
 void VisualCompass::readColorClusters()
 {
     const char* str = CLUSTER_DATA_FILE;
+    colorExtraction();
+    colorClustering();
     ClusteringProvider.readClusters(str);
     return;
 }
@@ -359,15 +394,15 @@ void VisualCompass::drawPoseOrientation()
     return;
 }
 
-void VisualCompass::drawCompassOrientation()
+void VisualCompass::drawCompassOrientation(double orientation)
 {
     FIELD_DRAWING_CONTEXT;
     CIRCLE(getRobotPose().translation.x,
            getRobotPose().translation.y, 50);
 
     ARROW(getRobotPose().translation.x, getRobotPose().translation.y,
-          getRobotPose().translation.x + 400*cos(getRobotPose().rotation),
-          getRobotPose().translation.y + 400*sin(getRobotPose().rotation));
+          getRobotPose().translation.x + 400*cos(orientation),
+          getRobotPose().translation.y + 400*sin(orientation));
     return;
 }
 

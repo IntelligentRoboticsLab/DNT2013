@@ -94,6 +94,9 @@ private:
     WeightedExperts queryModel;
     void drawClusteredColors();
     void drawInfo();
+
+    int total, has_answer;
+    double sum_angle_error;
     /*
      *
      */
@@ -129,7 +132,7 @@ private:
     /*
      *
      */
-    void drawCompassOrientation();
+    void drawCompassOrientation(double orientation);
     /*
      *
      */

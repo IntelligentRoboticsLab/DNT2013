@@ -12,7 +12,14 @@ class WeightedExperts
     public:
         WeightedExperts();
         ~WeightedExperts();
-        double best_match(RobotPose pose, FieldInfo fInfo, VisualGridMapProvider &map, VisualCompassFeature inputFeature);
+
+        struct output
+        {
+            double orientation;
+            double confidence;
+        };
+
+         vector<output> best_match(RobotPose pose, FieldInfo fInfo, VisualGridMapProvider &map, VisualCompassFeature inputFeature);
     private:
         void checkApprCell();
 
