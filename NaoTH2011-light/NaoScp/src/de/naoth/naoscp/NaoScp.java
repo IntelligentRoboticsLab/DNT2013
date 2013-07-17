@@ -2590,7 +2590,7 @@ public class NaoScp extends NaoScpMainFrame
                                     .add(jPanel1Layout.createSequentialGroup()
                                         .add(cbRestartNaoqi)
                                         .add(18, 18, 18)
-                                        .add(cbNoBackup, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 144, Short.MAX_VALUE))
+                                        .add(cbNoBackup, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
                                     .add(jPanel1Layout.createSequentialGroup()
                                         .add(cbRestartNaoth)
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
@@ -2635,7 +2635,7 @@ public class NaoScp extends NaoScpMainFrame
                         .add(cbCopyExe)
                         .add(8, 8, 8)
                         .add(cbCopyLib)))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Copy & Run", jPanel1);
@@ -2816,10 +2816,7 @@ public class NaoScp extends NaoScpMainFrame
                                                 .add(jLabel23)
                                                 .add(18, 18, 18)))
                                         .add(jSettingsPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                            .add(jSettingsPanel1Layout.createSequentialGroup()
-                                                .add(radioWPA2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 100, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                                .add(0, 0, Short.MAX_VALUE))
-                                            .add(broadcastFieldWLAN, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                            .add(broadcastFieldWLAN, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                                             .add(subnetFieldWLAN)
                                             .add(netmaskFieldWLAN, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)))))))
                     .add(jSettingsPanel1Layout.createSequentialGroup()
@@ -2830,12 +2827,13 @@ public class NaoScp extends NaoScpMainFrame
                                 .add(jSettingsPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                                     .add(org.jdesktop.layout.GroupLayout.LEADING, wlanKey)
                                     .add(jSettingsPanel1Layout.createSequentialGroup()
-                                        .add(wlanSSID, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                                        .add(wlanSSID, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                                         .add(radioWEP)
-                                        .add(18, 18, 18)
+                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                                         .add(radioWPA, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 100, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .add(94, 94, 94))))
+                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                        .add(radioWPA2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 100, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
                             .add(jLabel5)
                             .add(jLabel9))))
                 .addContainerGap())
@@ -3060,8 +3058,8 @@ public class NaoScp extends NaoScpMainFrame
                     .add(cbRebootSystem, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(jButtonSetRobotNetwork, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, jButtonInitRobotSystem, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(jButtonSaveNetworkConfig, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-                    .add(jButtonRemoteKernelVideoReload, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                    .add(jButtonSaveNetworkConfig, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                    .add(jButtonRemoteKernelVideoReload, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 194, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -3112,7 +3110,7 @@ public class NaoScp extends NaoScpMainFrame
             .add(jCopyStatus, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .add(jPanel3Layout.createSequentialGroup()
                 .add(jScrollPane5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 254, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(0, 51, Short.MAX_VALUE))
+                .add(0, 3, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -3145,16 +3143,12 @@ public class NaoScp extends NaoScpMainFrame
             .add(layout.createSequentialGroup()
                 .add(jLabel12)
                 .add(2, 2, 2)
-                .add(jSplitPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 402, Short.MAX_VALUE)
+                .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void subnetFieldLANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subnetFieldLANActionPerformed
-      // TODO add your handling code here:
-    }//GEN-LAST:event_subnetFieldLANActionPerformed
 
     private void cbCopyLogsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCopyLogsActionPerformed
       // TODO add your handling code here:
@@ -3205,26 +3199,6 @@ public class NaoScp extends NaoScpMainFrame
     private void cbCopyExeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCopyExeItemStateChanged
       setActionBtnLabel();
     }//GEN-LAST:event_cbCopyExeItemStateChanged
-
-    private void subnetFieldWLANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subnetFieldWLANActionPerformed
-      // TODO add your handling code here:
-    }//GEN-LAST:event_subnetFieldWLANActionPerformed
-
-    private void netmaskFieldLANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_netmaskFieldLANActionPerformed
-      // TODO add your handling code here:
-    }//GEN-LAST:event_netmaskFieldLANActionPerformed
-
-    private void netmaskFieldWLANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_netmaskFieldWLANActionPerformed
-      // TODO add your handling code here:
-    }//GEN-LAST:event_netmaskFieldWLANActionPerformed
-
-    private void broadcastFieldLANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_broadcastFieldLANActionPerformed
-      // TODO add your handling code here:
-    }//GEN-LAST:event_broadcastFieldLANActionPerformed
-
-    private void broadcastFieldWLANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_broadcastFieldWLANActionPerformed
-      lblTeamCommWLAN.setText(broadcastFieldWLAN.getText());
-    }//GEN-LAST:event_broadcastFieldWLANActionPerformed
 
     private void lblTeamCommWLANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblTeamCommWLANActionPerformed
       // TODO add your handling code here:
@@ -3312,39 +3286,9 @@ public class NaoScp extends NaoScpMainFrame
     private void jSchemeBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jSchemeBoxItemStateChanged
     }//GEN-LAST:event_jSchemeBoxItemStateChanged
 
-    private void broadcastFieldLANInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_broadcastFieldLANInputMethodTextChanged
-    }//GEN-LAST:event_broadcastFieldLANInputMethodTextChanged
-
-    private void broadcastFieldWLANInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_broadcastFieldWLANInputMethodTextChanged
-    }//GEN-LAST:event_broadcastFieldWLANInputMethodTextChanged
-
-    private void broadcastFieldWLANPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_broadcastFieldWLANPropertyChange
-    }//GEN-LAST:event_broadcastFieldWLANPropertyChange
-
-    private void broadcastFieldWLANVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_broadcastFieldWLANVetoableChange
-    }//GEN-LAST:event_broadcastFieldWLANVetoableChange
-
-    private void broadcastFieldWLANCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_broadcastFieldWLANCaretPositionChanged
-    }//GEN-LAST:event_broadcastFieldWLANCaretPositionChanged
-
-    private void broadcastFieldWLANKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_broadcastFieldWLANKeyTyped
-    }//GEN-LAST:event_broadcastFieldWLANKeyTyped
-
-    private void broadcastFieldWLANKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_broadcastFieldWLANKeyPressed
-      lblTeamCommWLAN.setText(broadcastFieldWLAN.getText());
-    }//GEN-LAST:event_broadcastFieldWLANKeyPressed
-
-    private void broadcastFieldLANKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_broadcastFieldLANKeyPressed
-      lblTeamCommLAN.setText(broadcastFieldLAN.getText());
-    }//GEN-LAST:event_broadcastFieldLANKeyPressed
-
   private void cbNoBackupItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbNoBackupItemStateChanged
     setActionBtnLabel();
   }//GEN-LAST:event_cbNoBackupItemStateChanged
-
-  private void wlanSSIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wlanSSIDActionPerformed
-    // TODO add your handling code here:
-  }//GEN-LAST:event_wlanSSIDActionPerformed
 
   private void cbRestartNaoqiItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbRestartNaoqiItemStateChanged
     setActionBtnLabel();
@@ -3370,10 +3314,6 @@ public class NaoScp extends NaoScpMainFrame
     remoteReloadKernelVideoModule();
   }//GEN-LAST:event_jButtonRemoteKernelVideoReloadActionPerformed
 
-  private void wlanKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wlanKeyActionPerformed
-    // TODO add your handling code here:
-  }//GEN-LAST:event_wlanKeyActionPerformed
-
     private void naoByte2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_naoByte2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_naoByte2ActionPerformed
@@ -3390,17 +3330,81 @@ public class NaoScp extends NaoScpMainFrame
         // TODO add your handling code here:
     }//GEN-LAST:event_naoByte5ActionPerformed
 
+    private void cbCopyBehaviorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCopyBehaviorItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbCopyBehaviorItemStateChanged
+
     private void radioWPA2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioWPA2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_radioWPA2ActionPerformed
+
+    private void wlanKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wlanKeyActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_wlanKeyActionPerformed
+
+    private void wlanSSIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wlanSSIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_wlanSSIDActionPerformed
 
     private void radioWPAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioWPAActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_radioWPAActionPerformed
 
-    private void cbCopyBehaviorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCopyBehaviorItemStateChanged
+    private void broadcastFieldWLANVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_broadcastFieldWLANVetoableChange
+
+    }//GEN-LAST:event_broadcastFieldWLANVetoableChange
+
+    private void broadcastFieldWLANKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_broadcastFieldWLANKeyPressed
+        lblTeamCommWLAN.setText(broadcastFieldWLAN.getText());
+    }//GEN-LAST:event_broadcastFieldWLANKeyPressed
+
+    private void broadcastFieldWLANKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_broadcastFieldWLANKeyTyped
+
+    }//GEN-LAST:event_broadcastFieldWLANKeyTyped
+
+    private void broadcastFieldWLANPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_broadcastFieldWLANPropertyChange
+
+    }//GEN-LAST:event_broadcastFieldWLANPropertyChange
+
+    private void broadcastFieldWLANCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_broadcastFieldWLANCaretPositionChanged
+
+    }//GEN-LAST:event_broadcastFieldWLANCaretPositionChanged
+
+    private void broadcastFieldWLANInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_broadcastFieldWLANInputMethodTextChanged
+
+    }//GEN-LAST:event_broadcastFieldWLANInputMethodTextChanged
+
+    private void broadcastFieldWLANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_broadcastFieldWLANActionPerformed
+        lblTeamCommWLAN.setText(broadcastFieldWLAN.getText());
+    }//GEN-LAST:event_broadcastFieldWLANActionPerformed
+
+    private void netmaskFieldWLANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_netmaskFieldWLANActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbCopyBehaviorItemStateChanged
+    }//GEN-LAST:event_netmaskFieldWLANActionPerformed
+
+    private void subnetFieldWLANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subnetFieldWLANActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_subnetFieldWLANActionPerformed
+
+    private void broadcastFieldLANKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_broadcastFieldLANKeyPressed
+        lblTeamCommLAN.setText(broadcastFieldLAN.getText());
+    }//GEN-LAST:event_broadcastFieldLANKeyPressed
+
+    private void broadcastFieldLANInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_broadcastFieldLANInputMethodTextChanged
+
+    }//GEN-LAST:event_broadcastFieldLANInputMethodTextChanged
+
+    private void broadcastFieldLANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_broadcastFieldLANActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_broadcastFieldLANActionPerformed
+
+    private void netmaskFieldLANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_netmaskFieldLANActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_netmaskFieldLANActionPerformed
+
+    private void subnetFieldLANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subnetFieldLANActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_subnetFieldLANActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField broadcastFieldLAN;

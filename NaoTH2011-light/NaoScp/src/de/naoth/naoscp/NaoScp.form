@@ -128,7 +128,7 @@
                                               <Group type="102" attributes="0">
                                                   <Component id="cbRestartNaoqi" min="-2" max="-2" attributes="0"/>
                                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                                  <Component id="cbNoBackup" pref="144" max="32767" attributes="0"/>
+                                                  <Component id="cbNoBackup" pref="0" max="32767" attributes="0"/>
                                               </Group>
                                               <Group type="102" attributes="0">
                                                   <Component id="cbRestartNaoth" min="-2" max="-2" attributes="0"/>
@@ -193,7 +193,7 @@
                                   <Component id="cbCopyLib" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace pref="19" max="32767" attributes="0"/>
+                          <EmptySpace pref="23" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -671,7 +671,7 @@
                               <Component id="cbRebootSystem" max="32767" attributes="0"/>
                               <Component id="jButtonSetRobotNetwork" max="32767" attributes="0"/>
                               <Component id="jButtonInitRobotSystem" alignment="1" max="32767" attributes="1"/>
-                              <Component id="jButtonSaveNetworkConfig" pref="192" max="32767" attributes="0"/>
+                              <Component id="jButtonSaveNetworkConfig" pref="194" max="32767" attributes="0"/>
                               <Component id="jButtonRemoteKernelVideoReload" alignment="0" pref="194" max="32767" attributes="0"/>
                               <Component id="jScrollPane3" alignment="1" pref="0" max="32767" attributes="0"/>
                           </Group>
@@ -762,11 +762,7 @@
                                                           </Group>
                                                       </Group>
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Group type="102" attributes="0">
-                                                              <Component id="radioWPA2" min="-2" pref="100" max="-2" attributes="0"/>
-                                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                                          </Group>
-                                                          <Component id="broadcastFieldWLAN" alignment="0" pref="0" max="32767" attributes="1"/>
+                                                          <Component id="broadcastFieldWLAN" alignment="0" pref="169" max="32767" attributes="1"/>
                                                           <Component id="subnetFieldWLAN" max="32767" attributes="1"/>
                                                           <Component id="netmaskFieldWLAN" alignment="0" pref="0" max="32767" attributes="1"/>
                                                       </Group>
@@ -783,12 +779,13 @@
                                               <Group type="103" groupAlignment="1" attributes="0">
                                                   <Component id="wlanKey" alignment="0" max="32767" attributes="3"/>
                                                   <Group type="102" alignment="1" attributes="0">
-                                                      <Component id="wlanSSID" pref="83" max="32767" attributes="1"/>
+                                                      <Component id="wlanSSID" pref="120" max="32767" attributes="1"/>
                                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                       <Component id="radioWEP" min="-2" max="-2" attributes="0"/>
-                                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                       <Component id="radioWPA" min="-2" pref="100" max="-2" attributes="0"/>
-                                                      <EmptySpace min="-2" pref="94" max="-2" attributes="0"/>
+                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                      <Component id="radioWPA2" min="-2" pref="100" max="-2" attributes="0"/>
                                                   </Group>
                                               </Group>
                                           </Group>
@@ -1270,7 +1267,7 @@
                   <Component id="jCopyStatus" alignment="0" max="32767" attributes="1"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jScrollPane5" min="-2" pref="254" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="51" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="3" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
