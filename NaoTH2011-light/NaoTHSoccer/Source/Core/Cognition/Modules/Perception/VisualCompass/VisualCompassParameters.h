@@ -29,5 +29,6 @@
 
 // WeightedExperts
 #define SMOOTHING_FACTOR 0.1 //TODO test this value later
+#define GRID_CELL_CONFIDENCE 0.51
 
 #endif // VISUALCOMPASSPARAMETERS_H

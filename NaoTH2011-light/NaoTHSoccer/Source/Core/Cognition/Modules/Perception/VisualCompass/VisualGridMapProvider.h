@@ -20,6 +20,7 @@ class VisualGridMapProvider
 {
 public:
     VisualCompassFeature ***gridmap;
+    float gridCellConfidence[GRID_X_LENGTH][GRID_Y_LENGTH];
     bool isInitialized;
 
     void initializeStorageArray()
@@ -55,6 +56,27 @@ public:
         isInitialized = false;
     }
 
+    void inline resetConfidenceOverGrid()
+    {
+        for (int i = 0; i < GRID_X_LENGTH; ++i)
+            for (int j = 0; j < GRID_Y_LENGTH; ++j)
+                this->gridCellConfidence[i][j] = 0.0;
+        return;
+    }
+
+    void inline updateConfidenceOverGrid(vector<Sample> sampleSet, FieldInfo fInfo)
+    {
+
+        for(unsigned int i = 0; i < sampleSet.size(); i++)
+        {
+            Sample& sample = sampleSet[i];
+            Vector2<int> gridPos = fieldPosToGridPos(sample.translation, fInfo);
+            this->gridCellConfidence[gridPos.x][gridPos.y] += 1.0 / sampleSet.size();
+        }
+
+        return;
+    }
+
     // takes a vector with features and store them in the grid
     void storeFeature(VisualCompassFeature vcf, RobotPose robotPose, FieldInfo fInfo)
     {
@@ -63,16 +85,16 @@ public:
             Vector3<int> transRot = fieldPosToGridPos(robotPose, fInfo);
             this->gridmap[transRot.x][transRot.y][transRot.z].valid = true;
             memcpy(this->gridmap[transRot.x][transRot.y][transRot.z].featureTable2D, vcf.featureTable2D, sizeof (vcf.featureTable2D));
-//            for(int i=0; i<COMPASS_FEATURE_NUMBER; i++)
-//            {
-//                for(int j=0; j<NUM_OF_COLORS; j++)
-//                {
-//                    for(int jj=0; jj<NUM_OF_COLORS; jj++)
-//                    {
-//                        this->gridmap[transRot.x][transRot.y][transRot.z].featureTable2D[i][j][jj] = vcf.featureTable2D[i][j][jj];
-//                    }
-//                }
-//            }
+            //            for(int i=0; i<COMPASS_FEATURE_NUMBER; i++)
+            //            {
+            //                for(int j=0; j<NUM_OF_COLORS; j++)
+            //                {
+            //                    for(int jj=0; jj<NUM_OF_COLORS; jj++)
+            //                    {
+            //                        this->gridmap[transRot.x][transRot.y][transRot.z].featureTable2D[i][j][jj] = vcf.featureTable2D[i][j][jj];
+            //                    }
+            //                }
+            //            }
             this->gridmap[transRot.x][transRot.y][transRot.z].orientation = robotPose.rotation;
         }
         return;
@@ -101,6 +123,27 @@ public:
         // TODO:: fix it work with rads, HARDCODED VALUE!!!!!!!!!
         int theta = (int) theta_full / 2;
         return Vector3<int>(x, y, theta);
+    }
+
+    /*
+         *translates the field position to the grid position
+         *where we are going to store the feature.
+         *Assumes: field pos in the center 0,0
+         */
+    static Vector2<int> fieldPosToGridPos(Vector2<double> pose2d, FieldInfo fInfo)
+    {
+        int x = 0;
+        int y = 0;
+        double dx = fInfo.xLength / GRID_X_LENGTH;
+        double dy = fInfo.yLength / GRID_Y_LENGTH;
+        //find the proper bin and grid cell
+        double poseX = pose2d.x + fInfo.xLength / 2;
+        double poseY = pose2d.y + fInfo.yLength / 2;
+        x = max(0, (int) floor(poseX / dx));
+        x = min(GRID_X_LENGTH-1, x);
+        y = max(0, (int) floor(poseY / dy));
+        y = min(GRID_Y_LENGTH-1, y);
+        return Vector2<int>(x, y);
     }
 
     void saveGridMapModel()

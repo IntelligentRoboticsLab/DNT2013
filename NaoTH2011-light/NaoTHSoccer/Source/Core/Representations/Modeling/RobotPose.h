@@ -8,8 +8,10 @@
 #ifndef _RobotPose_h_
 #define _RobotPose_h_
 
+#include "vector"
 #include "Tools/Math/Pose2D.h"
 #include "Tools/DataStructures/Printable.h"
+#include "Cognition/Modules/Modeling/SelfLocator/MonteCarloSelfLocator/Sample.h"
 
 class RobotPose: public Pose2D, public naoth::Printable
 {
@@ -29,6 +31,8 @@ public:
   // can be used as a measure for how 'precise' the position estimation is
   Vector2<double> principleAxisMajor;
   Vector2<double> principleAxisMinor;
+  // to be used by visual compass for grid cell confidence
+  std::vector<Sample> theSampleSet;
 
 
   void setPose(const Pose2D& other, bool isValid)

@@ -39,6 +39,7 @@
 #include "Representations/Perception/ArtificialHorizon.h"
 #include "Representations/Perception/LinePercept.h"
 #include "Representations/Perception/ObjectPercept.h"
+#include "Cognition/Modules/Modeling/SelfLocator/MonteCarloSelfLocator/MonteCarloSelfLocator.h"
 
 // modelling
 #include "Representations/Modeling/RobotPose.h"
@@ -96,7 +97,11 @@ private:
     void drawInfo();
 
     int total, has_answer;
-    double sum_angle_error;
+    double sum_angle_error, square_sum_angle_error;
+    /*
+     *
+     */
+    void resetCounters();
     /*
      *
      */
@@ -145,6 +150,14 @@ private:
      *
      */
     void drawVisualGridModel();
+    /*
+     *
+     */
+    void drawCellConfidence();
+    /*
+     *
+     */
+    void recordedFeatures();
     /*
      *
      */

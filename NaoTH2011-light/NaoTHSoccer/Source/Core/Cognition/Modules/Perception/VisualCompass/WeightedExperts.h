@@ -19,6 +19,12 @@ class WeightedExperts
             double confidence;
         };
 
+        struct used_cell
+        {
+            Vector2<int> pos;
+            double confidence;
+        };
+
          vector<output> best_match(RobotPose pose, FieldInfo fInfo, VisualGridMapProvider &map, VisualCompassFeature inputFeature);
     private:
         void checkApprCell();

@@ -15,10 +15,12 @@ VisualCompass::VisualCompass()
     DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_orientation_loc","from localization", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_orientation_vc","from visual compass", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_visual_grid_map","", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_cell_confidence","", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_info","", false);
     // visual compass
     DEBUG_REQUEST_REGISTER("VisualCompass:functions:record_offline","record the feature map for the location of the robot", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:functions:online_mode", "", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:reset_counters","", false);
 
     DEBUG_REQUEST_REGISTER("VisualCompass:functions:grid:read_model_from_config","", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:functions:grid:save_model_to_config","", false);
@@ -47,6 +49,7 @@ void VisualCompass::execute()
 
     DEBUG_REQUEST("VisualCompass:functions:record_offline", recordFeatures(););
     DEBUG_REQUEST("VisualCompass:functions:online_mode", victoria(););
+    DEBUG_REQUEST("VisualCompass:functions:reset_counters", resetCounters(););
 
     DEBUG_REQUEST("VisualCompass:functions:grid:save_model_to_config", saveGridMapModel(););
     DEBUG_REQUEST("VisualCompass:functions:grid:read_model_from_config", readGridMapModel(););
@@ -61,6 +64,7 @@ void VisualCompass::execute()
 
     DEBUG_REQUEST("VisualCompass:debug:draw_orientation_loc", drawPoseOrientation(););
     DEBUG_REQUEST("VisualCompass:debug:draw_visual_grid_map", drawVisualGridModel(););
+    DEBUG_REQUEST("VisualCompass:debug:draw_cell_confidence", drawCellConfidence(););
     DEBUG_REQUEST("VisualCompass:debug:mark_area", drawROI(););
     DEBUG_REQUEST("VisualCompass:debug:draw_info", drawInfo(););
 
@@ -68,14 +72,37 @@ void VisualCompass::execute()
     return;
 }
 
+void VisualCompass::recordedFeatures()
+{
+    FIELD_DRAWING_CONTEXT;
+    //stringstream ss;
+    //ss << GridMapProvider.size();
+    string str = "4";
+    TEXT_DRAWING(600, - getFieldInfo().yLength / 2 - 450, str);
+    TEXT_DRAWING(-600, - getFieldInfo().yLength / 2 - 450, "Compass features: ");
+    return;
+}
+
+void VisualCompass::resetCounters()
+{
+    total = 0;
+    has_answer = 0;
+    sum_angle_error = 0;
+    square_sum_angle_error = 0;
+}
+
 void VisualCompass::victoria()
 {
     // for statistics
     total++;
-
+    double angle_error = 0.0;
+    bool updated = false;
     // end
+
     if(validHorizon() && clustered)
     {
+        GridMapProvider.resetConfidenceOverGrid();
+        GridMapProvider.updateConfidenceOverGrid(getRobotPose().theSampleSet, getFieldInfo());
         vector< vector<Pixel> > stripes;
         verticalScanner(stripes);
         VisualCompassFeature tmp;
@@ -98,25 +125,36 @@ void VisualCompass::victoria()
             if(ori != getRobotPose().rotation)
             {
                 has_answer++;
-                double kati = abs(ori - getRobotPose().rotation);
-                if(kati > Math::pi)
+                double _angle = abs(ori - getRobotPose().rotation);
+                if(_angle > Math::pi)
                 {
-                    kati -= Math::pi2;
+                    _angle -= Math::pi2;
                 }
-                sum_angle_error = abs(kati);
+                angle_error = abs(_angle);
+                sum_angle_error += angle_error;
+                square_sum_angle_error += (angle_error * angle_error);
+                updated = true;
             }
         }
 
     }
-    std::cout <<  "total " << total << std::endl;
-    std::cout <<  "has answer " << has_answer << std::endl;
-    std::cout <<  "error " << Math::toDegrees(sum_angle_error/has_answer) << std::endl;
+
+    if (updated)
+    {
+        std::cout << "Used images | Mean error | MSE " << std::endl;
+        std::cout << has_answer << "/" << total << " | ";
+        //std::cout << Math::toDegrees(angle_error) << " | ";
+        std::cout << sum_angle_error / has_answer << " | ";
+        std::cout << square_sum_angle_error / has_answer << " | ";
+        std::cout << std::endl;
+    }
     return;
 }
 
 void VisualCompass::drawInfo()
 {
-
+    recordedFeatures();
+    return;
 }
 
 void VisualCompass::initializeGridMapModel()
@@ -150,6 +188,8 @@ void VisualCompass::readColorClusters()
     colorExtraction();
     colorClustering();
     ClusteringProvider.readClusters(str);
+    if (ClusteringProvider.getClusters())
+        clustered = true;
     return;
 }
 
@@ -172,6 +212,7 @@ void VisualCompass::clearCompass()
     if(GridMapProvider.isInitialized)
     {
         GridMapProvider.destroyStorageArray();
+        GridMapProvider.initializeStorageArray();
     }
     return;
 }
@@ -207,35 +248,7 @@ void VisualCompass::drawClusteredColors()
         for (unsigned int j = 0; j < getImage().height(); j++)
         {
             clustered = ClusteringProvider.nearestNeighborIndex(getImage().get(i,j).channels[0], getImage().get(i,j).channels[1],getImage().get(i,j).channels[2]);
-            switch (clustered) {
-            case 0:
-                POINT_PX(ColorClasses::black, i , j);
-                break;
-            case 1:
-                POINT_PX(ColorClasses::blue, i , j);
-                break;
-            case 2:
-                POINT_PX(ColorClasses::gray, i , j);
-                break;
-            case 3:
-                POINT_PX(ColorClasses::green, i , j);
-                break;
-            case 4:
-                POINT_PX(ColorClasses::red, i , j);
-                break;
-            case 5:
-                POINT_PX(ColorClasses::orange, i , j);
-                break;
-            case 6:
-                POINT_PX(ColorClasses::pink, i , j);
-                break;
-            case 7:
-                POINT_PX(ColorClasses::skyblue, i , j);
-                break;
-            default:
-                break;
-            }
-
+            POINT_PX(ColorClasses::Color(clustered), i, j);
         }
     }
     return;
@@ -382,6 +395,26 @@ void VisualCompass::drawVisualGridModel()
     return;
 }
 
+void VisualCompass::drawCellConfidence()
+{
+    FIELD_DRAWING_CONTEXT;
+    double dx = getFieldInfo().xLength / GRID_X_LENGTH;
+    double dy = getFieldInfo().yLength / GRID_Y_LENGTH;
+    double lx = - getFieldInfo().xLength / 2 + dx / 2;
+    double ly = - getFieldInfo().yLength / 2 + dy / 2;
+    for(int i =0; i < GRID_X_LENGTH; i++)
+    {
+        double x = i * dx;
+        for(int j =0; j < GRID_Y_LENGTH; j++)
+        {
+            double y = j * dy;
+            FILLBOX(lx + x, ly + y, lx + x + 100 , ly + y + 400 * GridMapProvider.gridCellConfidence[i][j]);
+        }
+    }
+
+    return;
+}
+
 void VisualCompass::drawPoseOrientation()
 {
     FIELD_DRAWING_CONTEXT;
@@ -400,9 +433,11 @@ void VisualCompass::drawCompassOrientation(double orientation)
     CIRCLE(getRobotPose().translation.x,
            getRobotPose().translation.y, 50);
 
+    PEN("FF0000", 1);
     ARROW(getRobotPose().translation.x, getRobotPose().translation.y,
           getRobotPose().translation.x + 400*cos(orientation),
           getRobotPose().translation.y + 400*sin(orientation));
+    PEN("000000", 1);
     return;
 }
 
@@ -428,6 +463,6 @@ void VisualCompass::extractPixelsFromImages()
     ss << num_images;
     string str = ss.str();
     TEXT_DRAWING(300, - getFieldInfo().yLength / 2 - 300, str);
-    TEXT_DRAWING(-300, - getFieldInfo().yLength / 2 - 300, "Images: ");
+    TEXT_DRAWING(-300, - getFieldInfo().yLength / 2 - 300, "SavedImgs: ");
     return;
 }
