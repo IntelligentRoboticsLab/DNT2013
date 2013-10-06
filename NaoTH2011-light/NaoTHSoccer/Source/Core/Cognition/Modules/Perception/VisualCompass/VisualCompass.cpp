@@ -12,10 +12,10 @@ VisualCompass::VisualCompass()
     // debug stuff
     DEBUG_REQUEST_REGISTER("VisualCompass:debug:mark_area", "mark the possibles' features area", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:debug:scan_lines", "", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_orientation_loc","from localization", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_orientation_vc","from visual compass", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_visual_grid_map","", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_cell_confidence","", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_orientation_loc","from localization", true);
+    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_orientation_vc","from visual compass", true);
+    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_visual_grid_map","", true);
+    DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_cell_confidence","", true);
     DEBUG_REQUEST_REGISTER("VisualCompass:debug:draw_info","", false);
     // visual compass
     DEBUG_REQUEST_REGISTER("VisualCompass:functions:record_offline","record the feature map for the location of the robot", false);
@@ -46,6 +46,8 @@ VisualCompass::~VisualCompass()
 void VisualCompass::execute()
 {
     initializeGridMapModel();
+    GridMapProvider.resetConfidenceOverGrid();
+    GridMapProvider.updateConfidenceOverGrid(getRobotPose().theSampleSet, getFieldInfo());
 
     DEBUG_REQUEST("VisualCompass:functions:record_offline", recordFeatures(););
     DEBUG_REQUEST("VisualCompass:functions:online_mode", victoria(););
@@ -101,8 +103,6 @@ void VisualCompass::victoria()
 
     if(validHorizon() && clustered)
     {
-        GridMapProvider.resetConfidenceOverGrid();
-        GridMapProvider.updateConfidenceOverGrid(getRobotPose().theSampleSet, getFieldInfo());
         vector< vector<Pixel> > stripes;
         verticalScanner(stripes);
         VisualCompassFeature tmp;
@@ -157,7 +157,7 @@ void VisualCompass::drawInfo()
     return;
 }
 
-void VisualCompass::initializeGridMapModel()
+void inline VisualCompass::initializeGridMapModel()
 {
     if(!GridMapProvider.isInitialized) GridMapProvider.initializeStorageArray();
     return;
@@ -385,9 +385,11 @@ void VisualCompass::drawVisualGridModel()
             {
                 if(GridMapProvider.gridmap[i][j][ii].valid)
                 {
+                    PEN("0000FF", 1);
                     ARROW(lx + x, ly + y,
-                          lx + x + 100*cos(GridMapProvider.gridmap[i][j][ii].orientation),
-                          ly + y + 100*sin(GridMapProvider.gridmap[i][j][ii].orientation));
+                          lx + x + (50 + (200 * GridMapProvider.gridmap[i][j][ii].measurement_certainty)) * cos(GridMapProvider.gridmap[i][j][ii].orientation),
+                          ly + y + (50 + (200 * GridMapProvider.gridmap[i][j][ii].measurement_certainty)) * sin(GridMapProvider.gridmap[i][j][ii].orientation));
+                    PEN("000000", 1);
                 }
             }
         }
@@ -408,7 +410,11 @@ void VisualCompass::drawCellConfidence()
         for(int j =0; j < GRID_Y_LENGTH; j++)
         {
             double y = j * dy;
-            FILLBOX(lx + x, ly + y, lx + x + 100 , ly + y + 400 * GridMapProvider.gridCellConfidence[i][j]);
+            PEN("0000FF", 1);
+            FILLBOX(lx + x + dx / 2 - 150, ly + y, lx + x + dx / 2 - 150 + 100 , ly + y + 400 * GridMapProvider.gridCellConfidence[i][j]);
+            PEN("000000", 1);
+            FILLBOX(lx + x + dx / 2 - 150, ly + y - 2, lx + x + dx / 2 - 150 + 100 , ly + y + 1);
+            FILLBOX(lx + x + dx / 2 - 150, ly + y + 401, lx + x + dx / 2 - 150 + 100 , ly + y + 404);
         }
     }
 

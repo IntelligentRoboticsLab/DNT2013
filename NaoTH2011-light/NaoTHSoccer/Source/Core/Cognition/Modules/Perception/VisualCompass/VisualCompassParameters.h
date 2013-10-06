@@ -13,6 +13,7 @@
 #define COMPASS_WIDTH_MAX 0.80
 #define COMPASS_FEATURE_NUMBER 10
 #define COMPASS_DATA_FILE "compass.dat"
+#define COMPASS_PARTICLE_UPDATE true
 
 // VisualCompassFeature
 // ...

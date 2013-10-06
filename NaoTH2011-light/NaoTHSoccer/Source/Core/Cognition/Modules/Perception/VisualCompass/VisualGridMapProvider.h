@@ -80,24 +80,76 @@ public:
     // takes a vector with features and store them in the grid
     void storeFeature(VisualCompassFeature vcf, RobotPose robotPose, FieldInfo fInfo)
     {
-        if(robotPose.isValid)
+        // leave it 0 if you want to have a dynamic update based on the mc particles.
+        if(COMPASS_PARTICLE_UPDATE)
         {
-            Vector3<int> transRot = fieldPosToGridPos(robotPose, fInfo);
-            this->gridmap[transRot.x][transRot.y][transRot.z].valid = true;
-            memcpy(this->gridmap[transRot.x][transRot.y][transRot.z].featureTable2D, vcf.featureTable2D, sizeof (vcf.featureTable2D));
-            //            for(int i=0; i<COMPASS_FEATURE_NUMBER; i++)
-            //            {
-            //                for(int j=0; j<NUM_OF_COLORS; j++)
-            //                {
-            //                    for(int jj=0; jj<NUM_OF_COLORS; jj++)
-            //                    {
-            //                        this->gridmap[transRot.x][transRot.y][transRot.z].featureTable2D[i][j][jj] = vcf.featureTable2D[i][j][jj];
-            //                    }
-            //                }
-            //            }
-            this->gridmap[transRot.x][transRot.y][transRot.z].orientation = robotPose.rotation;
+            if(robotPose.isValid)
+            {
+                Vector3<int> transRot = fieldPosToGridPos(robotPose, fInfo);
+                for (int x = 0; x < GRID_X_LENGTH; ++x)
+                {
+                    for (int y = 0; y < GRID_Y_LENGTH; ++y)
+                    {
+                        if(this->gridCellConfidence[x][y] > 0.00)
+                        {
+                            if(!this->gridmap[x][y][transRot.z].valid)
+                            {
+                                this->gridmap[x][y][transRot.z].valid = true;
+                                memcpy(this->gridmap[x][y][transRot.z].featureTable2D, vcf.featureTable2D, sizeof (vcf.featureTable2D));
+                                this->gridmap[x][y][transRot.z].orientation = robotPose.rotation;
+                                this->gridmap[x][y][transRot.z].measurement_certainty = this->gridCellConfidence[x][y];
+                            }
+                            else
+                            {
+                                if(this->gridmap[x][y][transRot.z].measurement_certainty <= this->gridCellConfidence[x][y])
+                                {
+                                    memcpy(this->gridmap[x][y][transRot.z].featureTable2D, vcf.featureTable2D, sizeof (vcf.featureTable2D));
+                                    this->gridmap[x][y][transRot.z].orientation = robotPose.rotation;
+                                    this->gridmap[x][y][transRot.z].measurement_certainty = this->gridCellConfidence[x][y];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return;
         }
-        return;
+        else
+        {
+            if(robotPose.isValid)
+            {
+                Vector3<int> transRot = fieldPosToGridPos(robotPose, fInfo);
+                if(!this->gridmap[transRot.x][transRot.y][transRot.z].valid)
+                {
+                    this->gridmap[transRot.x][transRot.y][transRot.z].valid = true;
+                    memcpy(this->gridmap[transRot.x][transRot.y][transRot.z].featureTable2D, vcf.featureTable2D, sizeof (vcf.featureTable2D));
+                    this->gridmap[transRot.x][transRot.y][transRot.z].orientation = robotPose.rotation;
+                    this->gridmap[transRot.x][transRot.y][transRot.z].measurement_certainty = this->gridCellConfidence[transRot.x][transRot.y];
+                }
+                else
+                {
+                    if(this->gridmap[transRot.x][transRot.y][transRot.z].measurement_certainty <= this->gridCellConfidence[transRot.x][transRot.y])
+                    {
+                        memcpy(this->gridmap[transRot.x][transRot.y][transRot.z].featureTable2D, vcf.featureTable2D, sizeof (vcf.featureTable2D));
+                        this->gridmap[transRot.x][transRot.y][transRot.z].orientation = robotPose.rotation;
+                        this->gridmap[transRot.x][transRot.y][transRot.z].measurement_certainty = this->gridCellConfidence[transRot.x][transRot.y];
+                    }
+                }
+                /*
+             * same job as the above memcopy, but slower I guess...
+             */
+                //            for(int i=0; i<COMPASS_FEATURE_NUMBER; i++)
+                //            {
+                //                for(int j=0; j<NUM_OF_COLORS; j++)
+                //                {
+                //                    for(int jj=0; jj<NUM_OF_COLORS; jj++)
+                //                    {
+                //                        this->gridmap[transRot.x][transRot.y][transRot.z].featureTable2D[i][j][jj] = vcf.featureTable2D[i][j][jj];
+                //                    }
+                //                }
+                //            }
+            }
+        }
     }
 
     /*
