@@ -6,6 +6,7 @@
 #include "Cognition/Modules/Perception/VisualCompass/VisualGridMapProvider.h"
 #include "Representations/Modeling/RobotPose.h"
 #include "Representations/Infrastructure/FieldInfo.h"
+#include "Tools/Math/Vector2.h"
 
 class WeightedExperts
 {
@@ -22,7 +23,6 @@ class WeightedExperts
         struct used_cell
         {
             Vector2<int> pos;
-            double confidence;
         };
 
          vector<output> best_match(RobotPose pose, FieldInfo fInfo, VisualGridMapProvider &map, VisualCompassFeature inputFeature);
