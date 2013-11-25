@@ -13,6 +13,12 @@ namespace naoth
   class PlatformBase;
   class ProcessInterface;
 
+/**
+* @brief Class included from Motion.h
+*
+* Class is an interface. ToDo: document where it is used and how.
+*
+*/
   class Callable
   {
   public:

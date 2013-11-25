@@ -12,10 +12,14 @@
 namespace naoth
 {
 
-/* 
-  * the PlatformBase holds (and provides access to) 
-  * some basic information about the platform
-  */
+/**
+* @brief This class is an interface.
+*
+* The PlatformBase holds (and provides access to)
+* some basic information about the platform. 
+* 
+* ToDo: define Platform.
+*/
 class PlatformBase
 {
 public:
