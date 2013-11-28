@@ -12,6 +12,7 @@
 #include <cassert>
 #include <typeinfo>
 
+// This file has been touched by the documentation effort
 namespace naoth
 {
 /**

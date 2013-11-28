@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 
+// This file has been touched by the documentation effort
 namespace naoth
 {
 
@@ -33,7 +34,6 @@ public:
     std::cout << "destruct PlatformBase" << std::endl;
   }
 
-  /////////////////////// get ///////////////////////
   virtual std::string getBodyID() const = 0;
   virtual std::string getBodyNickName() const = 0;
   virtual std::string getHeadNickName() const = 0;
@@ -44,7 +44,7 @@ public:
 private:
   std::string platformName;
   unsigned int theBasicTimeStep;
-};//end class PlatformBase
+};
 
 
 }//end namespace naoth

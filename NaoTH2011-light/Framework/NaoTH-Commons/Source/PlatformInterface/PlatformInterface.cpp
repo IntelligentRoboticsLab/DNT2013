@@ -9,5 +9,11 @@
 using namespace naoth;
 using namespace std;
 
-
+// This file has been touched by the documentation effort
+namespace naoth {
+    /**
+     * @brief Empty file!!!
+     */
+    class WTF2 {};
+}
 

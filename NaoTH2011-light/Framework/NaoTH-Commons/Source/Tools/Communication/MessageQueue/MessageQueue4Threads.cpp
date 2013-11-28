@@ -7,6 +7,8 @@
  
 #include "MessageQueue4Threads.h"
 
+// This file has been touched by the documentation effort
+
 MessageQueue4Threads::MessageQueue4Threads()
 {
   theMutex = g_mutex_new();

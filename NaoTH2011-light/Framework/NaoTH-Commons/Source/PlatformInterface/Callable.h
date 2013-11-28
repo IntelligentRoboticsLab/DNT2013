@@ -8,6 +8,7 @@
 #ifndef CALLABLE_H
 #define CALLABLE_H
 
+// This file has been touched by the documentation effort
 namespace naoth
 {
   class PlatformBase;

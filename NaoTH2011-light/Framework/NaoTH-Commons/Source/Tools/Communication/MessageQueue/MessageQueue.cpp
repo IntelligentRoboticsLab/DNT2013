@@ -8,6 +8,8 @@
 #include "MessageQueue.h"
 #include "Tools/Debug/NaoTHAssert.h"
 
+// This file has been touched by the documentation effort
+
 MessageQueue::MessageQueue():
 theReader(NULL),
 theWriter(NULL)

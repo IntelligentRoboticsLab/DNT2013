@@ -8,7 +8,13 @@
 
 using namespace std;
 
+// This file has been touched by the documentation effort
 namespace naoth
 {
 
+    /**
+     * @brief EMPY FILE!!!!
+     */
+    class WTF {
+    };
 }//end namespace naoth
