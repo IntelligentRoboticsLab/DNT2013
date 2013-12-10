@@ -1,9 +1,8 @@
 /**
 * @file VisualCompass.h
 *
-* @author <a href="mailto:giorgosmethe@gmail.com">Georgios Methenitis</a>
-* @author ...
-* @author ...
+* @author <a href="mailto:giorgosmethe@gmail.com">Methenitis, Georgios</a>
+* @author <a href="mailto:dhrdekok@gmail.com">de Kok, Patrick</a>
 * Definition of class VisualCompass
 */
 
@@ -81,6 +80,15 @@ PROVIDE(HeadMotionRequest)
 PROVIDE(MotionRequest)
 END_DECLARE_MODULE(VisualCompass)
 
+// This file has been touched by the documentation effort
+
+/**
+ * @brief This class provides a visual compass which updates during usage.
+ *
+ * The implementation is based on ``ViCTOriA: Visual Compass To Orientate 
+ * Accurately'' by de Kok et al. and ``Orientation finding using a grid based
+ * visual compass'' by Methenitis et al.  
+ */
 class VisualCompass: private VisualCompassBase
 {
 public:
@@ -98,113 +106,158 @@ private:
 
     int total, has_answer;
     double sum_angle_error, square_sum_angle_error;
-    /*
-     *
+
+    /**
+     * @brief This function sets all counters back to 0.
      */
     void resetCounters();
-    /*
-     *
+
+    /**
+     * @brief This function stores current color clusters to file.
      */
     void saveColorClusters();
-    /*
-     *
+
+    /**
+     * @brief This function retrieves color clusters from file.
      */
     void readColorClusters();
+
     /*
      *
      */
     void head();
+
     /*
      *
      */
     void motion();
+
     /*
      *
      */
     bool clustered;
+
     /*
      *
      */
     void initializeGridMapModel();
+
     /*
      *
      */
     void extractPixelsFromImages();
+
     /*
      *
      */
     void drawPoseOrientation();
+
     /*
      *
      */
     void drawCompassOrientation(double orientation);
+
     /*
      *
      */
     void drawROI();
+
     /*
      *
      */
     void colorClustering();
+
     /*
      *
      */
     void drawVisualGridModel();
+
     /*
      *
      */
     void drawCellConfidence();
+
     /*
      *
      */
     void recordedFeatures();
+
     /*
      *
      */
     void victoria();
-    /*
+
+    /**
+     * @brief This function store features in the grid map.
+     *
      * During the off line phase, this method records features
      * and creates the model. You can enable this function through
      * robotControl.
      */
     void recordFeatures();
-    /*
-     * reads the already saved model from the disk, if there is one.
+
+    /**
+     * @brief This function reads a saved model from the disk, if present.
      */
     void readGridMapModel();
-    /*
-     * saves the current model in a binary file in the config directory.
+
+    /**
+     * @brief This function saves the current model to a binary file.
+     *
+     * The file is stored in the config directory.
      * We call this method after the recording function, to save the model.
      */
     void saveGridMapModel();
-    /*
-     * checks if there is already a model saved into the disk.
+
+    /**
+     * @brief This function checks if there is already a model saved to disk.
      */
     bool hasGridMapModel();
-    /*
-     * clears any previous files stored from the compass. We can enable
-     * this function only from robotControl.
+
+    /**
+     * @brief This function clears any previous files stored from the compass. 
+     *
+     * You can enable this function only from RobotControl.
      */
     void clearCompass();
-    /*
-     *returns true if the visual compass has an output to give
+
+    /**
+     * @brief This function checks if the visual compass can make an estimate.
+     *
+     * If the part of the image below the horizon is more than a certain 
+     * threshold, the compass will be disabled to make any estimate, as too
+     * little information is present to base its orientational estimate on.
      */
     bool validHorizon();
-    /*
-     *extracts the colors above the horizon
+
+    /**
+     * @brief This function stores all pixels of an image in pixelVector.
      */
     void colorExtraction();
-    /*
-     *gets the image and the horizon and scans every 10 pixels
-     *a vertical line storing the pixel values into a vector
+
+    /**
+     * @brief This function gets scanlines from an image, if allowed.
+     *
+     * For this, the function first retrieves an image from the camera, 
+     * computes the position of the horizon in that image.  It then collects
+     * lines of pixels, 10 px from each other and orthogonal to the horizon.
+     * This is put in the stripes parameter.
+     *
+     * @param stripes A collection of scanlines orthogonal to the horizon
      */
     void verticalScanner(vector< vector<Pixel> > &stripes);
-    /*
-     *does the robot to turn 360 degrees, to map the environment
+
+    /**
+     * @brief This function lets the robot do an initialization routine.
+     *
+     * The routine lets the robot make a full turn at its spot, and collect
+     * all features it sees.  This way, there will be a (nearly) complete 
+     * model at the robot's current grid cell.
      */
     void mapping(cv::Mat &mappingImages);
-    /*
-     *make the robot position stand in order to record features
+
+    /**
+     * @brief This function lets the robot sit in a stable position for recording.
      */
     void scannerPosition();
 
