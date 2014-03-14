@@ -10,7 +10,8 @@ FRAMEWORK_PATH = nil
 EXTERN_PATH_NATIVE = nil
 -- webots instalation if available
 -- default: os.getenv("WEBOTS_HOME")
-WEBOTS_HOME = "../../webots"
+--WEBOTS_HOME = "../../webots"
+WEBOTS_HOME = nil
 
 -- path to the Nao crosscompiler and libs
 -- default: os.getenv("NAO_CTC")
@@ -24,7 +25,7 @@ EXTERN_PATH_NAO = nil
 
 -- naoqi toolchain needed to compile the NaoSMAL
 -- default: os.getenv("AL_DIR")
-AL_DIR = "../../naoqi-sdk-1.14.5-linux32"
+AL_DIR = "../../../../aldebaran/naoqi-sdk-1.14.5-linux32"
 
 -- example: add additional dirs for both platforms
 --if PLATFORM == "Nao" then
