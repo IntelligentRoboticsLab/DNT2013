@@ -26,12 +26,13 @@ VisualCompass::VisualCompass()
     DEBUG_REQUEST_REGISTER("VisualCompass:functions:grid:save_model_to_config","", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:functions:grid:clear_feature_grid_map"," delete the previous generated model", false);
 
-    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:save_color_clusters", "", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:read_color_clusters", "", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:cluster_colors", "", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:clear_images","", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:save_color_clusters", "Write current color clusters to file", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:read_color_clusters", "Read previous color clusters from file", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:static_clustering", "Use a preset amount of colors from single image", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:cluster_colors", "Generate color clusters from input images", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:clear_images", "Remove all stored images", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:record_images","stores images to use them for color extraction", false);
-    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:show_clustered_colors","", false);
+    DEBUG_REQUEST_REGISTER("VisualCompass:functions:color:show_clustered_colors","Display color clusters' centroids", false);
     // motions
     DEBUG_REQUEST_REGISTER("VisualCompass:motion:scanner_standing", "", false);
     DEBUG_REQUEST_REGISTER("VisualCompass:motion:standard_stand", "stand as standard or not", true);
@@ -57,11 +58,12 @@ void VisualCompass::execute()
     DEBUG_REQUEST("VisualCompass:functions:grid:read_model_from_config", readGridMapModel(););
     DEBUG_REQUEST("VisualCompass:functions:grid:clear_feature_grid_map", clearCompass(););
 
-    DEBUG_REQUEST("VisualCompass:functions:color:cluster_colors", colorClustering(););
-    DEBUG_REQUEST("VisualCompass:functions:color:record_images", extractPixelsFromImages(););
     DEBUG_REQUEST("VisualCompass:functions:color:save_color_clusters", saveColorClusters(););
     DEBUG_REQUEST("VisualCompass:functions:color:read_color_clusters", readColorClusters(););
+    DEBUG_REQUEST("VisualCompass:functions:color:static_clustering", staticColorClusters(););
+    DEBUG_REQUEST("VisualCompass:functions:color:cluster_colors", colorClustering(););
     DEBUG_REQUEST("VisualCompass:functions:color:clear_images", pixelVector.clear(););
+    DEBUG_REQUEST("VisualCompass:functions:color:record_images", extractPixelsFromImages(););
     DEBUG_REQUEST("VisualCompass:functions:color:show_clustered_colors", drawClusteredColors(););
 
     DEBUG_REQUEST("VisualCompass:debug:draw_orientation_loc", drawPoseOrientation(););
@@ -72,6 +74,29 @@ void VisualCompass::execute()
 
     DEBUG_REQUEST("VisualCompass:motion:standard_stand", scannerPosition(););
     return;
+}
+
+void VisualCompass::staticColorClusters()
+{
+    pixelVector.clear();
+#define DEFAULT_COLOR_CENTROIDS {\
+	{  0,   0,   0},\
+	{255,   0,   0},\
+	{  0, 255,   0},\
+	{255, 255,   0},\
+	{  0,   0, 255},\
+	{255,   0, 255},\
+	{  0, 255, 255},\
+	{255, 255, 255},\
+}
+    unsigned char centroids[NUM_OF_COLORS][3] = DEFAULT_COLOR_CENTROIDS;
+    for(int i = 0; i < NUM_OF_COLORS; i++)
+		{
+			  Pixel p;
+			  p.channels = centroids[i]; // TODO: copy this array
+			  pixelVector.push_back(p);
+		}
+    extractPixelsFromImages();
 }
 
 void VisualCompass::recordedFeatures()

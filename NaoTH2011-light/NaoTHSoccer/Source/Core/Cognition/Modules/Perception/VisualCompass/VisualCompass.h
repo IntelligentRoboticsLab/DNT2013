@@ -85,9 +85,15 @@ END_DECLARE_MODULE(VisualCompass)
 /**
  * @brief This class provides a visual compass which updates during usage.
  *
- * The implementation is based on ``ViCTOriA: Visual Compass To Orientate 
- * Accurately'' by de Kok et al. and ``Orientation finding using a grid based
- * visual compass'' by Methenitis et al.  
+ * The implementation is based on "ViCTOriA: Visual Compass To Orientate 
+ * Accurately" by de Kok et al.[1] and "Orientation finding using a grid based
+ * visual compass" by Methenitis et al.[2]
+ *
+ * [1] See for the project report: 
+ *   http://www.dutchnaoteam.nl/wp-content/uploads/2013/07/ViCTOriA.pdf
+ *
+ * [2] See for the publication:
+ *   http://www.science.uva.nl/~arnoud/publications/GridBasedVisualCompass.pdf
  */
 class VisualCompass: private VisualCompassBase
 {
@@ -96,7 +102,14 @@ public:
     ~VisualCompass();
     void execute();
 private:
+		/**
+		 * @brief Number of images used for making the color profile. 
+		 * Only used for debug info.
+		 */
     int num_images;
+    /**
+     * @brief Collection of all pixels of the images used for making a color model.
+     */
     vector<Pixel> pixelVector;
     VisualGridMapProvider GridMapProvider;
     ColorDiscretizer ClusteringProvider;
@@ -121,6 +134,11 @@ private:
      * @brief This function retrieves color clusters from file.
      */
     void readColorClusters();
+
+    /**
+     *
+     */
+    void staticColorClusters();
 
     /*
      *
